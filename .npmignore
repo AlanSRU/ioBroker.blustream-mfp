@@ -1,0 +1,39 @@
+# Source control
+.git/
+.github/
+
+# Development files
+.vscode/
+.idea/
+.eslintrc.js
+.gitignore
+.npmignore
+
+# Test files
+test/
+coverage/
+.nyc_output/
+
+# Documentation source (README is included by default)
+docs/
+
+# Protocol documentation (not needed for runtime)
+protocols/
+
+# Build artifacts
+build/
+dist/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env.*
+
+# ioBroker specific
+iobroker-data/

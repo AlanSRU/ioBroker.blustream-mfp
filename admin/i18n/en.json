@@ -1,0 +1,15 @@
+{
+    "Blustream Adapter Configuration": "Blustream Adapter Configuration",
+    "Device Model": "Device Model",
+    "Connection Type": "Connection Type",
+    "IP Connection Settings": "IP Connection Settings",
+    "RS232 Connection Settings": "RS232 Connection Settings",
+    "IP Address": "IP Address",
+    "TCP Port": "TCP Port",
+    "Serial Port": "Serial Port",
+    "Baud Rate": "Baud Rate",
+    "Timing Settings": "Timing Settings",
+    "Polling Interval (ms)": "Polling Interval (ms)",
+    "Reconnect Interval (ms)": "Reconnect Interval (ms)",
+    "Enable Telnet IAC Negotiation": "Enable Telnet IAC Negotiation"
+}

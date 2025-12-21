@@ -1,28 +1,43 @@
 {
   "name": "iobroker.blustream-mfp",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "description": "ioBroker adapter for Blustream Presentation Switchers",
   "author": {
     "name": "Alan Paris",
     "email": "alan@example.com"
   },
+  "contributors": [
+    {
+      "name": "Alan Paris",
+      "email": "alan@example.com"
+    }
+  ],
   "homepage": "https://github.com/alanparis/ioBroker.blustream-mfp",
   "license": "MIT",
   "keywords": [
     "ioBroker",
     "blustream",
+    "amf42au",
+    "mfp62",
     "mfp72",
     "mfp112",
+    "wmf51",
+    "wmf72",
     "presentation switcher",
     "hdmi matrix",
-    "av control"
+    "av control",
+    "home automation",
+    "smart home"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/alanparis/ioBroker.blustream-mfp"
+    "url": "git+https://github.com/alanparis/ioBroker.blustream-mfp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/alanparis/ioBroker.blustream-mfp/issues"
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "dependencies": {
     "@iobroker/adapter-core": "^3.0.4",
@@ -32,18 +47,20 @@
     "@iobroker/testing": "^4.1.0",
     "@types/node": "^20.10.0",
     "chai": "^4.3.10",
+    "eslint": "^8.56.0",
     "mocha": "^10.2.0"
   },
   "main": "main.js",
   "files": [
     "admin/",
-    "lib/",
     "main.js",
     "io-package.json",
     "LICENSE"
   ],
   "scripts": {
     "test": "mocha --exit",
+    "test:package": "mocha test/package --exit",
+    "test:integration": "mocha test/integration --exit",
     "lint": "eslint ."
   }
 }

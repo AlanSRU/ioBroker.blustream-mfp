@@ -1,0 +1,15 @@
+{
+    "Blustream Adapter Configuration": "Конфігурація адаптера Blustream",
+    "Device Model": "Модель пристрою",
+    "Connection Type": "Тип підключення",
+    "IP Connection Settings": "Налаштування IP-підключення",
+    "RS232 Connection Settings": "Налаштування підключення RS232",
+    "IP Address": "IP-адреса",
+    "TCP Port": "TCP-порт",
+    "Serial Port": "Послідовний порт",
+    "Baud Rate": "Швидкість передачі даних",
+    "Timing Settings": "Налаштування часу",
+    "Polling Interval (ms)": "Інтервал опитування (мс)",
+    "Reconnect Interval (ms)": "Інтервал перепідключення (мс)",
+    "Enable Telnet IAC Negotiation": "Увімкнути узгодження Telnet IAC"
+}
