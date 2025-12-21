@@ -34,7 +34,7 @@
     "url": "https://github.com/AlanSRU/ioBroker.blustream-mfp.git"
   },
   "bugs": {
-    "url": "https://github.com/alanparis/ioBroker.blustream-mfp/issues"
+    "url": "https://github.com/AlanSRU/ioBroker.blustream-mfp/issues"
   },
   "engines": {
     "node": ">=18"
