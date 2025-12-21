@@ -25,7 +25,7 @@
       "en": "Control Blustream AMF/MFP/WMF series AV switchers via RS232 or IP",
       "de": "Steuerung von Blustream AMF/MFP/WMF Serie AV-Umschaltern über RS232 oder IP"
     },
-    "authors": ["Alan Paris <alan@example.com>"],
+    "authors": ["Alan Paris <alan.paris@scottish.rugby>"],
     "keywords": ["blustream", "amf42au", "mfp62", "mfp72", "mfp112", "wmf51", "wmf72", "hdmi", "matrix", "switcher", "av", "presentation", "wireless"],
     "license": "MIT",
     "platform": "Javascript/Node.js",

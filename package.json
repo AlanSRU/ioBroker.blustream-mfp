@@ -4,12 +4,12 @@
   "description": "ioBroker adapter for Blustream Presentation Switchers",
   "author": {
     "name": "Alan Paris",
-    "email": "alan@example.com"
+    "email": "alan.paris@scottish.rugby"
   },
   "contributors": [
     {
       "name": "Alan Paris",
-      "email": "alan@example.com"
+      "email": "alan.paris@scottish.rugby"
     }
   ],
   "homepage": "https://github.com/alanparis/ioBroker.blustream-mfp",
