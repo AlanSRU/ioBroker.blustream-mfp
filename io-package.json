@@ -4,43 +4,17 @@
     "version": "0.3.0",
     "news": {
       "0.3.0": {
-        "en": "Added AMF42AU, WMF51, WMF72 support; CEC, presets, picture controls",
-        "de": "AMF42AU, WMF51, WMF72 Unterstützung; CEC, Presets, Bildsteuerung",
-        "ru": "Добавлена поддержка AMF42AU, WMF51, WMF72; CEC, пресеты, управление изображением",
-        "pt": "Adicionado suporte AMF42AU, WMF51, WMF72; CEC, predefinições, controles de imagem",
-        "nl": "AMF42AU, WMF51, WMF72 ondersteuning toegevoegd; CEC, presets, beeldbesturing",
-        "fr": "Ajout du support AMF42AU, WMF51, WMF72; CEC, préréglages, contrôles d'image",
-        "it": "Aggiunto supporto AMF42AU, WMF51, WMF72; CEC, preset, controlli immagine",
-        "es": "Añadido soporte AMF42AU, WMF51, WMF72; CEC, preajustes, controles de imagen",
-        "pl": "Dodano obsługę AMF42AU, WMF51, WMF72; CEC, presety, sterowanie obrazem",
-        "uk": "Додано підтримку AMF42AU, WMF51, WMF72; CEC, пресети, керування зображенням",
-        "zh-cn": "添加AMF42AU、WMF51、WMF72支持；CEC、预设、图像控制"
-      },
-      "0.2.0": {
-        "en": "Added MFP62 support, dynamic model-specific states",
-        "de": "MFP62 Unterstützung hinzugefügt, dynamische modellspezifische Zustände",
-        "ru": "Добавлена поддержка MFP62, динамические состояния для конкретных моделей",
-        "pt": "Adicionado suporte MFP62, estados dinâmicos específicos do modelo",
-        "nl": "MFP62 ondersteuning toegevoegd, dynamische modelspecifieke statussen",
-        "fr": "Ajout du support MFP62, états dynamiques spécifiques au modèle",
-        "it": "Aggiunto supporto MFP62, stati dinamici specifici per modello",
-        "es": "Añadido soporte MFP62, estados dinámicos específicos del modelo",
-        "pl": "Dodano obsługę MFP62, dynamiczne stany specyficzne dla modelu",
-        "uk": "Додано підтримку MFP62, динамічні стани для конкретних моделей",
-        "zh-cn": "添加MFP62支持，动态模型特定状态"
-      },
-      "0.1.0": {
-        "en": "Initial release with MFP72 and MFP112 support",
-        "de": "Erstveröffentlichung mit MFP72 und MFP112 Unterstützung",
-        "ru": "Первый выпуск с поддержкой MFP72 и MFP112",
-        "pt": "Lançamento inicial com suporte MFP72 e MFP112",
-        "nl": "Eerste release met MFP72 en MFP112 ondersteuning",
-        "fr": "Version initiale avec support MFP72 et MFP112",
-        "it": "Rilascio iniziale con supporto MFP72 e MFP112",
-        "es": "Lanzamiento inicial con soporte MFP72 y MFP112",
-        "pl": "Pierwsze wydanie z obsługą MFP72 i MFP112",
-        "uk": "Перший випуск з підтримкою MFP72 та MFP112",
-        "zh-cn": "初始版本，支持MFP72和MFP112"
+        "en": "Initial release with support for AMF42AU, MFP62, MFP72, MFP112, WMF51, WMF72; CEC, presets, picture controls",
+        "de": "Erstveröffentlichung mit Unterstützung für AMF42AU, MFP62, MFP72, MFP112, WMF51, WMF72; CEC, Presets, Bildsteuerung",
+        "ru": "Первый выпуск с поддержкой AMF42AU, MFP62, MFP72, MFP112, WMF51, WMF72; CEC, пресеты, управление изображением",
+        "pt": "Lançamento inicial com suporte para AMF42AU, MFP62, MFP72, MFP112, WMF51, WMF72; CEC, predefinições, controles de imagem",
+        "nl": "Eerste release met ondersteuning voor AMF42AU, MFP62, MFP72, MFP112, WMF51, WMF72; CEC, presets, beeldbesturing",
+        "fr": "Version initiale avec support pour AMF42AU, MFP62, MFP72, MFP112, WMF51, WMF72; CEC, préréglages, contrôles d'image",
+        "it": "Rilascio iniziale con supporto per AMF42AU, MFP62, MFP72, MFP112, WMF51, WMF72; CEC, preset, controlli immagine",
+        "es": "Lanzamiento inicial con soporte para AMF42AU, MFP62, MFP72, MFP112, WMF51, WMF72; CEC, preajustes, controles de imagen",
+        "pl": "Pierwsze wydanie z obsługą AMF42AU, MFP62, MFP72, MFP112, WMF51, WMF72; CEC, presety, sterowanie obrazem",
+        "uk": "Перший випуск з підтримкою AMF42AU, MFP62, MFP72, MFP112, WMF51, WMF72; CEC, пресети, керування зображенням",
+        "zh-cn": "初始版本，支持AMF42AU、MFP62、MFP72、MFP112、WMF51、WMF72；CEC、预设、图像控制"
       }
     },
     "titleLang": {
