@@ -1,0 +1,210 @@
+                           AMF42AU Advanced Multi-Format Presentation Switcher
+                           FW Version: V1.2
+========================   System Information Commands
+?/HELP                     Print Help Information
+STATUS                     Print System Status And Port Status
+INSTA                      Print All Input Status
+OUTSTA                     Print All Output Status
+CTRLSTA                    Print All Control Status
+AUDSTA                     Print All Audio Status
+========================   System Control Commands
+PON/OFF                    Set System Power On Or Off
+KEY ON/OFF                 Set System Key Control On Or Off
+NOSIGDLY xxxxx             Set System Off Time To xxxxx Seconds (300-10800s,Defa                                                                                                             ult 600s)
+                           When No HDMI Signal Has Been Detected, System Will Tu                                                                                                             rn Off After Specified Time
+NOSIGSTANDBY ON/OFF        Set No Signal Standby On Or Off
+RESET                      Reset System To Default Setting
+                           Type "Yes" To Confirm, "No" To Discard
+POCOUT ON/OFF              Set HDBT Output POC On Or Off
+OUT xx MUTE ON/OFF         Set Output xx Video Mute On Or Off
+OUT xx SWITCH yy           Set Output xx Auto Switching To yy
+                           xx=[00]: All Output Ports, [01...02]: Output Port
+                           yy=AUTO: Auto Switching On - Auto Mode
+                           yy=MAN: Auto Switching Off - Manual Mode
+OUT xx BRIGHTNESS vv       Set Output xx Brightness To vv
+OUT xx CONTRAST vv         Set Output xx Contrast To vv
+                           vv=[00...99]: Brightness/Contrast Value
+OUT xx PICTUREMODE mm      Set Output xx Picture Mode mm
+                           mm=01: Soft Mode, 02: Standard Mode, 03: Vivid Mode,                                                                                                              04: User Mode
+OUT xx RED vv              Set Output xx RED To vv
+OUT xx GREEN vv            Set Output xx GREEN To vv
+OUT xx BLUE vv             Set Output xx BLUE To vv
+                           vv=[00...255]: RED/GREEN/BLUE Value
+OUT xx COLOURTEMP mm       Set Output xx Colour Temperature mm
+                           mm=01: Warm Mode, 02: Standard Mode, 03: Cool Mode, 0                                                                                                             4: User Mode
+OUT xx RES rr              Set Output xx Scaler Resolution To rr
+                           rr=00: 1024x768@60Hz            rr=07: 720P@60Hz
+                           rr=01: 1280x800@60Hz            rr=08: 1080P@50Hz
+                           rr=02: 1360x768@60Hz            rr=09: 1080P@60Hz
+                           rr=03: 1440x900@60Hz            rr=10: 4K2K@30Hz
+                           rr=04: 1680x1050@60Hz           rr=11: 4K2K@50Hz
+                           rr=05: 1920x1200@60Hz           rr=12: 4K2K@60Hz
+                           rr=06: 720P@50Hz
+OUT xx FR yy               Set Output xx From Input yy
+                           xx=[00]: All Output Ports, [01...02]: Output Port
+                           yy=[01...04]: Input Port 1 To 4
+PRESET pp SAVE             Save Current Output Config To Preset pp
+PRESET pp APPLY            Apply Preset pp
+PRESET pp CLR              Clear Preset pp
+                           pp=[01...09]: Preset
+EDID yy DF zz              Set Input yy EDID To Default EDID zz
+                           yy=[00]: All Input Ports, [01...04]: Input Port
+                           zz=00: HDMI 1080p@60Hz, Audio 2CH PCM (Default)
+                           zz=01: HDMI 4K@30Hz 4:4:4, Audio 2ch PCM
+                           zz=02: HDMI 4K@60Hz 4:2:0, Audio 2ch PCM
+                           zz=03: HDMI 4K@60Hz 4:4:4, Audio 2ch PCM
+                           zz=04: DVI 1280x1024@60Hz, Audio None
+                           zz=05: DVI 1920x1080@60Hz, Audio None
+                           zz=06: DVI 1920x1200@60Hz, Audio None
+                           zz=07: HDMI 1920x1200@60Hz, Audio 2ch PCM
+                           zz=08: User EDID 1
+                           zz=09: User EDID 2
+                           zz=10: EDID Passthrough1 (Copy from HDBT)
+                           zz=11: EDID Passthrough2 (Copy from HDMI OUT1)
+                           zz=12: EDID Passthrough3 (Copy from HDMI OUT2)
+EDID yy CP xx              Copy EDID From Output xx To Input yy
+                           yy=[00]: All Input Ports, [01...04]: Input Port
+                           xx=01: HDMI Output 1, 02: HDMI Ouput 2, 03: HDBT Outp                                                                                                             ut 2
+EXTEDIDSAVE zz             Save External EDID From USB Into Slot zz
+                           xx = 08 : User EDID 1
+                           xx = 09 : User EDID 2
+========================   Audio Mixing Commands
+AUD xx FR yy               Set The Analogue/Digital Audio xx To Follow Audio Out                                                                                                             put yy
+                           xx=01: Analogue
+                           xx=02: Digital
+                           yy=01: Output 1 (HDMI)
+                           yy=02: Output 2 (Dual HDBT/HDMI)
+                           yy=03: HDBT RX ARC Optical *Analogue Audio Can't Be S                                                                                                             witched To ARC
+                           yy=04: HDBT RX ARC HDMI *Analogue Audio Can't Be Swit                                                                                                             ched To ARC
+AUD xx BALANCED ON/OFF     Set Audio Output xx Balanced On Or Off
+                           xx=01: Analogue
+AUDSCAANA                  Set HDMI Input 1 Audio From Analogue L/R Input
+AUDSCAORG                  Set HDMI Input 1 Audio From Original Source (HDMI 1)
+MUTE ON/OFF OUT xx         Set Output xx Mute On or Off
+                           xx=00: All Outputs
+                           xx=01: Audio of HDMI Output 1
+                           xx=02: Audio of HDMI Output 2
+                           xx=03: Audio Of SPDIF Output
+                           xx=04: Audio Of L/R Output
+                           xx=05: AUDEMBED Audio Input
+                           xx=06: Mic Audio Input
+VOL vv OUT xx              Set Volume Level vv On Output xx
+                           vv=00-100: Set Volume Level
+                           vv=+: Volume Level Increase
+                           vv=-: Volume Level Decrease
+                           xx=00: Select All Output Ports
+                           xx=01...04: Select Output Port 01 to 04
+                           xx=01: Audio of HDMI Output 1
+                           xx=02: Audio of HDMI Output 2
+                           xx=04: Audio Of L/R Output
+AUDEMBED VOL vv            Set Volume Level vv For AUDEMBED Input
+MIC VOL vv                 Set Volume Level vv For MIC Input
+OUT xx HDMIVOL vv          Set Volume Level vv For HDMI Source
+                           xx=00: All HDMI OUT Source
+                           xx=01: HDMI OUT 01 Source
+                           xx=02: HDMI OUT 02 Source
+                           vv=00-100: Set Volume Level
+                           vv=+: Volume Level Increase
+                           vv=-: Volume Level Decrease
+                           vv=UNMUTE: Unmute HDMI Source Volume
+                           vv=MUTE: Mute HDMI Source Volume
+OUT xx MIX mm              Set Output xx Audio MIX Type To mm
+                           xx=00: All Outputs
+                           xx=01...02: Output 1 To 2
+                           mm=01: HDMI Audio Only
+                           mm=02: Mic Audio Only
+                           mm=03: AUDEMBED Audio Only
+                           mm=04: HDMI Audio + Mic Audio
+                           mm=05: AUDEMBED Audio + Mic Audio
+MIC AUTOBG ON/OFF          Set Auto Background Audio Volume Decrease When Mic Detected To On Or Off
+MIC BGVOL pp               Set Auto Background Audio Volume Decrease To pp Percent
+                           pp=[00...100]: Percent Of Volume
+MIC BGDEL dd               After No Mic Audio For dd Seconds, Start The Ramp Up Of The Background Volume
+                           dd=[01...20]: Delay Seconds
+MIC RUP rr                 Set Ramp Up Background Audio Volume For rr Seconds
+                           rr=[00]: Instant Ramp, No Delay
+                           rr=[01...20]: 0.5s Increment
+MIC RDOWN rr               Set Ramp Down Background Audio Volume For rr Seconds
+                           rr=[00]: Instant Ramp, No Delay
+                           rr=[01...20]: 0.5s Increment
+=========================  Output CEC Control Commands
+OUT xx CEC ENABLE/DISABLE  Set CEC Control Of Output xx To Enabled Or Disabled
+OUT xx CEC INPUT yy        Send CEC Input Channel Selection To Output xx
+OUT xx CEC OK              Send CEC OK To Output xx
+OUT xx CEC UP              Send CEC Up To Output xx
+OUT xx CEC DOWN            Send CEC Down To Output xx
+OUT xx CEC LEFT            Send CEC Left To Output xx
+OUT xx CEC RIGHT           Send CEC Right To Output xx
+OUT xx CEC RETURN          Send CEC Return To Output xx
+OUT xx CEC EXIT            Send CEC Exit To Output xx
+OUT xx CEC VOLUP           Send CEC Volume Up To Output xx
+OUT xx CEC VOLDOWN         Send CEC Volume Down To Output xx
+OUT xx CEC MUTE            Send CEC Mute Toggle To Output xx
+OUT xx CEC PLAY            Send CEC Play To Output xx
+OUT xx CEC STOP            Send CEC Stop To Output xx
+OUT xx CEC PAUSE           Send CEC Pause To Output xx
+OUT xx CEC RECORD          Send CEC Record To Output xx
+OUT xx CEC REWIND          Send CEC Rewind To Output xx
+OUT xx CEC FF              Send CEC Fast Forward To Output xx
+OUT xx CEC FWD             Send CEC Forward To Output xx
+OUT xx CEC BWD             Send CEC Backward To Output xx
+OUT xx CEC POFF            Send CEC Power Off To Output xx
+OUT xx CEC PON             Send CEC Power On To Output xx
+                           xx=00: Select All Output Ports
+                           xx=[01...03]: Select One Output Port
+                           yy: Select The TV Input Port
+OUT xx CEC USER aa bb cc dd  Set Output xx CEC User Command For Power On
+                           aa=01: User Command 1, 02: User Command 2
+                           bb cc dd=: Custom CEC Command
+========================   Input CEC Control Commands
+IN yy CEC ENABLE/DISABLE   Set CEC Control Of Output yy To Enabled Or Disabled
+IN yy CEC OK               Send CEC OK To Input yy
+IN yy CEC UP               Send CEC Up To Input yy
+IN yy CEC DOWN             Send CEC Down To Input yy
+IN yy CEC LEFT             Send CEC Left To Input yy
+IN yy CEC RIGHT            Send CEC Right To Input yy
+IN yy CEC RETURN           Send CEC Return To Input yy
+IN yy CEC EXIT             Send CEC Exit To Input yy
+IN yy CEC VOLUP            Send CEC Volume Up To Input yy
+IN yy CEC VOLDOWN          Send CEC Volume Down To Input yy
+IN yy CEC PLAY             Send CEC Play To Input yy
+IN yy CEC STOP             Send CEC Stop To Input yy
+IN yy CEC PAUSE            Send CEC Pause To Input yy
+IN yy CEC RECORD           Send CEC Record To Input yy
+IN yy CEC REWIND           Send CEC Rewind To Input yy
+IN yy CEC FF               Send CEC Fast Forward To Input yy
+IN yy CEC FWD              Send CEC Forward To Input yy
+IN yy CEC BWD              Send CEC Backward To Input yy
+IN yy CEC POFF             Send CEC Power Off To Input yy
+IN yy CEC PON              Send CEC Power On To Input yy
+                           yy=00: Select All Input Ports
+                           yy=[01...03]: Select One Input Port
+========================   RS232 Control Commands
+RS232BAUD z                Set RS232 Baud Rate To xx
+                           z=0: 115200, 1: 57600(default), 2: 38400, 3: 19200,  4: 9600
+RS232ON DISABLE            Set Auto RS232 Commands When Detect A Signal To Disabled
+RS232ON x:y:z:a            Send y Type Of Command a Stored In Slot x To The Third-party Device Whose Baud Rate Is z
+                           x=1: Store RS232 Command In Slot 1 - Display On
+                           x=2: Store RS232 Command In Slot 2 - Input Select
+                           x=3: Store RS232 Command In Slot 3 - User Command 1
+                           x=4: Store RS232 Command In Slot 4 - User Command 2
+                           y=a: ASCII, h: HEX
+                           z=1: 2400, 2: 4800, 3: 9600, 4: 19200, 5: 38400, 6: 57600 (default), 7: 115200
+                           a=: RS232 command
+RS232OFF DISABLE           Set Auto RS232 Commands When Not Detect A Signal To Disabled
+RS232OFF y:z:a             Set RS232 Off Command a Of y Type Whose Baud Rate Is z
+                           y=a: ASCII, h: HEX
+                           z=1: 2400, 2: 4800, 3: 9600, 4: 19200, 5: 38400, 6: 57600 (default), 7: 115200
+                           a=: RS232 command
+RS232 RPTCMD x             Set RS232 Repeat Command To x Time(s)
+                           x=[1...2]: Command Repeats
+RS232 SAMECMD DLY ttt      Set RS232 Different Same Delay Time To ttt Seconds (1-200s, Default 2s)
+RS232 DIFFCMD DLY ttt      Set RS232 Different Command Delay Time To ttt Seconds (1-200s, Default 7s)
+                           ttt=[001...200]: Time In Seconds
+========================   Network Control Commands
+NET DHCP ON/OFF            Set Auto IP(DHCP) On Or Off
+NET IP xxx.xxx.xxx.xxx     Set IP Address
+NET GW xxx.xxx.xxx.xxx     Set Gateway Address
+NET SM xxx.xxx.xxx.xxx     Set Subnet Mask Address
+NET RB                     Set Network Reboot And Apply New Config!!!
+NET TN xxxx                Set Telnet Port

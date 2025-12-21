@@ -1,0 +1,49 @@
+{
+  "name": "iobroker.blustream-mfp",
+  "version": "0.1.0",
+  "description": "ioBroker adapter for Blustream Presentation Switchers",
+  "author": {
+    "name": "Alan Paris",
+    "email": "alan@example.com"
+  },
+  "homepage": "https://github.com/alanparis/ioBroker.blustream-mfp",
+  "license": "MIT",
+  "keywords": [
+    "ioBroker",
+    "blustream",
+    "mfp72",
+    "mfp112",
+    "presentation switcher",
+    "hdmi matrix",
+    "av control"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alanparis/ioBroker.blustream-mfp"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "dependencies": {
+    "@iobroker/adapter-core": "^3.0.4",
+    "serialport": "^12.0.0"
+  },
+  "devDependencies": {
+    "@iobroker/testing": "^4.1.0",
+    "@types/node": "^20.10.0",
+    "chai": "^4.3.10",
+    "mocha": "^10.2.0"
+  },
+  "main": "main.js",
+  "files": [
+    "admin/",
+    "lib/",
+    "main.js",
+    "io-package.json",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "mocha --exit",
+    "lint": "eslint ."
+  }
+}

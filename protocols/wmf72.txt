@@ -1,0 +1,159 @@
+==========================================================================================
+       WMF72 Wireless Media Presenter
+       FW Version: V1.1.9
+
+============= System Information Commands
+?/HELP                     Print Help Information
+STATUS                     Print System Status And Port Status
+INSTA                      Print All Input Status
+OUTSTA                     Print All Output Status
+CTRLSTA                    Print All Control Status
+AUDSTA                     Print All Audio Status
+SECSTA                     Print All Security Status
+NETSTA                     Print All Network Status
+============= System Cortrol Commands
+PON/OFF                    Set System Power On Or Off
+KEY ON/OFF                 Set System Key Control On Or Off
+RESET                      Reset System To Default Setting
+REBOOT                     Set System Reboot
+OSD HOME                   Force to Home Screen
+OUT MUTE ON/OFF            Set Output Video Mute On Or Off
+OUT OSD ON/OFF             Show the base device name and password when mirroring
+OUT DISPLAY MODE xx        Set Output Dual Display Mode to xx
+                           xx = 1: Mirorring
+                           xx = 2: Multiview + Single view
+                           xx = 3: Single view + Multiview
+OUT ooo FR iii             Set Output ooo From Input yyy
+OUT ooo W widx FR iii      Set Output ooo Multiview Window widx From Input iii
+                           ooo = 00  all output
+                           widx = 01-04 Multiview Window
+                           iii = 01-n Select input
+                           iii = Name or MAC or Serial Number
+AUTO SWITCH ON/OFF         Set  AUTO SWITCH ON/OFF
+LAYOUT TRIPLE DF yy        Set Default Triple Window Layout To yy
+                           yy=[01]: Triple-T
+                           yy=[02]: Triple-L
+                           yy=[03]: Triple-B
+                           yy=[04]: Triple-R
+LAYOUT QUAD DF yy          Set Default Quad Window Layout To yy
+                           yy=[01]: Quad
+                           yy=[02]: Quad-B
+                           yy=[03]: Quad-R
+                           yy=[04]: Quad-T
+                           yy=[05]: Quad-L
+OUT LAYOUT yy              Set Multiview Window Layout To yy
+                           yy=[01]: Single Source
+                           yy=[02]: Dual
+                           yy=[03]: Triple-T
+                           yy=[04]: Triple-L
+                           yy=[05]: Triple-B
+                           yy=[06]: Triple-R
+                           yy=[07]: Quad
+                           yy=[08]: Quad-B
+                           yy=[09]: Quad-R
+                           yy=[10]: Quad-T
+                           yy=[11]: Quad-L
+OUT xx RES rr              Set Output xx Scaler Resolution To rr
+                           xx=[1...2]:1:Main,2:Sub
+                           xx = [00..01]: Select One Output Port
+                           rr = 00: Auto
+                           rr = 01: 720P@50Hz
+                           rr = 02: 720P@60Hz
+                           rr = 03: 1080P@30Hz
+                           rr = 04: 1080P@50Hz
+                           rr = 05: 1080P@60Hz
+                           rr = 06: 3840x2160P@30Hz (Only for Main Output)
+                           rr = 07: 3840x2160P@50Hz (Only for Main Output)
+                           rr = 08: 3840x2160P@60Hz (Only for Main Output)
+                           rr = 09: 4096x2160P@30Hz (Only for Main Output)
+                           rr = 10: 4096x2160P@50Hz (Only for Main Output)
+                           rr = 11: 4096x2160P@60Hz (Only for Main Output)
+SEC xx ON/OFF              Set Security Level
+                           xx = 03: Changing the code deletes all temporary data from base unit
+                           xx = 04: "Airplay" PIN code
+                           xx = 05: Telnet password
+                           xx = 06: Encryption of Data: AES-256 Bit + RSA-1024Bit
+                           xx = 07: Password changing deletes and removes the data of the base unit
+                           xx = 08: "Miracast" PIN code
+                           xx = 09: Disable the android APK
+                           xx = 10: Disable "Airplay"
+                           xx = 11: Disable "Firmware Degrade"
+                           xx = 12: Disable Miracast
+                           xx = 13: Disable Win/Mac APP
+                           xx = 14: Disable "Chromecast"
+AUD OUT xx                 Audio output selection
+                           xx = 00 Set output audio to Analogue and HDMI.
+                           xx = 01 Set output audio to HDMI only.
+                           xx = 02 Set output audio to Analogue only.
+                           xx = 03 Set output audio to USB only.
+AUDIO MODE yy              Set Output Audio From Input yy
+                           yy=[01]: Audio Mixer (default)
+                           yy=[02]: Single Input source
+                           yy=[03]: Single Input Window
+                           yy=[04]: Single Input First IN
+                           yy=[05]: Single Input Last IN
+AUDIO MUTE yy ON/OFF       Mute input when in Audio Mixer Mode
+                           yy=[1-15] Connected Input Devices
+AUDIO FR yy                Set Output Audio From Input iii [can only use on Single Input Source]
+                           iii = 01-n Select input
+                           iii = Name or MAc or Serial Number
+AUDIO FR W widx            Set Output Audio From Window widx [can only use on single Input Window]
+                           widx = 01-05 Multiview Window
+VOL vv                     Set Volume Level vv On Output
+INSTART iii                Set Input to Start Sharing Input
+INSTOP iii                 Set Input to Stop Sharing Input
+INFORCE xxx                Set Input xxx Fullscreen Sharing
+                           xxx = 000 : Stop fullscreen sharing
+                           xx = 001-00n Fullscreen selected Input
+                           xx = IP Address
+                           xx = Name
+                           xx = MAC
+                           xx = Serial Number
+                           xx = Mac address
+STBYON                     Enables Auto Standby mode
+STBYOFF                    Disables Auto Standby mode
+STBDLY xx                  Set Auto standby Delay
+                           xx = 00  STBYOFF
+                           xx = 01-30 = time in minutes
+OUT xx SIDEBAR ON/OFF      Statusbar show/Statusbar hide
+                           xx = [0...2]:0:All,1:Main,2:Sub
+PAIR                       Get button info
+PAIRREMOVE xx              Remove paired dongle
+============= RS232 Control Commands
+RS232BAUD x                Set RS232 Baud Rate To x
+                x = 1 2400, 2 4800, 3 9600,4 19200, 5 38400,6 57600 (Default), 7 115200
+============= Network Control Commands
+LAN yy DHCP ON/OFF         Set Auto IP(DHCP) On Or Off
+LAN yy IP xxx.xxx.xxx.xxx  Set IP Address
+LAN yy GW xxx.xxx.xxx.xxx  Set Gateway Address
+LAN yy SM xxx.xxx.xxx.xxx  Set Subnet Mask Address
+LAN yy TCPPORT xxxx        Set TCP/IP Port
+LAN yy RB                  Set Network Reboot And Apply New Config!!!
+LAN yy DNS xxxx            Set DNS Domain Name To xxxx
+                           yy=1 LAN1
+                           yy=2 LAN2
+============= WIFI Control Commands
+WIFI ON/OFF                Turn wifi hotspot On or Off
+WIFI FREQ ff CH ccc        Set wifi hotspot frequency and channel
+                           ff = 2: 2.4Ghz
+                           ff = 5: 5Ghz
+                           ccc = For 2.4Ghz: 1-11
+                           ccc = For 5Ghz: 36, 40, 44, 48, 149, 153, 157, 161, auto
+WIFI SSID xxxx             Set wifi SSID
+WIFI PASS xxxx             Set wifi PASS
+REFRESH PASS xx            Change Wifi Password
+                           xx = 00: Change password
+                           xx = 01: 5 mins
+                           xx = 02: 30 mins
+                           xx = 03: 1 hour
+                           xx = 04: 24 hours
+                           xx = 05: Never
+============= USB Control Command
+HOST x FR ALL              Set USB devices connect from x host
+                           x = 1 USB-C, 2 USB-B, 3 Wireless
+AUTO-SWITCHING ON/OFF      Set USB host auto-switching On/Off
+USB CONTROL x              Set USB host auto-switching control method
+                           x = 1 First in has control, 2 Last in takes control
+HOST PRIORITY x            Set host priority when connecting with both USB-C and USB-B hosts at the same time
+                           x = 1 USB-C, 2 USB-B
+==========================================================================================

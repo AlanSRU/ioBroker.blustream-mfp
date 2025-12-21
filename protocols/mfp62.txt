@@ -1,0 +1,115 @@
+              HDMI MFP62 Help Info
+              
+
+============= System Information Command
+?             Print Help Information
+HELP          Print Help Information
+STATUS        Print System Status And Port Status
+============= System Control Command
+PON           Power On, System Run On Normal State
+POFF          Power Off, System Run On Power Save State
+IR ON/OFF     Set System IR Control On Or Off
+KEY ON/OFF    Set System KEY Control On Or Off
+LCD ON/OFF    Set LCD Always On Or Auto Turn Off In Power On State
+RESET         Reset System To Default Setting
+RESET ALL     Reset System And Network To Default Setting
+============= Input And Output Port Control Command
+OUT OSD ON/OFF  Set Scaler OSD Show On or Off
+OUT RES rr    Set Scaler Output Resolution
+              rr=00: 1024x768@60Hz
+              rr=01: 1280x800@60Hz
+              rr=02: 1360x768@60Hz
+              rr=03: 1440x900@60Hz
+              rr=04: 1680x1050@60Hz
+              rr=05: 1920x1200@60Hz
+              rr=06: 720P@50Hz
+              rr=07: 720P@60Hz
+              rr=08: 1080P@50Hz
+              rr=09: 1080P@60Hz
+              rr=10: 4K2K@25Hz
+              rr=11: 4K2K@30Hz
+              rr=12: 4K2K@50Hz
+              rr=13: 4K2K@60Hz
+              rr=14: DCI 4K2K@25Hz
+              rr=15: DCI 4K2K@30Hz
+              rr=16: DCI 4K2K@50Hz
+              rr=17: DCI 4K2K@60Hz
+              rr=18: Auto
+OUT FREQ mm   Set Output Frequence Mode
+              When Output Resolution Is Video Timing
+              mm=AUTO: Set Output Freq Auto Change To Input Freq
+              mm=FORCE: Set Output Freq By CMD:OUT RES rr Select
+OUT xx ON/OFF  Set Output:xx On Or Off
+              xx=00: Select All OUTPUT Port
+              xx=[01...02]: Select One OUTPUT Port
+OUT xx FR yy  Select One Input Port:yy
+              yy=[01...03:HDMI, 04:DP, 05:USB-C, 06:VGA]
+OUT AUTO ON/OFF Set Auto Switch Port On or Off
+EDID xx CP yy  Set Input:xx EDID Copy From Output:yy
+EDID xx DF zz  Set Input:xx EDID To Default EDID:zz
+EDID SAVE yy TO ss  Save Output:yy EDID To User Memory:ss
+              xx=00: Select All INPUT Port
+              xx=[01...06]: Select One INPUT Port
+              yy=[01...02]: Select One OUTPUT Port
+              ss=[01..02]: User EDID Memory
+              zz=00: HDMI 1080p@60Hz,      zz=01: HDMI 1080p
+                                                                          zz=02:                                                                                                              HDMI 1080p@60Hz, Audio 7.1CH DTS/DOLBY/HD
+              zz=03: HDMI 1080i@60Hz, Audio 2CH PCM
+              zz=04: HDMI 1080i@60Hz, Audio 5.1CH DTS/DOLBY
+              zz=05: HDMI 1080i@60Hz, Audio 7.1CH DTS/DOLBY/HD
+              zz=06: HDMI 1080p@60Hz/3D, Audio 2CH PCM
+              zz=07: HDMI 1080p@60Hz/3D, Audio 5.1CH DTS/DOLBY
+              zz=08: HDMI 1080p@60Hz/3D, Audio 7.1CH DTS/DOLBY/HD
+              zz=09: HDMI 4K@30Hz 4:4:4, Audio 2CH PCM
+              zz=10: HDMI 4K@30Hz 4:4:4, Audio 5.1CH DTS/DOLBY
+              zz=11: HDMI 4K@30Hz 4:4:4, Audio 7.1CH DTS/DOLBY/HD
+              zz=12: HDMI 4K@60Hz 4:2:0, Audio 2CH PCM
+              zz=13: HDMI 4K@60Hz 4:2:0, Audio 5.1CH DTS/DOLBY
+              zz=14: HDMI 4K@60Hz 4:2:0, Audio 7.1CH DTS/DOLBY/HD
+              zz=15: HDMI 4K@60Hz 4:4:4, Audio 2CH PCM
+              zz=16: HDMI 4K@60Hz 4:4:4, Audio 5.1CH DTS/DOLBY
+              zz=17: HDMI 4K@60Hz 4:4:4, Audio 7.1CH DTS/DOLBY/HD
+              zz=18: DVI 1280x1024@60Hz, Audio None
+              zz=19: DVI 1920x1080@60Hz, Audio None
+              zz=20: DVI 1920x1200@60Hz, Audio None
+              zz=21: HDMI 1920x1200@60Hz, Audio 2CH /5.1CH PCM
+              zz=22: User EDID 1
+              zz=23: User EDID 2
+============= Audio Control COmmand
+AUD SCA ORG   Scaler Audio Input Follow Port Selection
+AUD SCA ANA   Scaler Audio Input From Analog L/R Signal
+AUD PCM SCA/BYP  When Input PCM Audio, Use Scaler To Process Or Just
+              Bypass To Output. Bitstream Audio Always Bypass
+              HDMI1 And VGA Input Audio Always Use Scaler Porcess
+AUD RX yy ORG  RX Input:yy Use Orginal HDMI/DVI Signal
+AUD RX yy ANA  RX Input:yy Embeded Analog L/R
+              RX=[01...05]: 01:HDMI1 02:HDMI2 03:HDMI3 04:DP 05:USB-C
+VOL xx        Set Scaler Audio Volume
+              xx=[00...100]: Volume Value
+              xx=+: Volume Increase
+              xx=-: Volume Decrease
+MUTE ON/OFF   Set Scaler Output Audio Mute ON Or OFF
+MIC MIX mm    Set MIC And Background Audio Mix Mode
+              mm=ON: Mix MIC And Background Audio
+              mm=BGO: Background Audio Only
+              mm=MICO: MIC Audio Only
+MIC VOL xx    Set MIC Input Audio Volume
+MIC MUTE ON/OFF  Set MIC Mute On Or Off
+MIC AUTOBG ON/OFF  Set Auto Decrease Background Audio On Or Off When Detect MIC                                                                                                              Plug
+MIC BGVOL pp  Set Auto Decrease Background Audio To pp Percent Of "VOL xx"
+              pp=[00...100]: Percent Of "VOL xx" Setting
+MIC BGR dd    After Speaking, The MIC Takes dd Seconds To Raise The Volume
+              dd=[01...20]: Delay Seconds
+MIC RUP  rr   Set Ramp Up Background Audio Volume For rr Seconds
+MIC RDN  rr   Set Ramp Down Background Audio Volume For rr Seconds
+              rr=[00]: Instant Ramp, No Delay
+              rr=[01...20]: 0.5s Increment
+
+============= Network Control Command
+NET DHCP ON/OFF  Set Auto IP(DHCP) ON Or OFF
+NET IP xxx.xxx.xxx.xxx  Set IP Address
+NET GW xxx.xxx.xxx.xxx  Set Gateway Address
+NET SM xxx.xxx.xxx.xxx  Set Subnet Mask Address
+NET RB        Set Network Reboot and Apply New Config!!!
+NET TN xxxx   Set Telnet Port
+================================================================

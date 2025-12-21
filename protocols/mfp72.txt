@@ -1,0 +1,87 @@
+              MFP72  Help Info
+              
+============= System Information Command
+?             Print Help Information
+HELP          Print Help Information
+STATUS        Print System Status And Port Status
+              RS232 Baudrate: 57600
+============= System Control Command
+PON           Power On, System Run On Normal State
+POFF          Power Off, System Run On Power Save State
+IR ON/OFF     Set System IR Control On Or Off
+KEY ON/OFF    Set System KEY Control On Or Off
+DBG ON/OFF    Set Debug Mode On Or Off
+BEEP ON/OFF   Set Onboard Beep On Or Off
+LCD ON/OFF    Set LCD Always On Or Auto Turn Off In Power On State
+RESET         Reset System To Default Setting
+              (Should Type "Yes" To Confirm, "No" To Discard)
+============= Output Port Control Command
+OUT xx FR yy  Set OUTPUT:xx From INPUT:yy
+              xx=00: Select All OUTPUT Port
+              xx=[01...02]: Select One OUTPUT Port
+              yy=[01...04]: HDMI Input 01 ~ 04
+              yy=AV: AV Input( Output 02 Only )
+              yy=YPBPR: Component Input( Output 02 Only )
+              yy=VGA: VGA Input( Output 02 Only )
+OUT ADJ       Request VGA Input Auto Adjust
+OUT OSD ON/OFF Set OSD Show On or Off
+OUT SP/MX     Set OUTPUT To Splitter or Matrix Mode
+OUT RES rr    Set Scaler Output Resolution
+              (Change Output Resolution Will Effect EDID Setting)
+              rr=01: 1080P@50Hz
+              rr=02: 1080P@60Hz
+              rr=03: 720P@50Hz
+              rr=04: 720P@60Hz
+              rr=05: 1280x1024@60Hz
+              rr=06: 1024x768@60Hz
+              rr=07: 1360x768@60Hz
+              rr=08: 1440x900@60Hz
+              rr=09: 1680x1050@60Hz
+OUT FREQ mm   Set Output Frequence Mode
+              When Output Resolution is 1080P or 720P
+              mm=AUTO: Set Output Freq Auto Change To Input Freq
+              mm=FORCE: Set Output Freq By CMD:OUT RES rr Select
+OUT AR rr     Set Scaler Output Aspect Ratio
+              rr=[00: Full Screen, 01: Keep Aspect Ratio]
+              rr=[02: 16:9, 03: 4:3]
+OUT ZOOM mm   Set Scaler Output Zoom Out Mode
+              mm=00: No Zoom
+              mm=[01: 2%, 02: 4%, 03: 6%, 04: 8%]
+              mm=[05: 10%, 06: 12%, 07: 14%, 08: 16%]
+OUT SCAN mm   Set Scaler Input Overscan Mode
+              mm=00: No Overscan
+              mm=[01: 2%, 02: 4%, 03: 6%, 04: 8%]
+              mm=[05: 10%, 06: 12%, 07: 14%, 08: 16%]
+============= Audio Control COmmand
+AUD SCA ORG   Scaler Audio Input Follow Port Selection
+AUD SCA ANA   Scaler Audio Input From Analog L/R Signal
+VOL xx        Set Scaler Audio Volume
+              xx=[00...30]: Volume Value
+              xx=+: Volume Increase
+              xx=-: Volume Decrease
+MUTE ON/OFF   Set Scaler Audio Mute On Or Off
+============= Input Port EDID Control Command
+EDID xx CP yy Set Input:xx EDID Copy From Output:yy
+EDID xx DF zz Set Input:xx EDID To Default EDID:zz
+              (cmd: OUT RES rr Will Effect EDID Setting)
+              xx=00: Select All INPUT Port
+              xx=[01...04]: Select One INPUT Port
+              yy=[01...02]: Select One OUTPUT Port
+              zz=00: PC 1080p, HDMI 1080p, 2CH PCM
+              zz=01: PC 1080p, HDMI 1080p, 5.1CH PCM/DTS/DB
+              zz=02: PC 1080p, HDMI 1080p, 7.1CH PCM/DTS/DB/HD
+              zz=03: PC 1080i, HDMI 1080i, 2CH PCM
+              zz=04: PC 1080i, HDMI 1080i, 5.1CH PCM/DTS/DB
+              zz=05: PC 1080i, HDMI 1080i, 7.1CH PCM/DTS/DB/HD
+              zz=06: PC 1080p, HDMI 3D,    2CH PCM
+              zz=07: PC 1080p, HDMI 3D,    5.1CH PCM/DTS/DB
+              zz=08: PC 1080p, HDMI 3D,    7.1CH PCM/DTS/DB/HD
+              zz=09: PC 4K2K,  HDMI 4K2K,  2CH PCM
+              zz=10: PC 4K2K,  HDMI 4K2K,  5.1CH PCM/DTS/DB
+              zz=11: PC 4K2K,  HDMI 4K2K,  7.1CH PCM/DTS/DB/HD
+              zz=12: DVI 1280x1024@60Hz, Audio None
+              zz=13: DVI 1920x1080@60Hz, Audio None
+              zz=14: DVI 1920x1200@60Hz, Audio None
+              zz=15: User EDID 1
+              zz=16: User EDID 2
+              zz=17: GUI Download EDID

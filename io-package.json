@@ -1,0 +1,136 @@
+{
+  "common": {
+    "name": "blustream-mfp",
+    "version": "0.3.0",
+    "news": {
+      "0.3.0": {
+        "en": "Added AMF42AU, WMF51, WMF72 support; CEC, presets, picture controls",
+        "de": "AMF42AU, WMF51, WMF72 Unterstützung; CEC, Presets, Bildsteuerung"
+      },
+      "0.2.0": {
+        "en": "Added MFP62 support, dynamic model-specific states",
+        "de": "MFP62 Unterstützung hinzugefügt, dynamische modellspezifische Zustände"
+      },
+      "0.1.0": {
+        "en": "Initial release with MFP72 and MFP112 support",
+        "de": "Erstveröffentlichung mit MFP72 und MFP112 Unterstützung"
+      }
+    },
+    "title": "Blustream AV Switcher",
+    "titleLang": {
+      "en": "Blustream AV Switcher",
+      "de": "Blustream AV-Umschalter"
+    },
+    "desc": {
+      "en": "Control Blustream AMF/MFP/WMF series AV switchers via RS232 or IP",
+      "de": "Steuerung von Blustream AMF/MFP/WMF Serie AV-Umschaltern über RS232 oder IP"
+    },
+    "authors": ["Alan Paris <alan@example.com>"],
+    "keywords": ["blustream", "amf42au", "mfp62", "mfp72", "mfp112", "wmf51", "wmf72", "hdmi", "matrix", "switcher", "av", "presentation", "wireless"],
+    "license": "MIT",
+    "platform": "Javascript/Node.js",
+    "main": "main.js",
+    "icon": "blustream.png",
+    "enabled": true,
+    "extIcon": "https://raw.githubusercontent.com/alanparis/ioBroker.blustream-mfp/main/admin/blustream.png",
+    "readme": "https://github.com/alanparis/ioBroker.blustream-mfp/blob/main/README.md",
+    "loglevel": "info",
+    "mode": "daemon",
+    "type": "multimedia",
+    "compact": true,
+    "connectionType": "local",
+    "dataSource": "poll",
+    "adminUI": {
+      "config": "materialize"
+    },
+    "dependencies": [
+      {
+        "js-controller": ">=3.3.0"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "admin": ">=5.0.0"
+      }
+    ]
+  },
+  "native": {
+    "connectionType": "ip",
+    "ipAddress": "192.168.1.100",
+    "ipPort": 23,
+    "telnetNegotiation": true,
+    "serialPort": "/dev/ttyUSB0",
+    "serialBaudRate": 57600,
+    "deviceModel": "mfp72",
+    "pollingInterval": 30000,
+    "reconnectInterval": 10000
+  },
+  "objects": [],
+  "instanceObjects": [
+    {
+      "_id": "info",
+      "type": "channel",
+      "common": {
+        "name": "Information"
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.connection",
+      "type": "state",
+      "common": {
+        "role": "indicator.connected",
+        "name": "Device connected",
+        "type": "boolean",
+        "read": true,
+        "write": false,
+        "def": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.model",
+      "type": "state",
+      "common": {
+        "role": "text",
+        "name": "Device model",
+        "type": "string",
+        "read": true,
+        "write": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "commands",
+      "type": "channel",
+      "common": {
+        "name": "Commands"
+      },
+      "native": {}
+    },
+    {
+      "_id": "commands.raw",
+      "type": "state",
+      "common": {
+        "role": "text",
+        "name": "Send Raw Command",
+        "type": "string",
+        "read": false,
+        "write": true
+      },
+      "native": {}
+    },
+    {
+      "_id": "commands.getStatus",
+      "type": "state",
+      "common": {
+        "role": "button",
+        "name": "Get Status",
+        "type": "boolean",
+        "read": false,
+        "write": true
+      },
+      "native": {}
+    }
+  ]
+}
