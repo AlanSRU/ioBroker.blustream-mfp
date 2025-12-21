@@ -7,7 +7,7 @@
 
 [![NPM](https://nodei.co/npm/iobroker.blustream-mfp.png?downloads=true)](https://nodei.co/npm/iobroker.blustream-mfp/)
 
-**Tests:** ![Test and Release](https://github.com/alanparis/ioBroker.blustream-mfp/workflows/Test%20and%20Release/badge.svg)
+**Tests:** ![Test and Release](https://github.com/AlanSRU/ioBroker.blustream-mfp/workflows/Test%20and%20Release/badge.svg)
 
 ## Blustream AV Switcher adapter for ioBroker
 
@@ -38,7 +38,7 @@ Or install directly from GitHub:
 
 ```bash
 cd /opt/iobroker
-npm install alanparis/ioBroker.blustream-mfp
+npm install AlanSRU/ioBroker.blustream-mfp
 ```
 
 ## Configuration
@@ -150,7 +150,7 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 
 MIT License
 
-Copyright (c) 2024 Alan Paris <alan@example.com>
+Copyright (c) 2024 Alan Paris <alan.paris@scottish.rugby>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
