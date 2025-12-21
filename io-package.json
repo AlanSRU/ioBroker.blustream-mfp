@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "blustream-mfp",
-    "version": "0.3.0",
+    "version": "0.3.1",
     "news": {
+      "0.3.1": {
+        "en": "Fixed adapter checker warnings, added translations",
+        "de": "Adapter-Checker-Warnungen behoben, Übersetzungen hinzugefügt",
+        "ru": "Исправлены предупреждения проверки адаптера, добавлены переводы",
+        "pt": "Corrigidos avisos do verificador de adaptador, traduções adicionadas",
+        "nl": "Adapter checker waarschuwingen opgelost, vertalingen toegevoegd",
+        "fr": "Corrections des avertissements du vérificateur d'adaptateur, traductions ajoutées",
+        "it": "Corretti avvisi del controllo adattatore, aggiunte traduzioni",
+        "es": "Corregidas advertencias del verificador de adaptador, traducciones añadidas",
+        "pl": "Naprawiono ostrzeżenia sprawdzania adaptera, dodano tłumaczenia",
+        "uk": "Виправлено попередження перевірки адаптера, додано переклади",
+        "zh-cn": "修复适配器检查器警告，添加翻译"
+      },
       "0.3.0": {
         "en": "Initial release with support for AMF42AU, MFP62, MFP72, MFP112, WMF51, WMF72; CEC, presets, picture controls",
         "de": "Erstveröffentlichung mit Unterstützung für AMF42AU, MFP62, MFP72, MFP112, WMF51, WMF72; CEC, Presets, Bildsteuerung",
