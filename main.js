@@ -154,7 +154,7 @@ const MODEL_DEFINITIONS = {
         hasDebug: true,
         hasMicrophone: false,
         hasAutoSwitch: false,
-        hasOutputEnable: false,
+        hasOutputEnable: true,
         hasHDBaseT: true,
         hasBypass: true,
         hasIR232: true,
@@ -447,6 +447,8 @@ class BlustreamAdapter extends utils.Adapter {
         this.currentCommand = null;
         this.commandTimeout = null;
         this.modelDef = null;
+        this._statusHeaders = null;
+        this._responseLines = null;
 
         this.on('ready', this.onReady.bind(this));
         this.on('stateChange', this.onStateChange.bind(this));
@@ -480,12 +482,19 @@ class BlustreamAdapter extends utils.Adapter {
 
         this.log.info(`Setting up states for model: ${def.name}`);
 
-        // First, delete all model-specific states
-        for (const statePath of ALL_MODEL_STATES) {
-            try {
-                await this.delObjectAsync(statePath, { recursive: true });
-            } catch (e) {
-                // Ignore errors - state might not exist
+        // Only delete and recreate states if the model has changed
+        const lastModelState = await this.getStateAsync('info.model');
+        const lastModel = lastModelState && lastModelState.val;
+        const modelChanged = lastModel !== def.name;
+
+        if (modelChanged) {
+            this.log.info(`Model changed from ${lastModel || 'none'} to ${def.name}, recreating states`);
+            for (const statePath of ALL_MODEL_STATES) {
+                try {
+                    await this.delObjectAsync(statePath, { recursive: true });
+                } catch (e) {
+                    // Ignore errors - state might not exist
+                }
             }
         }
 
@@ -626,6 +635,27 @@ class BlustreamAdapter extends utils.Adapter {
                 },
                 native: {}
             });
+        }
+
+        // Telnet IAC negotiation toggle (runtime-changeable)
+        await this.setObjectNotExistsAsync('system.telnetNegotiation', {
+            type: 'state',
+            common: {
+                role: 'switch.enable',
+                name: 'Telnet IAC Negotiation',
+                type: 'boolean',
+                read: true,
+                write: true,
+                def: true
+            },
+            native: {}
+        });
+        // Use existing state value if available, otherwise fall back to adapter config
+        const telnetState = await this.getStateAsync('system.telnetNegotiation');
+        if (telnetState && telnetState.val !== null) {
+            this.config.telnetNegotiation = !!telnetState.val;
+        } else {
+            await this.setStateAsync('system.telnetNegotiation', this.config.telnetNegotiation !== false, true);
         }
 
         // Create output channel and states
@@ -1497,6 +1527,7 @@ class BlustreamAdapter extends utils.Adapter {
         });
 
         this.socket.on('data', (data) => {
+            this.log.debug(`Raw data received (${data.length} bytes): ${data.toString('hex')}`);
             if (this.config.telnetNegotiation) {
                 const cleanedData = this.handleTelnetIAC(data);
                 if (cleanedData.length > 0) {
@@ -1697,6 +1728,14 @@ class BlustreamAdapter extends utils.Adapter {
 
         for (const line of lines) {
             if (line.trim()) {
+                // Accumulate lines for full response capture
+                if (!this._responseLines) this._responseLines = [];
+                this._responseLines.push(line.trim());
+                // When we hit a separator line, flush the full response
+                if (/^={5,}$/.test(line.trim())) {
+                    this.setStateAsync('info.rawResponse', this._responseLines.join('\n'), true);
+                    this._responseLines = [];
+                }
                 this.processResponse(line.trim());
             }
         }
@@ -1704,6 +1743,7 @@ class BlustreamAdapter extends utils.Adapter {
 
     processResponse(response) {
         this.log.debug(`Received: ${response}`);
+        this.setStateAsync('info.lastReceived', response, true);
 
         // Clear command timeout on response
         if (this.commandTimeout) {
@@ -1711,7 +1751,149 @@ class BlustreamAdapter extends utils.Adapter {
             this.commandTimeout = null;
         }
 
-        // Parse status responses
+        // Skip separator lines and title lines
+        if (/^={3,}$/.test(response) || /Status$/i.test(response) || /^FW Version/i.test(response) || /^Scaler Version/i.test(response)) {
+            // End of STATUS response — release command queue on separator
+            if (/^={3,}$/.test(response)) {
+                this._statusHeaders = null;
+                this.currentCommand = null;
+                this.processCommandQueue();
+            }
+            return;
+        }
+
+        // Tab-delimited STATUS table parsing (MFP112 format)
+        if (response.includes('\t')) {
+            const cols = response.split('\t').map(c => c.trim());
+
+            // Detect header rows by known header keywords
+            const headerKeywords = ['Power', 'Input', 'Output', 'ScalerAudio', 'ScalerBypass', 'ScalerAspect'];
+            if (headerKeywords.some(h => cols[0] === h || cols.includes(h))) {
+                this._statusHeaders = cols;
+                this.log.debug(`Status table headers: ${cols.join(', ')}`);
+                return;
+            }
+
+            // Data row — parse using stored headers
+            if (this._statusHeaders) {
+                const headers = this._statusHeaders;
+                const data = {};
+                for (let i = 0; i < headers.length; i++) {
+                    data[headers[i]] = (cols[i] || '').trim();
+                }
+                this.log.debug(`Status table row: ${JSON.stringify(data)}`);
+                this.parseStatusTableRow(headers[0], data);
+                return;
+            }
+        }
+
+        // Single-line command responses (non-STATUS)
+        this.parseSingleResponse(response);
+
+        // Continue processing queue for non-STATUS responses
+        this.currentCommand = null;
+        this.processCommandQueue();
+    }
+
+    parseStatusTableRow(tableType, data) {
+        switch (tableType) {
+            case 'Power':
+                // System row: Power, IR, Key, DBG, Beep, LCD, IR_RS232
+                if (data.Power) this.setStateAsync('system.power', data.Power.toUpperCase() === 'ON', true);
+                if (data.IR) this.setStateAsync('system.ir', data.IR.toUpperCase() === 'ON', true);
+                if (data.Key) this.setStateAsync('system.key', data.Key.toUpperCase() === 'ON', true);
+                if (data.DBG) this.setStateAsync('system.debug', data.DBG.toUpperCase() === 'ON', true);
+                if (data.Beep) this.setStateAsync('system.beep', data.Beep.toUpperCase() === 'ON', true);
+                if (data.LCD) this.setStateAsync('system.lcd', data.LCD.toUpperCase() === 'ON', true);
+                if (data.IR_RS232) {
+                    // Map "Remote TX" -> "RTX", "Remote RX" -> "RRX", "Remote RX and TX" -> "BOTH"
+                    const ir232Val = data.IR_RS232.toUpperCase();
+                    if (ir232Val.includes('BOTH') || (ir232Val.includes('RX') && ir232Val.includes('TX'))) {
+                        this.setStateAsync('system.ir232', 'BOTH', true);
+                    } else if (ir232Val.includes('TX')) {
+                        this.setStateAsync('system.ir232', 'RTX', true);
+                    } else if (ir232Val.includes('RX')) {
+                        this.setStateAsync('system.ir232', 'RRX', true);
+                    } else {
+                        this.setStateAsync('system.ir232', 'OFF', true);
+                    }
+                }
+                break;
+
+            case 'Output': {
+                // Output row: Output, SelectInput, CableConn, OutputEn, Mode
+                const outputNum = parseInt(data.Output, 10);
+                if (outputNum >= 1 && outputNum <= 3) {
+                    if (data.SelectInput) {
+                        // Convert friendly names to command values: HDMI1->01, HDMI2->02, etc.
+                        const inputMap = { 'HDMI1': '01', 'HDMI2': '02', 'HDMI3': '03', 'HDMI4': '04', 'HDBT': 'HDBT', 'AV': 'AV', 'YPbPr': 'YPBPR', 'YPBPR': 'YPBPR', 'VGA': 'VGA', 'VGA1': 'VGA1', 'VGA2': 'VGA2', 'VGA3': 'VGA3', 'VGA4': 'VGA4' };
+                        const source = inputMap[data.SelectInput] || data.SelectInput;
+                        this.setStateAsync(`output.${outputNum}.source`, source, true);
+                    }
+                    if (data.OutputEn) {
+                        this.setStateAsync(`output.${outputNum}.enabled`, data.OutputEn.trim().toUpperCase() === 'YES', true);
+                    }
+                    if (data.Mode) {
+                        const mode = data.Mode.toUpperCase();
+                        this.setStateAsync('output.mode', mode === 'SPLITTER' ? 'SP' : (mode === 'MATRIX' ? 'MX' : mode), true);
+                    }
+                }
+                break;
+            }
+
+            case 'ScalerAudio':
+                // Audio row: ScalerAudio, Volume, Mute, Format
+                if (data.Volume) this.setStateAsync('audio.volume', parseInt(data.Volume, 10), true);
+                if (data.Mute) this.setStateAsync('audio.mute', data.Mute.toUpperCase() === 'ON', true);
+                if (data.ScalerAudio) {
+                    const src = data.ScalerAudio.toUpperCase().trim();
+                    this.setStateAsync('audio.source', src === 'ORGINAL' ? 'ORG' : 'ANA', true);
+                }
+                break;
+
+            case 'ScalerBypass':
+                // Bypass row: ScalerBypass, Resolution, Frequence
+                if (data.ScalerBypass) this.setStateAsync('output.bypass', data.ScalerBypass.toUpperCase() === 'ON', true);
+                if (data.Resolution) {
+                    // Reverse-lookup resolution code from the display string
+                    const resDef = this.modelDef && this.modelDef.resolutions;
+                    if (resDef) {
+                        const resCode = Object.keys(resDef).find(k => resDef[k] === data.Resolution);
+                        if (resCode) this.setStateAsync('output.resolution', resCode, true);
+                    }
+                }
+                if (data.Frequence) {
+                    this.setStateAsync('output.freqMode', data.Frequence.toUpperCase(), true);
+                }
+                break;
+
+            case 'ScalerAspect':
+                // Aspect row: ScalerAspect, OSD, ZoomOut, Overscan
+                if (data.ScalerAspect) {
+                    const arMap = { 'FULLSCREEN': '00', 'KEEPASPECTRATIO': '01', '16:9': '02', '4:3': '03' };
+                    const arVal = arMap[data.ScalerAspect.toUpperCase().replace(/\s+/g, '')] || '00';
+                    this.setStateAsync('output.aspectRatio', arVal, true);
+                }
+                if (data.OSD) this.setStateAsync('system.osd', data.OSD.toUpperCase() === 'ON', true);
+                if (data.ZoomOut) {
+                    const zoom = data.ZoomOut.toUpperCase() === 'NO' ? 0 : parseInt(data.ZoomOut.replace(/[^0-9]/g, ''), 10) || 0;
+                    this.setStateAsync('output.zoom', zoom, true);
+                }
+                if (data.Overscan) {
+                    const scan = data.Overscan.toUpperCase() === 'NO' ? 0 : parseInt(data.Overscan.replace(/[^0-9]/g, ''), 10) || 0;
+                    this.setStateAsync('output.overscan', scan, true);
+                }
+                break;
+
+            default:
+                this.log.debug(`Unhandled status table type: ${tableType}`);
+        }
+    }
+
+    parseSingleResponse(response) {
+        // Handle single-line command acknowledgements and Key:Value responses
+        // (used by other models like MFP62/MFP72 and individual command responses)
+
         if (response.includes('Power:')) {
             const match = response.match(/Power:\s*(ON|OFF)/i);
             if (match) this.setStateAsync('system.power', match[1].toUpperCase() === 'ON', true);
@@ -1762,7 +1944,6 @@ class BlustreamAdapter extends utils.Adapter {
             if (match) this.setStateAsync('audio.volume', parseInt(match[1], 10), true);
         }
 
-        // MFP112 specific
         if (response.includes('BYP:')) {
             const match = response.match(/BYP:\s*(ON|OFF)/i);
             if (match) this.setStateAsync('output.bypass', match[1].toUpperCase() === 'ON', true);
@@ -1773,22 +1954,20 @@ class BlustreamAdapter extends utils.Adapter {
             if (match) this.setStateAsync('system.ir232', match[1].toUpperCase(), true);
         }
 
-        // Output routing
+        // Output routing: OUT 01 FR 02
         const outMatch = response.match(/OUT\s*(\d+)\s*FR\s*(\w+)/i);
         if (outMatch) {
             const output = parseInt(outMatch[1], 10);
-            const source = outMatch[2];
-            this.setStateAsync(`output.${output}.source`, source, true);
+            this.setStateAsync(`output.${output}.source`, outMatch[2], true);
         }
 
-        // Output enable state
+        // Output enable: OUT 01: ON
         const outEnMatch = response.match(/OUT\s*(\d+):\s*(ON|OFF)/i);
         if (outEnMatch) {
             const output = parseInt(outEnMatch[1], 10);
             this.setStateAsync(`output.${output}.enabled`, outEnMatch[2].toUpperCase() === 'ON', true);
         }
 
-        // Mode
         if (response.includes('Mode:')) {
             const match = response.match(/Mode:\s*(SP|MX|Splitter|Matrix)/i);
             if (match) {
@@ -1797,19 +1976,16 @@ class BlustreamAdapter extends utils.Adapter {
             }
         }
 
-        // Resolution
         if (response.includes('RES:')) {
             const match = response.match(/RES:\s*(\d+)/i);
             if (match) this.setStateAsync('output.resolution', match[1].padStart(2, '0'), true);
         }
 
-        // Aspect ratio
         if (response.includes('AR:')) {
             const match = response.match(/AR:\s*(\d+)/i);
             if (match) this.setStateAsync('output.aspectRatio', match[1].padStart(2, '0'), true);
         }
 
-        // MFP62 microphone states
         if (response.includes('MIC VOL:')) {
             const match = response.match(/MIC VOL:\s*(\d+)/i);
             if (match) this.setStateAsync('microphone.volume', parseInt(match[1], 10), true);
@@ -1825,7 +2001,6 @@ class BlustreamAdapter extends utils.Adapter {
             if (match) this.setStateAsync('microphone.mixMode', match[1].toUpperCase(), true);
         }
 
-        // Network states
         if (response.includes('DHCP:')) {
             const match = response.match(/DHCP:\s*(ON|OFF)/i);
             if (match) this.setStateAsync('network.dhcp', match[1].toUpperCase() === 'ON', true);
@@ -1835,10 +2010,6 @@ class BlustreamAdapter extends utils.Adapter {
             const match = response.match(/IP:\s*(\d+\.\d+\.\d+\.\d+)/i);
             if (match) this.setStateAsync('network.ip', match[1], true);
         }
-
-        // Continue processing queue
-        this.currentCommand = null;
-        this.processCommandQueue();
     }
 
     startPolling() {
@@ -1884,6 +2055,7 @@ class BlustreamAdapter extends utils.Adapter {
         this.currentCommand = command;
 
         this.log.debug(`Sending command: ${command}`);
+        this.setStateAsync('info.lastSent', command, true);
 
         const cmdWithCR = command + '\r';
 
@@ -1989,6 +2161,11 @@ class BlustreamAdapter extends utils.Adapter {
 
             case 'system.ir232':
                 this.sendCommand(`IR232 ${state.val}`);
+                break;
+
+            case 'system.telnetNegotiation':
+                this.config.telnetNegotiation = !!state.val;
+                this.log.info(`Telnet IAC negotiation ${state.val ? 'enabled' : 'disabled'}`);
                 break;
 
             case 'output.mode':

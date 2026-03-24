@@ -135,6 +135,58 @@
       "native": {}
     },
     {
+      "_id": "info.lastSent",
+      "type": "state",
+      "common": {
+        "role": "text",
+        "name": "Last command sent",
+        "type": "string",
+        "read": true,
+        "write": false,
+        "def": ""
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.lastReceived",
+      "type": "state",
+      "common": {
+        "role": "text",
+        "name": "Last response received",
+        "type": "string",
+        "read": true,
+        "write": false,
+        "def": ""
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.rawResponse",
+      "type": "state",
+      "common": {
+        "role": "text",
+        "name": "Full raw response",
+        "type": "string",
+        "read": true,
+        "write": false,
+        "def": ""
+      },
+      "native": {}
+    },
+    {
+      "_id": "system.telnetNegotiation",
+      "type": "state",
+      "common": {
+        "role": "switch.enable",
+        "name": "Telnet IAC Negotiation",
+        "type": "boolean",
+        "read": true,
+        "write": true,
+        "def": true
+      },
+      "native": {}
+    },
+    {
       "_id": "commands",
       "type": "channel",
       "common": {

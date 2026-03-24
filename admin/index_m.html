@@ -187,7 +187,7 @@
         settings.connectionType = settings.connectionType || 'ip';
         settings.ipAddress = settings.ipAddress || '192.168.1.100';
         settings.ipPort = settings.ipPort || 23;
-        settings.telnetNegotiation = settings.telnetNegotiation !== false;
+        if (typeof settings.telnetNegotiation !== 'boolean') settings.telnetNegotiation = true;
         settings.serialPort = settings.serialPort || '/dev/ttyUSB0';
         settings.serialBaudRate = settings.serialBaudRate || 57600;
         settings.deviceModel = settings.deviceModel || 'mfp72';
