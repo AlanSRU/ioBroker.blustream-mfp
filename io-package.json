@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "blustream-mfp",
-    "version": "0.3.1",
+    "version": "0.3.2",
     "news": {
+      "0.3.2": {
+        "en": "Added better response parsing",
+        "de": "Verbesserte Antwortanalyse hinzugefügt",
+        "ru": "Добавлен улучшенный разбор ответов",
+        "pt": "Adicionada melhor análise de resposta",
+        "nl": "Verbeterde responsverwerking toegevoegd",
+        "fr": "Amélioration de l'analyse des réponses",
+        "it": "Aggiunta una migliore analisi delle risposte",
+        "es": "Añadido mejor análisis de respuestas",
+        "pl": "Dodano lepsze parsowanie odpowiedzi",
+        "uk": "Додано покращений розбір відповідей",
+        "zh-cn": "添加了更好的响应解析"
+      },
       "0.3.1": {
         "en": "Fixed adapter checker warnings, added translations",
         "de": "Adapter-Checker-Warnungen behoben, Übersetzungen hinzugefügt",
