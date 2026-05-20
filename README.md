@@ -120,15 +120,9 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 	### __WORK IN PROGRESS__
 -->
 ### __WORK IN PROGRESS__
-* (Alan Paris) Bumped minimum Node.js to 20, js-controller to 6.0.11 and admin to 7.6.20
-* (Alan Paris) Updated @iobroker/adapter-core to 3.3.x and @iobroker/testing to 5.2.x
-* (Alan Paris) Migrated admin UI from materialize to jsonConfig
-* (Alan Paris) Switched to @iobroker/eslint-config with flat config and Prettier
-* (Alan Paris) Added @iobroker/adapter-dev for i18n tooling
-* (Alan Paris) Added @alcalzone/release-script for automated releases
-* (Alan Paris) Migrated CI workflow to ioBroker/testing-action-*
-* (Alan Paris) Added Dependabot config with cooldown and an auto-merge workflow
-* (Alan Paris) Switched `net` to `node:net`; committed package-lock.json
+* (Alan Paris) Now requires Node.js 20+, js-controller 6.0.11+, admin 7.6.20+
+* (Alan Paris) Migrated admin UI to jsonConfig
+* (Alan Paris) Modernized internal tooling (release-script, ESLint 9, ioBroker testing actions)
 
 ### 0.3.2 (2026-03-24)
 * (Alan Paris) Improved telnet response parsing
