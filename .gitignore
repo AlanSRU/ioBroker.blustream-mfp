@@ -34,3 +34,4 @@ package-lock.json
 
 # ioBroker specific
 iobroker-data/
+.commitinfo

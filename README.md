@@ -28,18 +28,7 @@ For more information about Blustream products, visit [Blustream](https://www.blu
 
 ## Installation
 
-Install the adapter from the ioBroker admin interface or via npm:
-
-```bash
-npm install iobroker.blustream-mfp
-```
-
-Or install directly from GitHub:
-
-```bash
-cd /opt/iobroker
-npm install AlanSRU/ioBroker.blustream-mfp
-```
+Install the adapter from the ioBroker admin interface (Adapters → search for "blustream").
 
 ## Configuration
 
@@ -127,30 +116,21 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 
 ## Changelog
 
-### 0.3.0 (2024-XX-XX)
-* Added AMF42AU support
-* Added WMF51 and WMF72 wireless presenter support
-* Added CEC control for supported models
-* Added preset management for AMF series
-* Added picture control (brightness, contrast, color temperature)
+### 0.3.2 (2026-03-24)
+* Added better response parsing
 
-### 0.2.0 (2024-XX-XX)
-* Added MFP62 support
-* Implemented dynamic model-specific states
-* Improved state cleanup when changing models
+### 0.3.1
+* Fixed adapter checker warnings, added translations
 
-### 0.1.0 (2024-XX-XX)
-* Initial release
-* Support for MFP72 and MFP112
-* IP and RS232 connection support
-* Basic input/output switching
-* Volume and mute control
+### 0.3.0
+* Initial release with support for AMF42AU, MFP62, MFP72, MFP112, WMF51, WMF72
+* CEC control, presets, picture controls
 
 ## License
 
 MIT License
 
-Copyright (c) 2024 Alan Paris <alan.paris@scottish.rugby>
+Copyright (c) 2026 Alan Paris <alan.paris@scottish.rugby>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
