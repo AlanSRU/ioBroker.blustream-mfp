@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "blustream-mfp",
-    "version": "0.3.2",
+    "version": "0.3.3",
     "news": {
+      "0.3.3": {
+        "en": "Now requires Node.js 20+, js-controller 6.0.11+, admin 7.6.20+\nMigrated admin UI to jsonConfig\nModernized internal tooling (release-script, ESLint 9, ioBroker testing actions)",
+        "de": "Jetzt erfordert Node.js 20+, js-controller 6.0.11+, admin 7.6.20+\nMigrated admin UI to jsonConfig\nModernisierte interne Tooling (Release-script, ESLint 9, ioBroker-Testaktionen)",
+        "ru": "Теперь требуется Node.js 20+, js-контроллер 6.0.11+, админ 7.6.20+\nМиграционный админ UI для jsonConfig\nМодернизированный внутренний инструментарий (релиз-скрипт, ESLint 9, действия тестирования ioBroker)",
+        "pt": "Agora requer Node.js 20+, js-controller 6.0.11+, admin 7.6.20+\nIU de administrador migrado para jsonConfig\nFerramentas internas modernizadas (release-script, ESLint 9, ações de teste do ioBroker)",
+        "nl": "Nu vereist Node.js 20+, js-controller 6.0.11+, admin 7.6.20+\nMigrated admin UI to jsonConfig\nGemoderniseerde interne tooling (release-script, ESLint 9, ioBroker testing actions)",
+        "fr": "Maintenant nécessite Node.js 20+, js-controller 6.0.11+, admin 7.6.20+\nMigred admin UI to jsonConfig\nOutils internes modernisés (release-script, ESLint 9, ioBroker testing actions)",
+        "it": "Ora richiede Node.js 20+, js-controller 6.0.11+, admin 7.6.20+\nAdmin migrato UI a jsonConfig\nStrumenti interni modernizzati (release-script, ESLint 9, ioBroker azioni di test)",
+        "es": "Ahora requiere Node.js 20+, js-controller 6.0.11+, admin 7.6.20+\nMigrated admin UI to jsonConfig\nHerramientas internas modernizadas (release-script, ESLint 9, ioBroker testing actions)",
+        "pl": "Teraz wymaga Node.js 20 +, kontroler js- 6.0.11 +, admin 7.6.20 +\nMigrated admin UI to jsonConfig\nZmodernizowane oprzyrządowanie wewnętrzne (release- script, ESLint 9, joBroker testing actions)",
+        "uk": "Тепер вимагає Node.js 20+, js-controller 6.0.11+, admin 7.6.20+\nMigrated admin UI до jsonConfig\nМодернізований внутрішній інструментарій (видання-script, ESLint 9, ioBroker test action)",
+        "zh-cn": "现在需要节点20+,js控制器6.0.11+,admin 7.6.20+\n将管理员 UI 移到 jsonConfig\n现代化的内部工具(发布-script,ESLint 9,ioBroker测试行动)"
+      },
       "0.3.2": {
         "en": "Added better response parsing",
         "de": "Verbesserte Antwortanalyse hinzugefügt",
@@ -69,8 +82,24 @@
       "uk": "Керуйте AV-комутаторами серії Blustream AMF/MFP/WMF через RS232 або IP",
       "zh-cn": "通过RS232或IP控制Blustream AMF/MFP/WMF系列AV切换器"
     },
-    "authors": ["Alan Paris <alan.paris@scottish.rugby>"],
-    "keywords": ["blustream", "amf42au", "mfp62", "mfp72", "mfp112", "wmf51", "wmf72", "hdmi", "matrix", "switcher", "av", "presentation", "wireless"],
+    "authors": [
+      "Alan Paris <alan.paris@scottish.rugby>"
+    ],
+    "keywords": [
+      "blustream",
+      "amf42au",
+      "mfp62",
+      "mfp72",
+      "mfp112",
+      "wmf51",
+      "wmf72",
+      "hdmi",
+      "matrix",
+      "switcher",
+      "av",
+      "presentation",
+      "wireless"
+    ],
     "licenseInformation": {
       "license": "MIT",
       "type": "free"

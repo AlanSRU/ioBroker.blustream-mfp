@@ -119,7 +119,7 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
+### 0.3.3 (2026-05-20)
 * (Alan Paris) Now requires Node.js 20+, js-controller 6.0.11+, admin 7.6.20+
 * (Alan Paris) Migrated admin UI to jsonConfig
 * (Alan Paris) Modernized internal tooling (release-script, ESLint 9, ioBroker testing actions)

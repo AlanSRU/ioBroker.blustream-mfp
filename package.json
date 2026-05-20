@@ -1,6 +1,6 @@
 {
   "name": "iobroker.blustream-mfp",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "ioBroker adapter for Blustream Presentation Switchers",
   "author": {
     "name": "Alan Paris",
