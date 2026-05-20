@@ -1,16 +1,16 @@
 'use strict';
 
 const utils = require('@iobroker/adapter-core');
-const net = require('net');
+const net = require('node:net');
 
 // Telnet IAC (Interpret As Command) constants
-const IAC = 255;   // Interpret As Command
-const DONT = 254;  // Refuse to perform option
-const DO = 253;    // Request to perform option
-const WONT = 252;  // Refuse to perform option
-const WILL = 251;  // Agree to perform option
-const SB = 250;    // Subnegotiation Begin
-const SE = 240;    // Subnegotiation End
+const IAC = 255; // Interpret As Command
+const DONT = 254; // Refuse to perform option
+const DO = 253; // Request to perform option
+const WONT = 252; // Refuse to perform option
+const WILL = 251; // Agree to perform option
+const SB = 250; // Subnegotiation Begin
+const SE = 240; // Subnegotiation End
 
 // Model definitions with their capabilities and states
 const MODEL_DEFINITIONS = {
@@ -38,7 +38,7 @@ const MODEL_DEFINITIONS = {
             '01': 'HDMI 1',
             '02': 'HDMI 2',
             '03': 'HDMI 3',
-            '04': 'HDMI 4'
+            '04': 'HDMI 4',
         },
         resolutions: {
             '00': '1024x768@60Hz',
@@ -51,17 +51,17 @@ const MODEL_DEFINITIONS = {
             '07': '720P@60Hz',
             '08': '1080P@50Hz',
             '09': '1080P@60Hz',
-            '10': '4K2K@30Hz',
-            '11': '4K2K@50Hz',
-            '12': '4K2K@60Hz'
+            10: '4K2K@30Hz',
+            11: '4K2K@50Hz',
+            12: '4K2K@60Hz',
         },
         audioMixModes: {
             '01': 'HDMI Audio Only',
             '02': 'Mic Audio Only',
             '03': 'AUDEMBED Audio Only',
             '04': 'HDMI + Mic',
-            '05': 'AUDEMBED + Mic'
-        }
+            '05': 'AUDEMBED + Mic',
+        },
     },
     // MFP Series - Multi-Format Presentation
     mfp62: {
@@ -82,7 +82,7 @@ const MODEL_DEFINITIONS = {
             '03': 'HDMI 3',
             '04': 'DisplayPort',
             '05': 'USB-C',
-            '06': 'VGA'
+            '06': 'VGA',
         },
         resolutions: {
             '00': '1024x768@60Hz',
@@ -95,17 +95,17 @@ const MODEL_DEFINITIONS = {
             '07': '720P@60Hz',
             '08': '1080P@50Hz',
             '09': '1080P@60Hz',
-            '10': '4K2K@25Hz',
-            '11': '4K2K@30Hz',
-            '12': '4K2K@50Hz',
-            '13': '4K2K@60Hz',
-            '14': 'DCI 4K2K@25Hz',
-            '15': 'DCI 4K2K@30Hz',
-            '16': 'DCI 4K2K@50Hz',
-            '17': 'DCI 4K2K@60Hz',
-            '18': 'Auto'
+            10: '4K2K@25Hz',
+            11: '4K2K@30Hz',
+            12: '4K2K@50Hz',
+            13: '4K2K@60Hz',
+            14: 'DCI 4K2K@25Hz',
+            15: 'DCI 4K2K@30Hz',
+            16: 'DCI 4K2K@50Hz',
+            17: 'DCI 4K2K@60Hz',
+            18: 'Auto',
         },
-        audioInputs: ['01', '02', '03', '04', '05']  // HDMI1, HDMI2, HDMI3, DP, USB-C
+        audioInputs: ['01', '02', '03', '04', '05'], // HDMI1, HDMI2, HDMI3, DP, USB-C
     },
     mfp72: {
         name: 'MFP72',
@@ -123,12 +123,12 @@ const MODEL_DEFINITIONS = {
             '01': 'HDMI 1',
             '02': 'HDMI 2',
             '03': 'HDMI 3',
-            '04': 'HDMI 4'
+            '04': 'HDMI 4',
         },
         output2ExtraInputs: {
-            'AV': 'AV',
-            'YPBPR': 'Component',
-            'VGA': 'VGA'
+            AV: 'AV',
+            YPBPR: 'Component',
+            VGA: 'VGA',
         },
         resolutions: {
             '01': '1080P@50Hz',
@@ -139,17 +139,17 @@ const MODEL_DEFINITIONS = {
             '06': '1024x768@60Hz',
             '07': '1360x768@60Hz',
             '08': '1440x900@60Hz',
-            '09': '1680x1050@60Hz'
+            '09': '1680x1050@60Hz',
         },
         hasAspectRatio: true,
         hasZoom: true,
-        hasOverscan: true
+        hasOverscan: true,
     },
     mfp112: {
         name: 'MFP112',
         description: '5x2 Presentation Switcher with HDBaseT',
         category: 'MFP',
-        hasNetwork: true,  // Has built-in TCP port 8000
+        hasNetwork: true, // Has built-in TCP port 8000
         hasBeep: true,
         hasDebug: true,
         hasMicrophone: false,
@@ -166,15 +166,15 @@ const MODEL_DEFINITIONS = {
             '02': 'HDMI 2',
             '03': 'HDMI 3',
             '04': 'HDMI 4',
-            'HDBT': 'HDBaseT'
+            HDBT: 'HDBaseT',
         },
         output2ExtraInputs: {
-            'AV': 'AV',
-            'YPBPR': 'Component',
-            'VGA1': 'VGA 1',
-            'VGA2': 'VGA 2',
-            'VGA3': 'VGA 3',
-            'VGA4': 'VGA 4'
+            AV: 'AV',
+            YPBPR: 'Component',
+            VGA1: 'VGA 1',
+            VGA2: 'VGA 2',
+            VGA3: 'VGA 3',
+            VGA4: 'VGA 4',
         },
         resolutions: {
             '01': '1080P@50Hz',
@@ -185,11 +185,11 @@ const MODEL_DEFINITIONS = {
             '06': '1024x768@60Hz',
             '07': '1360x768@60Hz',
             '08': '1440x900@60Hz',
-            '09': '1680x1050@60Hz'
+            '09': '1680x1050@60Hz',
         },
         hasAspectRatio: true,
         hasZoom: true,
-        hasOverscan: true
+        hasOverscan: true,
     },
     // WMF Series - Wireless Media
     wmf51: {
@@ -210,7 +210,7 @@ const MODEL_DEFINITIONS = {
         isWireless: true,
         volumeMax: 100,
         outputs: 1,
-        inputs: {},  // Wireless inputs - dynamic
+        inputs: {}, // Wireless inputs - dynamic
         resolutions: {
             '00': 'Auto',
             '01': '720P@50Hz',
@@ -220,9 +220,9 @@ const MODEL_DEFINITIONS = {
             '05': '1080P@60Hz',
             '06': '4K@30Hz',
             '07': '4K@50Hz',
-            '08': '4K@60Hz'
+            '08': '4K@60Hz',
         },
-        dualLAN: true
+        dualLAN: true,
     },
     wmf72: {
         name: 'WMF72',
@@ -248,7 +248,7 @@ const MODEL_DEFINITIONS = {
         isWireless: true,
         volumeMax: 100,
         outputs: 2,
-        inputs: {},  // Wireless inputs - dynamic
+        inputs: {}, // Wireless inputs - dynamic
         resolutions: {
             '00': 'Auto',
             '01': '720P@50Hz',
@@ -260,13 +260,13 @@ const MODEL_DEFINITIONS = {
             '07': '3840x2160@50Hz',
             '08': '3840x2160@60Hz',
             '09': '4096x2160@30Hz',
-            '10': '4096x2160@50Hz',
-            '11': '4096x2160@60Hz'
+            10: '4096x2160@50Hz',
+            11: '4096x2160@60Hz',
         },
         displayModes: {
-            '1': 'Mirroring',
-            '2': 'Multiview + Single',
-            '3': 'Single + Multiview'
+            1: 'Mirroring',
+            2: 'Multiview + Single',
+            3: 'Single + Multiview',
         },
         layouts: {
             '01': 'Single',
@@ -278,18 +278,18 @@ const MODEL_DEFINITIONS = {
             '07': 'Quad',
             '08': 'Quad-B',
             '09': 'Quad-R',
-            '10': 'Quad-T',
-            '11': 'Quad-L'
+            10: 'Quad-T',
+            11: 'Quad-L',
         },
         audioModes: {
             '01': 'Audio Mixer',
             '02': 'Single Input Source',
             '03': 'Single Input Window',
             '04': 'First IN',
-            '05': 'Last IN'
+            '05': 'Last IN',
         },
-        dualLAN: true
-    }
+        dualLAN: true,
+    },
 };
 
 // All possible state paths that could be created by any model
@@ -426,7 +426,7 @@ const ALL_MODEL_STATES = [
     'cec.input4',
     'commands.vgaAutoAdjust',
     'commands.homeScreen',
-    'commands.forceInput'
+    'commands.forceInput',
 ];
 
 class BlustreamAdapter extends utils.Adapter {
@@ -492,7 +492,7 @@ class BlustreamAdapter extends utils.Adapter {
             for (const statePath of ALL_MODEL_STATES) {
                 try {
                     await this.delObjectAsync(statePath, { recursive: true });
-                } catch (e) {
+                } catch {
                     // Ignore errors - state might not exist
                 }
             }
@@ -502,7 +502,7 @@ class BlustreamAdapter extends utils.Adapter {
         await this.setObjectNotExistsAsync('system', {
             type: 'channel',
             common: { name: 'System Control' },
-            native: {}
+            native: {},
         });
 
         await this.setObjectNotExistsAsync('system.power', {
@@ -513,9 +513,9 @@ class BlustreamAdapter extends utils.Adapter {
                 type: 'boolean',
                 read: true,
                 write: true,
-                def: false
+                def: false,
             },
-            native: {}
+            native: {},
         });
 
         await this.setObjectNotExistsAsync('system.ir', {
@@ -526,9 +526,9 @@ class BlustreamAdapter extends utils.Adapter {
                 type: 'boolean',
                 read: true,
                 write: true,
-                def: true
+                def: true,
             },
-            native: {}
+            native: {},
         });
 
         await this.setObjectNotExistsAsync('system.key', {
@@ -539,9 +539,9 @@ class BlustreamAdapter extends utils.Adapter {
                 type: 'boolean',
                 read: true,
                 write: true,
-                def: true
+                def: true,
             },
-            native: {}
+            native: {},
         });
 
         await this.setObjectNotExistsAsync('system.lcd', {
@@ -552,9 +552,9 @@ class BlustreamAdapter extends utils.Adapter {
                 type: 'boolean',
                 read: true,
                 write: true,
-                def: false
+                def: false,
             },
-            native: {}
+            native: {},
         });
 
         await this.setObjectNotExistsAsync('system.osd', {
@@ -565,9 +565,9 @@ class BlustreamAdapter extends utils.Adapter {
                 type: 'boolean',
                 read: true,
                 write: true,
-                def: true
+                def: true,
             },
-            native: {}
+            native: {},
         });
 
         // Model-specific system states
@@ -580,9 +580,9 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'boolean',
                     read: true,
                     write: true,
-                    def: true
+                    def: true,
                 },
-                native: {}
+                native: {},
             });
         }
 
@@ -595,9 +595,9 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'boolean',
                     read: true,
                     write: true,
-                    def: false
+                    def: false,
                 },
-                native: {}
+                native: {},
             });
         }
 
@@ -610,9 +610,9 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'boolean',
                     read: true,
                     write: true,
-                    def: false
+                    def: false,
                 },
-                native: {}
+                native: {},
             });
         }
 
@@ -626,14 +626,14 @@ class BlustreamAdapter extends utils.Adapter {
                     read: true,
                     write: true,
                     states: {
-                        'OFF': 'Disconnected',
-                        'RRX': 'Remote RX',
-                        'RTX': 'Remote TX',
-                        'BOTH': 'Both RX and TX'
+                        OFF: 'Disconnected',
+                        RRX: 'Remote RX',
+                        RTX: 'Remote TX',
+                        BOTH: 'Both RX and TX',
                     },
-                    def: 'OFF'
+                    def: 'OFF',
                 },
-                native: {}
+                native: {},
             });
         }
 
@@ -646,9 +646,9 @@ class BlustreamAdapter extends utils.Adapter {
                 type: 'boolean',
                 read: true,
                 write: true,
-                def: true
+                def: true,
             },
-            native: {}
+            native: {},
         });
         // Use existing state value if available, otherwise fall back to adapter config
         const telnetState = await this.getStateAsync('system.telnetNegotiation');
@@ -662,7 +662,7 @@ class BlustreamAdapter extends utils.Adapter {
         await this.setObjectNotExistsAsync('output', {
             type: 'channel',
             common: { name: 'Output Control' },
-            native: {}
+            native: {},
         });
 
         // Create output states for each output
@@ -670,7 +670,7 @@ class BlustreamAdapter extends utils.Adapter {
             await this.setObjectNotExistsAsync(`output.${i}`, {
                 type: 'channel',
                 common: { name: `Output ${i}` },
-                native: {}
+                native: {},
             });
 
             // Build source list for this output
@@ -687,9 +687,9 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'string',
                     read: true,
                     write: true,
-                    states: sources
+                    states: sources,
                 },
-                native: {}
+                native: {},
             });
 
             if (def.hasOutputEnable) {
@@ -701,9 +701,9 @@ class BlustreamAdapter extends utils.Adapter {
                         type: 'boolean',
                         read: true,
                         write: true,
-                        def: true
+                        def: true,
                     },
-                    native: {}
+                    native: {},
                 });
             }
         }
@@ -719,11 +719,11 @@ class BlustreamAdapter extends utils.Adapter {
                     read: true,
                     write: true,
                     states: {
-                        'SP': 'Splitter',
-                        'MX': 'Matrix'
-                    }
+                        SP: 'Splitter',
+                        MX: 'Matrix',
+                    },
                 },
-                native: {}
+                native: {},
             });
         }
 
@@ -737,9 +737,9 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'boolean',
                     read: true,
                     write: true,
-                    def: false
+                    def: false,
                 },
-                native: {}
+                native: {},
             });
         }
 
@@ -752,9 +752,9 @@ class BlustreamAdapter extends utils.Adapter {
                 type: 'string',
                 read: true,
                 write: true,
-                states: def.resolutions
+                states: def.resolutions,
             },
-            native: {}
+            native: {},
         });
 
         // Frequency mode
@@ -767,11 +767,11 @@ class BlustreamAdapter extends utils.Adapter {
                 read: true,
                 write: true,
                 states: {
-                    'AUTO': 'Auto',
-                    'FORCE': 'Force'
-                }
+                    AUTO: 'Auto',
+                    FORCE: 'Force',
+                },
             },
-            native: {}
+            native: {},
         });
 
         // Aspect ratio, zoom, overscan (MFP72/MFP112)
@@ -788,10 +788,10 @@ class BlustreamAdapter extends utils.Adapter {
                         '00': 'Full Screen',
                         '01': 'Keep Aspect Ratio',
                         '02': '16:9',
-                        '03': '4:3'
-                    }
+                        '03': '4:3',
+                    },
                 },
-                native: {}
+                native: {},
             });
         }
 
@@ -807,11 +807,18 @@ class BlustreamAdapter extends utils.Adapter {
                     min: 0,
                     max: 8,
                     states: {
-                        0: 'No Zoom', 1: '2%', 2: '4%', 3: '6%', 4: '8%',
-                        5: '10%', 6: '12%', 7: '14%', 8: '16%'
-                    }
+                        0: 'No Zoom',
+                        1: '2%',
+                        2: '4%',
+                        3: '6%',
+                        4: '8%',
+                        5: '10%',
+                        6: '12%',
+                        7: '14%',
+                        8: '16%',
+                    },
                 },
-                native: {}
+                native: {},
             });
         }
 
@@ -827,11 +834,18 @@ class BlustreamAdapter extends utils.Adapter {
                     min: 0,
                     max: 8,
                     states: {
-                        0: 'No Overscan', 1: '2%', 2: '4%', 3: '6%', 4: '8%',
-                        5: '10%', 6: '12%', 7: '14%', 8: '16%'
-                    }
+                        0: 'No Overscan',
+                        1: '2%',
+                        2: '4%',
+                        3: '6%',
+                        4: '8%',
+                        5: '10%',
+                        6: '12%',
+                        7: '14%',
+                        8: '16%',
+                    },
                 },
-                native: {}
+                native: {},
             });
         }
 
@@ -839,7 +853,7 @@ class BlustreamAdapter extends utils.Adapter {
         await this.setObjectNotExistsAsync('audio', {
             type: 'channel',
             common: { name: 'Audio Control' },
-            native: {}
+            native: {},
         });
 
         await this.setObjectNotExistsAsync('audio.volume', {
@@ -852,9 +866,9 @@ class BlustreamAdapter extends utils.Adapter {
                 write: true,
                 min: 0,
                 max: def.volumeMax,
-                unit: ''
+                unit: '',
             },
-            native: {}
+            native: {},
         });
 
         await this.setObjectNotExistsAsync('audio.mute', {
@@ -865,9 +879,9 @@ class BlustreamAdapter extends utils.Adapter {
                 type: 'boolean',
                 read: true,
                 write: true,
-                def: false
+                def: false,
             },
-            native: {}
+            native: {},
         });
 
         await this.setObjectNotExistsAsync('audio.source', {
@@ -879,11 +893,11 @@ class BlustreamAdapter extends utils.Adapter {
                 read: true,
                 write: true,
                 states: {
-                    'ORG': 'Follow Video',
-                    'ANA': 'Analog Input'
-                }
+                    ORG: 'Follow Video',
+                    ANA: 'Analog Input',
+                },
             },
-            native: {}
+            native: {},
         });
 
         // MFP62-specific audio PCM mode
@@ -897,18 +911,18 @@ class BlustreamAdapter extends utils.Adapter {
                     read: true,
                     write: true,
                     states: {
-                        'SCA': 'Scaler Process',
-                        'BYP': 'Bypass'
-                    }
+                        SCA: 'Scaler Process',
+                        BYP: 'Bypass',
+                    },
                 },
-                native: {}
+                native: {},
             });
 
             // Per-input audio for MFP62 (RX inputs)
             await this.setObjectNotExistsAsync('audio.rx', {
                 type: 'channel',
                 common: { name: 'Input Audio Settings' },
-                native: {}
+                native: {},
             });
 
             const rxInputNames = ['HDMI1', 'HDMI2', 'HDMI3', 'DP', 'USB-C'];
@@ -917,17 +931,17 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'state',
                     common: {
                         role: 'state',
-                        name: `${rxInputNames[i-1]} Audio Mode`,
+                        name: `${rxInputNames[i - 1]} Audio Mode`,
                         type: 'string',
                         read: true,
                         write: true,
                         states: {
-                            'ORG': 'Original HDMI/DVI',
-                            'ANA': 'Embed Analog L/R'
+                            ORG: 'Original HDMI/DVI',
+                            ANA: 'Embed Analog L/R',
                         },
-                        def: 'ORG'
+                        def: 'ORG',
                     },
-                    native: {}
+                    native: {},
                 });
             }
         }
@@ -937,7 +951,7 @@ class BlustreamAdapter extends utils.Adapter {
             await this.setObjectNotExistsAsync('audio.hdmi', {
                 type: 'channel',
                 common: { name: 'HDMI Input Audio Settings' },
-                native: {}
+                native: {},
             });
 
             for (let i = 1; i <= 4; i++) {
@@ -950,13 +964,13 @@ class BlustreamAdapter extends utils.Adapter {
                         read: true,
                         write: true,
                         states: {
-                            'ORG': 'Original HDMI/DVI',
-                            'ANA': 'Embed Analog L/R',
-                            'AUTO': 'Auto (Analog when DVI)'
+                            ORG: 'Original HDMI/DVI',
+                            ANA: 'Embed Analog L/R',
+                            AUTO: 'Auto (Analog when DVI)',
                         },
-                        def: 'ORG'
+                        def: 'ORG',
                     },
-                    native: {}
+                    native: {},
                 });
             }
         }
@@ -966,7 +980,7 @@ class BlustreamAdapter extends utils.Adapter {
             await this.setObjectNotExistsAsync('microphone', {
                 type: 'channel',
                 common: { name: 'Microphone Control' },
-                native: {}
+                native: {},
             });
 
             await this.setObjectNotExistsAsync('microphone.volume', {
@@ -978,9 +992,9 @@ class BlustreamAdapter extends utils.Adapter {
                     read: true,
                     write: true,
                     min: 0,
-                    max: 100
+                    max: 100,
                 },
-                native: {}
+                native: {},
             });
 
             await this.setObjectNotExistsAsync('microphone.mute', {
@@ -991,9 +1005,9 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'boolean',
                     read: true,
                     write: true,
-                    def: false
+                    def: false,
                 },
-                native: {}
+                native: {},
             });
 
             await this.setObjectNotExistsAsync('microphone.mixMode', {
@@ -1005,13 +1019,13 @@ class BlustreamAdapter extends utils.Adapter {
                     read: true,
                     write: true,
                     states: {
-                        'ON': 'Mix MIC + Background',
-                        'BGO': 'Background Only',
-                        'MICO': 'MIC Only'
+                        ON: 'Mix MIC + Background',
+                        BGO: 'Background Only',
+                        MICO: 'MIC Only',
                     },
-                    def: 'ON'
+                    def: 'ON',
                 },
-                native: {}
+                native: {},
             });
 
             await this.setObjectNotExistsAsync('microphone.autoBg', {
@@ -1022,9 +1036,9 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'boolean',
                     read: true,
                     write: true,
-                    def: false
+                    def: false,
                 },
-                native: {}
+                native: {},
             });
 
             await this.setObjectNotExistsAsync('microphone.bgVolume', {
@@ -1037,9 +1051,9 @@ class BlustreamAdapter extends utils.Adapter {
                     write: true,
                     min: 0,
                     max: 100,
-                    unit: '%'
+                    unit: '%',
                 },
-                native: {}
+                native: {},
             });
 
             await this.setObjectNotExistsAsync('microphone.bgDelay', {
@@ -1052,9 +1066,9 @@ class BlustreamAdapter extends utils.Adapter {
                     write: true,
                     min: 1,
                     max: 20,
-                    unit: 's'
+                    unit: 's',
                 },
-                native: {}
+                native: {},
             });
 
             await this.setObjectNotExistsAsync('microphone.rampUp', {
@@ -1067,9 +1081,9 @@ class BlustreamAdapter extends utils.Adapter {
                     write: true,
                     min: 0,
                     max: 20,
-                    unit: 'x0.5s'
+                    unit: 'x0.5s',
                 },
-                native: {}
+                native: {},
             });
 
             await this.setObjectNotExistsAsync('microphone.rampDown', {
@@ -1082,9 +1096,9 @@ class BlustreamAdapter extends utils.Adapter {
                     write: true,
                     min: 0,
                     max: 20,
-                    unit: 'x0.5s'
+                    unit: 'x0.5s',
                 },
-                native: {}
+                native: {},
             });
         }
 
@@ -1093,7 +1107,7 @@ class BlustreamAdapter extends utils.Adapter {
             await this.setObjectNotExistsAsync('network', {
                 type: 'channel',
                 common: { name: 'Network Settings' },
-                native: {}
+                native: {},
             });
 
             await this.setObjectNotExistsAsync('network.dhcp', {
@@ -1104,9 +1118,9 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'boolean',
                     read: true,
                     write: true,
-                    def: false
+                    def: false,
                 },
-                native: {}
+                native: {},
             });
 
             await this.setObjectNotExistsAsync('network.ip', {
@@ -1116,9 +1130,9 @@ class BlustreamAdapter extends utils.Adapter {
                     name: 'IP Address',
                     type: 'string',
                     read: true,
-                    write: true
+                    write: true,
                 },
-                native: {}
+                native: {},
             });
 
             await this.setObjectNotExistsAsync('network.gateway', {
@@ -1128,9 +1142,9 @@ class BlustreamAdapter extends utils.Adapter {
                     name: 'Gateway',
                     type: 'string',
                     read: true,
-                    write: true
+                    write: true,
                 },
-                native: {}
+                native: {},
             });
 
             await this.setObjectNotExistsAsync('network.subnet', {
@@ -1140,9 +1154,9 @@ class BlustreamAdapter extends utils.Adapter {
                     name: 'Subnet Mask',
                     type: 'string',
                     read: true,
-                    write: true
+                    write: true,
                 },
-                native: {}
+                native: {},
             });
 
             await this.setObjectNotExistsAsync('network.telnetPort', {
@@ -1154,9 +1168,9 @@ class BlustreamAdapter extends utils.Adapter {
                     read: true,
                     write: true,
                     min: 1,
-                    max: 65535
+                    max: 65535,
                 },
-                native: {}
+                native: {},
             });
 
             await this.setObjectNotExistsAsync('network.reboot', {
@@ -1166,9 +1180,9 @@ class BlustreamAdapter extends utils.Adapter {
                     name: 'Reboot Network',
                     type: 'boolean',
                     read: false,
-                    write: true
+                    write: true,
                 },
-                native: {}
+                native: {},
             });
 
             // Dual LAN support for WMF series
@@ -1178,37 +1192,37 @@ class BlustreamAdapter extends utils.Adapter {
                     await this.setObjectNotExistsAsync(`network.${lan}`, {
                         type: 'channel',
                         common: { name: `LAN ${lanNum}` },
-                        native: {}
+                        native: {},
                     });
 
                     await this.setObjectNotExistsAsync(`network.${lan}.dhcp`, {
                         type: 'state',
                         common: { role: 'switch.enable', name: 'DHCP', type: 'boolean', read: true, write: true },
-                        native: {}
+                        native: {},
                     });
 
                     await this.setObjectNotExistsAsync(`network.${lan}.ip`, {
                         type: 'state',
                         common: { role: 'info.ip', name: 'IP Address', type: 'string', read: true, write: true },
-                        native: {}
+                        native: {},
                     });
 
                     await this.setObjectNotExistsAsync(`network.${lan}.gateway`, {
                         type: 'state',
                         common: { role: 'info.ip', name: 'Gateway', type: 'string', read: true, write: true },
-                        native: {}
+                        native: {},
                     });
 
                     await this.setObjectNotExistsAsync(`network.${lan}.subnet`, {
                         type: 'state',
                         common: { role: 'info.ip', name: 'Subnet Mask', type: 'string', read: true, write: true },
-                        native: {}
+                        native: {},
                     });
 
                     await this.setObjectNotExistsAsync(`network.${lan}.tcpPort`, {
                         type: 'state',
                         common: { role: 'value.port', name: 'TCP Port', type: 'number', read: true, write: true },
-                        native: {}
+                        native: {},
                     });
                 }
             }
@@ -1219,40 +1233,44 @@ class BlustreamAdapter extends utils.Adapter {
             await this.setObjectNotExistsAsync('wifi', {
                 type: 'channel',
                 common: { name: 'WiFi Hotspot' },
-                native: {}
+                native: {},
             });
 
             await this.setObjectNotExistsAsync('wifi.enabled', {
                 type: 'state',
                 common: { role: 'switch.enable', name: 'WiFi Enabled', type: 'boolean', read: true, write: true },
-                native: {}
+                native: {},
             });
 
             await this.setObjectNotExistsAsync('wifi.frequency', {
                 type: 'state',
                 common: {
-                    role: 'state', name: 'WiFi Frequency', type: 'string', read: true, write: true,
-                    states: { '2': '2.4GHz', '5': '5GHz' }
+                    role: 'state',
+                    name: 'WiFi Frequency',
+                    type: 'string',
+                    read: true,
+                    write: true,
+                    states: { 2: '2.4GHz', 5: '5GHz' },
                 },
-                native: {}
+                native: {},
             });
 
             await this.setObjectNotExistsAsync('wifi.channel', {
                 type: 'state',
                 common: { role: 'state', name: 'WiFi Channel', type: 'string', read: true, write: true },
-                native: {}
+                native: {},
             });
 
             await this.setObjectNotExistsAsync('wifi.ssid', {
                 type: 'state',
                 common: { role: 'text', name: 'SSID', type: 'string', read: true, write: true },
-                native: {}
+                native: {},
             });
 
             await this.setObjectNotExistsAsync('wifi.password', {
                 type: 'state',
                 common: { role: 'text', name: 'Password', type: 'string', read: true, write: true },
-                native: {}
+                native: {},
             });
         }
 
@@ -1260,8 +1278,15 @@ class BlustreamAdapter extends utils.Adapter {
         if (def.hasVideoMute) {
             await this.setObjectNotExistsAsync('system.videoMute', {
                 type: 'state',
-                common: { role: 'switch.enable', name: 'Video Mute', type: 'boolean', read: true, write: true, def: false },
-                native: {}
+                common: {
+                    role: 'switch.enable',
+                    name: 'Video Mute',
+                    type: 'boolean',
+                    read: true,
+                    write: true,
+                    def: false,
+                },
+                native: {},
             });
         }
 
@@ -1270,13 +1295,21 @@ class BlustreamAdapter extends utils.Adapter {
             await this.setObjectNotExistsAsync('system.standbyMode', {
                 type: 'state',
                 common: { role: 'switch.enable', name: 'Auto Standby', type: 'boolean', read: true, write: true },
-                native: {}
+                native: {},
             });
 
             await this.setObjectNotExistsAsync('system.standbyDelay', {
                 type: 'state',
-                common: { role: 'level', name: 'Standby Delay (min)', type: 'number', read: true, write: true, min: 0, max: 30 },
-                native: {}
+                common: {
+                    role: 'level',
+                    name: 'Standby Delay (min)',
+                    type: 'number',
+                    read: true,
+                    write: true,
+                    min: 0,
+                    max: 30,
+                },
+                native: {},
             });
         }
 
@@ -1285,13 +1318,22 @@ class BlustreamAdapter extends utils.Adapter {
             await this.setObjectNotExistsAsync('system.noSignalStandby', {
                 type: 'state',
                 common: { role: 'switch.enable', name: 'No Signal Standby', type: 'boolean', read: true, write: true },
-                native: {}
+                native: {},
             });
 
             await this.setObjectNotExistsAsync('system.noSignalDelay', {
                 type: 'state',
-                common: { role: 'level', name: 'No Signal Delay (sec)', type: 'number', read: true, write: true, min: 300, max: 10800, def: 600 },
-                native: {}
+                common: {
+                    role: 'level',
+                    name: 'No Signal Delay (sec)',
+                    type: 'number',
+                    read: true,
+                    write: true,
+                    min: 300,
+                    max: 10800,
+                    def: 600,
+                },
+                native: {},
             });
         }
 
@@ -1300,7 +1342,7 @@ class BlustreamAdapter extends utils.Adapter {
             await this.setObjectNotExistsAsync('system.pocOutput', {
                 type: 'state',
                 common: { role: 'switch.enable', name: 'HDBT POC Output', type: 'boolean', read: true, write: true },
-                native: {}
+                native: {},
             });
         }
 
@@ -1309,13 +1351,13 @@ class BlustreamAdapter extends utils.Adapter {
             await this.setObjectNotExistsAsync('system.reboot', {
                 type: 'state',
                 common: { role: 'button', name: 'Reboot System', type: 'boolean', read: false, write: true },
-                native: {}
+                native: {},
             });
 
             await this.setObjectNotExistsAsync('commands.homeScreen', {
                 type: 'state',
                 common: { role: 'button', name: 'Go to Home Screen', type: 'boolean', read: false, write: true },
-                native: {}
+                native: {},
             });
         }
 
@@ -1324,8 +1366,14 @@ class BlustreamAdapter extends utils.Adapter {
             for (let i = 1; i <= def.outputs; i++) {
                 await this.setObjectNotExistsAsync(`output.${i}.sidebar`, {
                     type: 'state',
-                    common: { role: 'switch.enable', name: `Output ${i} Sidebar`, type: 'boolean', read: true, write: true },
-                    native: {}
+                    common: {
+                        role: 'switch.enable',
+                        name: `Output ${i} Sidebar`,
+                        type: 'boolean',
+                        read: true,
+                        write: true,
+                    },
+                    native: {},
                 });
             }
         }
@@ -1335,10 +1383,14 @@ class BlustreamAdapter extends utils.Adapter {
             await this.setObjectNotExistsAsync('output.displayMode', {
                 type: 'state',
                 common: {
-                    role: 'state', name: 'Display Mode', type: 'string', read: true, write: true,
-                    states: def.displayModes
+                    role: 'state',
+                    name: 'Display Mode',
+                    type: 'string',
+                    read: true,
+                    write: true,
+                    states: def.displayModes,
                 },
-                native: {}
+                native: {},
             });
         }
 
@@ -1347,10 +1399,14 @@ class BlustreamAdapter extends utils.Adapter {
             await this.setObjectNotExistsAsync('output.layout', {
                 type: 'state',
                 common: {
-                    role: 'state', name: 'Multiview Layout', type: 'string', read: true, write: true,
-                    states: def.layouts
+                    role: 'state',
+                    name: 'Multiview Layout',
+                    type: 'string',
+                    read: true,
+                    write: true,
+                    states: def.layouts,
                 },
-                native: {}
+                native: {},
             });
         }
 
@@ -1359,19 +1415,27 @@ class BlustreamAdapter extends utils.Adapter {
             await this.setObjectNotExistsAsync('audio.mode', {
                 type: 'state',
                 common: {
-                    role: 'state', name: 'Audio Mode', type: 'string', read: true, write: true,
-                    states: def.audioModes
+                    role: 'state',
+                    name: 'Audio Mode',
+                    type: 'string',
+                    read: true,
+                    write: true,
+                    states: def.audioModes,
                 },
-                native: {}
+                native: {},
             });
 
             await this.setObjectNotExistsAsync('audio.output', {
                 type: 'state',
                 common: {
-                    role: 'state', name: 'Audio Output', type: 'string', read: true, write: true,
-                    states: { '00': 'Analog + HDMI', '01': 'HDMI Only', '02': 'Analog Only', '03': 'USB Only' }
+                    role: 'state',
+                    name: 'Audio Output',
+                    type: 'string',
+                    read: true,
+                    write: true,
+                    states: { '00': 'Analog + HDMI', '01': 'HDMI Only', '02': 'Analog Only', '03': 'USB Only' },
                 },
-                native: {}
+                native: {},
             });
         }
 
@@ -1380,47 +1444,81 @@ class BlustreamAdapter extends utils.Adapter {
             for (let i = 1; i <= def.outputs; i++) {
                 await this.setObjectNotExistsAsync(`output.${i}.brightness`, {
                     type: 'state',
-                    common: { role: 'level', name: `Output ${i} Brightness`, type: 'number', read: true, write: true, min: 0, max: 99 },
-                    native: {}
+                    common: {
+                        role: 'level',
+                        name: `Output ${i} Brightness`,
+                        type: 'number',
+                        read: true,
+                        write: true,
+                        min: 0,
+                        max: 99,
+                    },
+                    native: {},
                 });
 
                 await this.setObjectNotExistsAsync(`output.${i}.contrast`, {
                     type: 'state',
-                    common: { role: 'level', name: `Output ${i} Contrast`, type: 'number', read: true, write: true, min: 0, max: 99 },
-                    native: {}
+                    common: {
+                        role: 'level',
+                        name: `Output ${i} Contrast`,
+                        type: 'number',
+                        read: true,
+                        write: true,
+                        min: 0,
+                        max: 99,
+                    },
+                    native: {},
                 });
 
                 await this.setObjectNotExistsAsync(`output.${i}.pictureMode`, {
                     type: 'state',
                     common: {
-                        role: 'state', name: `Output ${i} Picture Mode`, type: 'string', read: true, write: true,
-                        states: { '01': 'Soft', '02': 'Standard', '03': 'Vivid', '04': 'User' }
+                        role: 'state',
+                        name: `Output ${i} Picture Mode`,
+                        type: 'string',
+                        read: true,
+                        write: true,
+                        states: { '01': 'Soft', '02': 'Standard', '03': 'Vivid', '04': 'User' },
                     },
-                    native: {}
+                    native: {},
                 });
 
                 await this.setObjectNotExistsAsync(`output.${i}.colourTemp`, {
                     type: 'state',
                     common: {
-                        role: 'state', name: `Output ${i} Colour Temperature`, type: 'string', read: true, write: true,
-                        states: { '01': 'Warm', '02': 'Standard', '03': 'Cool', '04': 'User' }
+                        role: 'state',
+                        name: `Output ${i} Colour Temperature`,
+                        type: 'string',
+                        read: true,
+                        write: true,
+                        states: { '01': 'Warm', '02': 'Standard', '03': 'Cool', '04': 'User' },
                     },
-                    native: {}
+                    native: {},
                 });
 
                 await this.setObjectNotExistsAsync(`output.${i}.videoMute`, {
                     type: 'state',
-                    common: { role: 'switch.enable', name: `Output ${i} Video Mute`, type: 'boolean', read: true, write: true },
-                    native: {}
+                    common: {
+                        role: 'switch.enable',
+                        name: `Output ${i} Video Mute`,
+                        type: 'boolean',
+                        read: true,
+                        write: true,
+                    },
+                    native: {},
                 });
 
                 await this.setObjectNotExistsAsync(`output.${i}.audioMix`, {
                     type: 'state',
                     common: {
-                        role: 'state', name: `Output ${i} Audio Mix`, type: 'string', read: true, write: true,
-                        states: def.audioMixModes || {}
+                        role: 'state',
+                        name: `Output ${i} Audio Mix`,
+                        type: 'string',
+                        read: true,
+                        write: true,
+                        states: def.audioMixModes || {},
                     },
-                    native: {}
+                    native: {},
                 });
             }
         }
@@ -1430,25 +1528,49 @@ class BlustreamAdapter extends utils.Adapter {
             await this.setObjectNotExistsAsync('presets', {
                 type: 'channel',
                 common: { name: 'Presets' },
-                native: {}
+                native: {},
             });
 
             await this.setObjectNotExistsAsync('presets.save', {
                 type: 'state',
-                common: { role: 'level', name: 'Save to Preset', type: 'number', read: false, write: true, min: 1, max: 9 },
-                native: {}
+                common: {
+                    role: 'level',
+                    name: 'Save to Preset',
+                    type: 'number',
+                    read: false,
+                    write: true,
+                    min: 1,
+                    max: 9,
+                },
+                native: {},
             });
 
             await this.setObjectNotExistsAsync('presets.apply', {
                 type: 'state',
-                common: { role: 'level', name: 'Apply Preset', type: 'number', read: false, write: true, min: 1, max: 9 },
-                native: {}
+                common: {
+                    role: 'level',
+                    name: 'Apply Preset',
+                    type: 'number',
+                    read: false,
+                    write: true,
+                    min: 1,
+                    max: 9,
+                },
+                native: {},
             });
 
             await this.setObjectNotExistsAsync('presets.clear', {
                 type: 'state',
-                common: { role: 'level', name: 'Clear Preset', type: 'number', read: false, write: true, min: 1, max: 9 },
-                native: {}
+                common: {
+                    role: 'level',
+                    name: 'Clear Preset',
+                    type: 'number',
+                    read: false,
+                    write: true,
+                    min: 1,
+                    max: 9,
+                },
+                native: {},
             });
         }
 
@@ -1457,15 +1579,21 @@ class BlustreamAdapter extends utils.Adapter {
             await this.setObjectNotExistsAsync('cec', {
                 type: 'channel',
                 common: { name: 'CEC Control' },
-                native: {}
+                native: {},
             });
 
             // Output CEC
             for (let i = 1; i <= 3; i++) {
                 await this.setObjectNotExistsAsync(`output.${i}.cecEnabled`, {
                     type: 'state',
-                    common: { role: 'switch.enable', name: `Output ${i} CEC`, type: 'boolean', read: true, write: true },
-                    native: {}
+                    common: {
+                        role: 'switch.enable',
+                        name: `Output ${i} CEC`,
+                        type: 'boolean',
+                        read: true,
+                        write: true,
+                    },
+                    native: {},
                 });
             }
 
@@ -1474,7 +1602,7 @@ class BlustreamAdapter extends utils.Adapter {
                 await this.setObjectNotExistsAsync(`cec.input${i}`, {
                     type: 'state',
                     common: { role: 'switch.enable', name: `Input ${i} CEC`, type: 'boolean', read: true, write: true },
-                    native: {}
+                    native: {},
                 });
             }
         }
@@ -1488,9 +1616,9 @@ class BlustreamAdapter extends utils.Adapter {
                     name: 'VGA Auto Adjust',
                     type: 'boolean',
                     read: false,
-                    write: true
+                    write: true,
                 },
-                native: {}
+                native: {},
             });
         }
 
@@ -1526,7 +1654,7 @@ class BlustreamAdapter extends utils.Adapter {
             this.processCommandQueue();
         });
 
-        this.socket.on('data', (data) => {
+        this.socket.on('data', data => {
             this.log.debug(`Raw data received (${data.length} bytes): ${data.toString('hex')}`);
             if (this.config.telnetNegotiation) {
                 const cleanedData = this.handleTelnetIAC(data);
@@ -1538,7 +1666,7 @@ class BlustreamAdapter extends utils.Adapter {
             }
         });
 
-        this.socket.on('error', (err) => {
+        this.socket.on('error', err => {
             this.log.error(`Socket error: ${err.message}`);
         });
 
@@ -1584,7 +1712,7 @@ class BlustreamAdapter extends utils.Adapter {
                 dataBits: 8,
                 stopBits: 1,
                 parity: 'none',
-                autoOpen: false
+                autoOpen: false,
             });
 
             this.serialPort.on('open', () => {
@@ -1595,11 +1723,11 @@ class BlustreamAdapter extends utils.Adapter {
                 this.processCommandQueue();
             });
 
-            this.serialPort.on('data', (data) => {
+            this.serialPort.on('data', data => {
                 this.handleData(data.toString());
             });
 
-            this.serialPort.on('error', (err) => {
+            this.serialPort.on('error', err => {
                 this.log.error(`Serial port error: ${err.message}`);
                 this.connected = false;
                 this.setStateAsync('info.connection', false, true);
@@ -1614,13 +1742,12 @@ class BlustreamAdapter extends utils.Adapter {
                 this.scheduleReconnect();
             });
 
-            this.serialPort.open((err) => {
+            this.serialPort.open(err => {
                 if (err) {
                     this.log.error(`Error opening serial port: ${err.message}`);
                     this.scheduleReconnect();
                 }
             });
-
         } catch (err) {
             this.log.error(`Serial port initialization error: ${err.message}`);
             this.scheduleReconnect();
@@ -1644,6 +1771,8 @@ class BlustreamAdapter extends utils.Adapter {
      * Handle Telnet IAC (Interpret As Command) sequences
      * Responds to DO/WILL requests with WONT/DONT to refuse options
      * Returns the data buffer with IAC sequences stripped out
+     *
+     * @param data
      */
     handleTelnetIAC(data) {
         const cleanedBytes = [];
@@ -1666,7 +1795,9 @@ class BlustreamAdapter extends utils.Adapter {
                     // Server asking us to DO/DONT something - respond with WONT
                     if (i + 2 < data.length) {
                         const option = data[i + 2];
-                        this.log.debug(`Telnet: Received ${command === DO ? 'DO' : 'DONT'} option ${option}, responding WONT`);
+                        this.log.debug(
+                            `Telnet: Received ${command === DO ? 'DO' : 'DONT'} option ${option}, responding WONT`,
+                        );
                         this.sendTelnetResponse(WONT, option);
                         i += 3;
                     } else {
@@ -1676,7 +1807,9 @@ class BlustreamAdapter extends utils.Adapter {
                     // Server telling us it WILL/WONT do something - respond with DONT
                     if (i + 2 < data.length) {
                         const option = data[i + 2];
-                        this.log.debug(`Telnet: Received ${command === WILL ? 'WILL' : 'WONT'} option ${option}, responding DONT`);
+                        this.log.debug(
+                            `Telnet: Received ${command === WILL ? 'WILL' : 'WONT'} option ${option}, responding DONT`,
+                        );
                         this.sendTelnetResponse(DONT, option);
                         i += 3;
                     } else {
@@ -1712,6 +1845,9 @@ class BlustreamAdapter extends utils.Adapter {
 
     /**
      * Send a Telnet IAC response
+     *
+     * @param command
+     * @param option
      */
     sendTelnetResponse(command, option) {
         if (this.socket && this.connected) {
@@ -1729,7 +1865,9 @@ class BlustreamAdapter extends utils.Adapter {
         for (const line of lines) {
             if (line.trim()) {
                 // Accumulate lines for full response capture
-                if (!this._responseLines) this._responseLines = [];
+                if (!this._responseLines) {
+                    this._responseLines = [];
+                }
                 this._responseLines.push(line.trim());
                 // When we hit a separator line, flush the full response
                 if (/^={5,}$/.test(line.trim())) {
@@ -1752,7 +1890,12 @@ class BlustreamAdapter extends utils.Adapter {
         }
 
         // Skip separator lines and title lines
-        if (/^={3,}$/.test(response) || /Status$/i.test(response) || /^FW Version/i.test(response) || /^Scaler Version/i.test(response)) {
+        if (
+            /^={3,}$/.test(response) ||
+            /Status$/i.test(response) ||
+            /^FW Version/i.test(response) ||
+            /^Scaler Version/i.test(response)
+        ) {
             // End of STATUS response — release command queue on separator
             if (/^={3,}$/.test(response)) {
                 this._statusHeaders = null;
@@ -1799,12 +1942,24 @@ class BlustreamAdapter extends utils.Adapter {
         switch (tableType) {
             case 'Power':
                 // System row: Power, IR, Key, DBG, Beep, LCD, IR_RS232
-                if (data.Power) this.setStateAsync('system.power', data.Power.toUpperCase() === 'ON', true);
-                if (data.IR) this.setStateAsync('system.ir', data.IR.toUpperCase() === 'ON', true);
-                if (data.Key) this.setStateAsync('system.key', data.Key.toUpperCase() === 'ON', true);
-                if (data.DBG) this.setStateAsync('system.debug', data.DBG.toUpperCase() === 'ON', true);
-                if (data.Beep) this.setStateAsync('system.beep', data.Beep.toUpperCase() === 'ON', true);
-                if (data.LCD) this.setStateAsync('system.lcd', data.LCD.toUpperCase() === 'ON', true);
+                if (data.Power) {
+                    this.setStateAsync('system.power', data.Power.toUpperCase() === 'ON', true);
+                }
+                if (data.IR) {
+                    this.setStateAsync('system.ir', data.IR.toUpperCase() === 'ON', true);
+                }
+                if (data.Key) {
+                    this.setStateAsync('system.key', data.Key.toUpperCase() === 'ON', true);
+                }
+                if (data.DBG) {
+                    this.setStateAsync('system.debug', data.DBG.toUpperCase() === 'ON', true);
+                }
+                if (data.Beep) {
+                    this.setStateAsync('system.beep', data.Beep.toUpperCase() === 'ON', true);
+                }
+                if (data.LCD) {
+                    this.setStateAsync('system.lcd', data.LCD.toUpperCase() === 'ON', true);
+                }
                 if (data.IR_RS232) {
                     // Map "Remote TX" -> "RTX", "Remote RX" -> "RRX", "Remote RX and TX" -> "BOTH"
                     const ir232Val = data.IR_RS232.toUpperCase();
@@ -1826,16 +1981,38 @@ class BlustreamAdapter extends utils.Adapter {
                 if (outputNum >= 1 && outputNum <= 3) {
                     if (data.SelectInput) {
                         // Convert friendly names to command values: HDMI1->01, HDMI2->02, etc.
-                        const inputMap = { 'HDMI1': '01', 'HDMI2': '02', 'HDMI3': '03', 'HDMI4': '04', 'HDBT': 'HDBT', 'AV': 'AV', 'YPbPr': 'YPBPR', 'YPBPR': 'YPBPR', 'VGA': 'VGA', 'VGA1': 'VGA1', 'VGA2': 'VGA2', 'VGA3': 'VGA3', 'VGA4': 'VGA4' };
+                        const inputMap = {
+                            HDMI1: '01',
+                            HDMI2: '02',
+                            HDMI3: '03',
+                            HDMI4: '04',
+                            HDBT: 'HDBT',
+                            AV: 'AV',
+                            YPbPr: 'YPBPR',
+                            YPBPR: 'YPBPR',
+                            VGA: 'VGA',
+                            VGA1: 'VGA1',
+                            VGA2: 'VGA2',
+                            VGA3: 'VGA3',
+                            VGA4: 'VGA4',
+                        };
                         const source = inputMap[data.SelectInput] || data.SelectInput;
                         this.setStateAsync(`output.${outputNum}.source`, source, true);
                     }
                     if (data.OutputEn) {
-                        this.setStateAsync(`output.${outputNum}.enabled`, data.OutputEn.trim().toUpperCase() === 'YES', true);
+                        this.setStateAsync(
+                            `output.${outputNum}.enabled`,
+                            data.OutputEn.trim().toUpperCase() === 'YES',
+                            true,
+                        );
                     }
                     if (data.Mode) {
                         const mode = data.Mode.toUpperCase();
-                        this.setStateAsync('output.mode', mode === 'SPLITTER' ? 'SP' : (mode === 'MATRIX' ? 'MX' : mode), true);
+                        this.setStateAsync(
+                            'output.mode',
+                            mode === 'SPLITTER' ? 'SP' : mode === 'MATRIX' ? 'MX' : mode,
+                            true,
+                        );
                     }
                 }
                 break;
@@ -1843,8 +2020,12 @@ class BlustreamAdapter extends utils.Adapter {
 
             case 'ScalerAudio':
                 // Audio row: ScalerAudio, Volume, Mute, Format
-                if (data.Volume) this.setStateAsync('audio.volume', parseInt(data.Volume, 10), true);
-                if (data.Mute) this.setStateAsync('audio.mute', data.Mute.toUpperCase() === 'ON', true);
+                if (data.Volume) {
+                    this.setStateAsync('audio.volume', parseInt(data.Volume, 10), true);
+                }
+                if (data.Mute) {
+                    this.setStateAsync('audio.mute', data.Mute.toUpperCase() === 'ON', true);
+                }
                 if (data.ScalerAudio) {
                     const src = data.ScalerAudio.toUpperCase().trim();
                     this.setStateAsync('audio.source', src === 'ORGINAL' ? 'ORG' : 'ANA', true);
@@ -1853,13 +2034,17 @@ class BlustreamAdapter extends utils.Adapter {
 
             case 'ScalerBypass':
                 // Bypass row: ScalerBypass, Resolution, Frequence
-                if (data.ScalerBypass) this.setStateAsync('output.bypass', data.ScalerBypass.toUpperCase() === 'ON', true);
+                if (data.ScalerBypass) {
+                    this.setStateAsync('output.bypass', data.ScalerBypass.toUpperCase() === 'ON', true);
+                }
                 if (data.Resolution) {
                     // Reverse-lookup resolution code from the display string
                     const resDef = this.modelDef && this.modelDef.resolutions;
                     if (resDef) {
                         const resCode = Object.keys(resDef).find(k => resDef[k] === data.Resolution);
-                        if (resCode) this.setStateAsync('output.resolution', resCode, true);
+                        if (resCode) {
+                            this.setStateAsync('output.resolution', resCode, true);
+                        }
                     }
                 }
                 if (data.Frequence) {
@@ -1870,17 +2055,25 @@ class BlustreamAdapter extends utils.Adapter {
             case 'ScalerAspect':
                 // Aspect row: ScalerAspect, OSD, ZoomOut, Overscan
                 if (data.ScalerAspect) {
-                    const arMap = { 'FULLSCREEN': '00', 'KEEPASPECTRATIO': '01', '16:9': '02', '4:3': '03' };
+                    const arMap = { FULLSCREEN: '00', KEEPASPECTRATIO: '01', '16:9': '02', '4:3': '03' };
                     const arVal = arMap[data.ScalerAspect.toUpperCase().replace(/\s+/g, '')] || '00';
                     this.setStateAsync('output.aspectRatio', arVal, true);
                 }
-                if (data.OSD) this.setStateAsync('system.osd', data.OSD.toUpperCase() === 'ON', true);
+                if (data.OSD) {
+                    this.setStateAsync('system.osd', data.OSD.toUpperCase() === 'ON', true);
+                }
                 if (data.ZoomOut) {
-                    const zoom = data.ZoomOut.toUpperCase() === 'NO' ? 0 : parseInt(data.ZoomOut.replace(/[^0-9]/g, ''), 10) || 0;
+                    const zoom =
+                        data.ZoomOut.toUpperCase() === 'NO'
+                            ? 0
+                            : parseInt(data.ZoomOut.replace(/[^0-9]/g, ''), 10) || 0;
                     this.setStateAsync('output.zoom', zoom, true);
                 }
                 if (data.Overscan) {
-                    const scan = data.Overscan.toUpperCase() === 'NO' ? 0 : parseInt(data.Overscan.replace(/[^0-9]/g, ''), 10) || 0;
+                    const scan =
+                        data.Overscan.toUpperCase() === 'NO'
+                            ? 0
+                            : parseInt(data.Overscan.replace(/[^0-9]/g, ''), 10) || 0;
                     this.setStateAsync('output.overscan', scan, true);
                 }
                 break;
@@ -1896,62 +2089,86 @@ class BlustreamAdapter extends utils.Adapter {
 
         if (response.includes('Power:')) {
             const match = response.match(/Power:\s*(ON|OFF)/i);
-            if (match) this.setStateAsync('system.power', match[1].toUpperCase() === 'ON', true);
+            if (match) {
+                this.setStateAsync('system.power', match[1].toUpperCase() === 'ON', true);
+            }
         }
 
         if (response.includes('IR:') && !response.includes('IR232:')) {
             const match = response.match(/\bIR:\s*(ON|OFF)/i);
-            if (match) this.setStateAsync('system.ir', match[1].toUpperCase() === 'ON', true);
+            if (match) {
+                this.setStateAsync('system.ir', match[1].toUpperCase() === 'ON', true);
+            }
         }
 
         if (response.includes('KEY:')) {
             const match = response.match(/KEY:\s*(ON|OFF)/i);
-            if (match) this.setStateAsync('system.key', match[1].toUpperCase() === 'ON', true);
+            if (match) {
+                this.setStateAsync('system.key', match[1].toUpperCase() === 'ON', true);
+            }
         }
 
         if (response.includes('BEEP:')) {
             const match = response.match(/BEEP:\s*(ON|OFF)/i);
-            if (match) this.setStateAsync('system.beep', match[1].toUpperCase() === 'ON', true);
+            if (match) {
+                this.setStateAsync('system.beep', match[1].toUpperCase() === 'ON', true);
+            }
         }
 
         if (response.includes('LCD:')) {
             const match = response.match(/LCD:\s*(ON|OFF)/i);
-            if (match) this.setStateAsync('system.lcd', match[1].toUpperCase() === 'ON', true);
+            if (match) {
+                this.setStateAsync('system.lcd', match[1].toUpperCase() === 'ON', true);
+            }
         }
 
         if (response.includes('OSD:')) {
             const match = response.match(/OSD:\s*(ON|OFF)/i);
-            if (match) this.setStateAsync('system.osd', match[1].toUpperCase() === 'ON', true);
+            if (match) {
+                this.setStateAsync('system.osd', match[1].toUpperCase() === 'ON', true);
+            }
         }
 
         if (response.includes('DBG:')) {
             const match = response.match(/DBG:\s*(ON|OFF)/i);
-            if (match) this.setStateAsync('system.debug', match[1].toUpperCase() === 'ON', true);
+            if (match) {
+                this.setStateAsync('system.debug', match[1].toUpperCase() === 'ON', true);
+            }
         }
 
         if (response.includes('AUTO:')) {
             const match = response.match(/AUTO:\s*(ON|OFF)/i);
-            if (match) this.setStateAsync('system.autoSwitch', match[1].toUpperCase() === 'ON', true);
+            if (match) {
+                this.setStateAsync('system.autoSwitch', match[1].toUpperCase() === 'ON', true);
+            }
         }
 
         if (response.includes('MUTE:')) {
             const match = response.match(/MUTE:\s*(ON|OFF)/i);
-            if (match) this.setStateAsync('audio.mute', match[1].toUpperCase() === 'ON', true);
+            if (match) {
+                this.setStateAsync('audio.mute', match[1].toUpperCase() === 'ON', true);
+            }
         }
 
         if (response.includes('VOL:')) {
             const match = response.match(/VOL:\s*(\d+)/i);
-            if (match) this.setStateAsync('audio.volume', parseInt(match[1], 10), true);
+            if (match) {
+                this.setStateAsync('audio.volume', parseInt(match[1], 10), true);
+            }
         }
 
         if (response.includes('BYP:')) {
             const match = response.match(/BYP:\s*(ON|OFF)/i);
-            if (match) this.setStateAsync('output.bypass', match[1].toUpperCase() === 'ON', true);
+            if (match) {
+                this.setStateAsync('output.bypass', match[1].toUpperCase() === 'ON', true);
+            }
         }
 
         if (response.includes('IR232:')) {
             const match = response.match(/IR232:\s*(OFF|RRX|RTX|BOTH)/i);
-            if (match) this.setStateAsync('system.ir232', match[1].toUpperCase(), true);
+            if (match) {
+                this.setStateAsync('system.ir232', match[1].toUpperCase(), true);
+            }
         }
 
         // Output routing: OUT 01 FR 02
@@ -1972,43 +2189,57 @@ class BlustreamAdapter extends utils.Adapter {
             const match = response.match(/Mode:\s*(SP|MX|Splitter|Matrix)/i);
             if (match) {
                 const mode = match[1].toUpperCase();
-                this.setStateAsync('output.mode', mode === 'SPLITTER' ? 'SP' : (mode === 'MATRIX' ? 'MX' : mode), true);
+                this.setStateAsync('output.mode', mode === 'SPLITTER' ? 'SP' : mode === 'MATRIX' ? 'MX' : mode, true);
             }
         }
 
         if (response.includes('RES:')) {
             const match = response.match(/RES:\s*(\d+)/i);
-            if (match) this.setStateAsync('output.resolution', match[1].padStart(2, '0'), true);
+            if (match) {
+                this.setStateAsync('output.resolution', match[1].padStart(2, '0'), true);
+            }
         }
 
         if (response.includes('AR:')) {
             const match = response.match(/AR:\s*(\d+)/i);
-            if (match) this.setStateAsync('output.aspectRatio', match[1].padStart(2, '0'), true);
+            if (match) {
+                this.setStateAsync('output.aspectRatio', match[1].padStart(2, '0'), true);
+            }
         }
 
         if (response.includes('MIC VOL:')) {
             const match = response.match(/MIC VOL:\s*(\d+)/i);
-            if (match) this.setStateAsync('microphone.volume', parseInt(match[1], 10), true);
+            if (match) {
+                this.setStateAsync('microphone.volume', parseInt(match[1], 10), true);
+            }
         }
 
         if (response.includes('MIC MUTE:')) {
             const match = response.match(/MIC MUTE:\s*(ON|OFF)/i);
-            if (match) this.setStateAsync('microphone.mute', match[1].toUpperCase() === 'ON', true);
+            if (match) {
+                this.setStateAsync('microphone.mute', match[1].toUpperCase() === 'ON', true);
+            }
         }
 
         if (response.includes('MIC MIX:')) {
             const match = response.match(/MIC MIX:\s*(ON|BGO|MICO)/i);
-            if (match) this.setStateAsync('microphone.mixMode', match[1].toUpperCase(), true);
+            if (match) {
+                this.setStateAsync('microphone.mixMode', match[1].toUpperCase(), true);
+            }
         }
 
         if (response.includes('DHCP:')) {
             const match = response.match(/DHCP:\s*(ON|OFF)/i);
-            if (match) this.setStateAsync('network.dhcp', match[1].toUpperCase() === 'ON', true);
+            if (match) {
+                this.setStateAsync('network.dhcp', match[1].toUpperCase() === 'ON', true);
+            }
         }
 
         if (response.includes('IP:') && !response.includes('DHCP')) {
             const match = response.match(/IP:\s*(\d+\.\d+\.\d+\.\d+)/i);
-            if (match) this.setStateAsync('network.ip', match[1], true);
+            if (match) {
+                this.setStateAsync('network.ip', match[1], true);
+            }
         }
     }
 
@@ -2057,11 +2288,11 @@ class BlustreamAdapter extends utils.Adapter {
         this.log.debug(`Sending command: ${command}`);
         this.setStateAsync('info.lastSent', command, true);
 
-        const cmdWithCR = command + '\r';
+        const cmdWithCR = `${command}\r`;
 
         try {
             if (this.config.connectionType === 'serial' && this.serialPort && this.serialPort.isOpen) {
-                this.serialPort.write(cmdWithCR, (err) => {
+                this.serialPort.write(cmdWithCR, err => {
                     if (err) {
                         this.log.error(`Error writing to serial port: ${err.message}`);
                     }
@@ -2075,7 +2306,6 @@ class BlustreamAdapter extends utils.Adapter {
                 this.currentCommand = null;
                 this.processCommandQueue();
             }, 5000);
-
         } catch (err) {
             this.log.error(`Error sending command: ${err.message}`);
             this.currentCommand = null;
@@ -2091,8 +2321,6 @@ class BlustreamAdapter extends utils.Adapter {
 
         const stateId = id.split('.').slice(2).join('.');
         this.log.debug(`State change: ${stateId} = ${state.val}`);
-
-        const model = this.config.deviceModel || 'mfp72';
 
         // Handle HDMI input audio (MFP112)
         const hdmiAudioMatch = stateId.match(/^audio\.hdmi\.input(\d)$/);
@@ -2322,14 +2550,14 @@ class BlustreamAdapter extends utils.Adapter {
             }
 
             callback();
-        } catch (e) {
+        } catch {
             callback();
         }
     }
 }
 
 if (require.main !== module) {
-    module.exports = (options) => new BlustreamAdapter(options);
+    module.exports = options => new BlustreamAdapter(options);
 } else {
     new BlustreamAdapter();
 }

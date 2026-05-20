@@ -7,7 +7,8 @@ dist/
 
 # IDE settings
 .idea/
-.vscode/
+.vscode/*
+!.vscode/settings.json
 *.swp
 *.swo
 *~
@@ -28,9 +29,6 @@ coverage/
 .env
 .env.local
 .env.*.local
-
-# Package lock (use npm ci in CI)
-package-lock.json
 
 # ioBroker specific
 iobroker-data/
