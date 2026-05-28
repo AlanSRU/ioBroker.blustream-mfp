@@ -119,6 +119,9 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
+### **WORK IN PROGRESS**
+- (copilot) Adapter requires node.js >= 22 now
+
 ### 0.3.4 (2026-05-28)
 * (Alan Paris) Cleared repochecker findings and unblocked CI after dependabot conflicts
 * (Alan Paris) Added tsconfig.json and @tsconfig/node20 for type checking
