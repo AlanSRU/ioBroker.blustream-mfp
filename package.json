@@ -47,15 +47,13 @@
     "@alcalzone/release-script": "^5.2.0",
     "@alcalzone/release-script-plugin-iobroker": "^5.2.0",
     "@alcalzone/release-script-plugin-license": "^5.2.0",
-    "@alcalzone/release-script-plugin-manual-review": "^5.2.0",
     "@iobroker/adapter-dev": "^1.5.0",
     "@iobroker/eslint-config": "^2.3.4",
     "@iobroker/testing": "^5.2.2",
-    "@types/node": "^25.7.0",
+    "@tsconfig/node20": "^20.1.9",
+    "@types/node": "^20",
     "chai": "^4.5.0",
-    "eslint": "^10.3.0",
-    "mocha": "^11.7.3",
-    "prettier": "^3.6.2"
+    "mocha": "^11.7.6"
   },
   "main": "main.js",
   "files": [

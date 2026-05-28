@@ -11,5 +11,13 @@
     "Timing Settings": "Timing Settings",
     "Polling Interval (ms)": "Polling Interval (ms)",
     "Reconnect Interval (ms)": "Reconnect Interval (ms)",
-    "Enable Telnet IAC Negotiation": "Enable Telnet IAC Negotiation"
+    "Enable Telnet IAC Negotiation": "Enable Telnet IAC Negotiation",
+    "IP address of the device or RS232-to-IP converter": "IP address of the device or RS232-to-IP converter",
+    "Default: 23 (Telnet)": "Default: 23 (Telnet)",
+    "How often to request device status (default: 30000ms)": "How often to request device status (default: 30000ms)",
+    "Time between reconnection attempts (default: 10000ms)": "Time between reconnection attempts (default: 10000ms)",
+    "Default for Blustream: 57600": "Default for Blustream: 57600",
+    "e.g. /dev/ttyUSB0 (Linux) or COM3 (Windows)": "e.g. /dev/ttyUSB0 (Linux) or COM3 (Windows)",
+    "/dev/ttyUSB0": "/dev/ttyUSB0",
+    "Handle Telnet control sequences (recommended for direct device connections)": "Handle Telnet control sequences (recommended for direct device connections)"
 }
