@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "blustream-mfp",
-    "version": "0.3.3",
+    "version": "0.3.4",
     "news": {
+      "0.3.4": {
+        "en": "Cleared repochecker findings and unblocked CI after dependabot conflicts\nAdded tsconfig.json and @tsconfig/node20 for type checking\nFilled in missing admin translations for jsonConfig help texts",
+        "de": "Geklärte Repochecker-Ergebnisse und entsperrte CI nach Abhängigkeitabot-Konflikten\nTsconfig.json und @tsconfig/node20 für Typprüfung hinzugefügt\nGefüllt in fehlenden Admin-Übersetzungen für jsonConfig Hilfetexte",
+        "ru": "Очищенные результаты репочекера и разблокированный CI после конфликтов с иждивенцами\nДобавлены tsconfig.json и @tsconfig/node20 для проверки типа\nЗаполненные недостающие переводы администратора для текстов помощи jsonConfig",
+        "pt": "Achados de repochecker limpos e IC desbloqueado após conflitos dependentes\nAdicionado tsconfig.json e @tsconfig/node20 para verificação do tipo\nPreenchido em traduções de administrador ausentes para textos de ajuda do jsonConfig",
+        "nl": "Duidelijke bevindingen van de repochecker en ontblokte CI na afhankelijke-botconflicten\nToegevoegd tsconfig.json en @tsconfig/node20 voor typecontrole\nIngevulde ontbrekende admin vertalingen voor jsonConfig help teksten",
+        "fr": "Conclusions de repochecker effacées et IC débloquée après conflits de dépendance\nAjouté tsconfig.json et @tsconfig/node20 pour la vérification de type\nRemplir les traductions d'administration manquantes pour les textes d'aide de jsonConfig",
+        "it": "Risultati riposizionatori cancellati e sbloccato CI dopo conflitti dipendeabot\nAggiunto tsconfig.json e @tsconfig/node20 per il controllo del tipo\nRiempito nelle traduzioni di amministratore mancanti per i testi di aiuto di jsonConfig",
+        "es": "Los hallazgos de los recicladores y la CI desbloqueada después de conflictos de los dependientes\nAñadido tsconfig.json y @tsconfig/node20 para la comprobación de tipo\nFilled in missing admin translations for jsonConfig help texts",
+        "pl": "Wyczyszczone wyniki badań repocheckera i odblokowany CI po konfliktach zależnościowych\nDodano tsconfig.json i @ tsconfig / node20 do sprawdzania typu\nWypełniona brakującymi tłumaczeniami administracyjnymi dla tekstów pomocy jsonConfig",
+        "uk": "Очищені репочекерські пошуки та розблоковані ТПП після конфліктів залежного\nДодано tsconfig.json і @tsconfig/node20 для перевірки типу\nЗаповнені відсутніми перекладами адміністратора для jsonConfig допомагають тексти",
+        "zh-cn": "已清查的复检结果和在依赖冲突后解锁 CI\n添加 tsconfig.json 和 @ tsconfig/ node20 用于类型检查\n填充 jsonConfig 帮助文本的缺失管理员翻译"
+      },
       "0.3.3": {
         "en": "Now requires Node.js 20+, js-controller 6.0.11+, admin 7.6.20+\nMigrated admin UI to jsonConfig\nModernized internal tooling (release-script, ESLint 9, ioBroker testing actions)",
         "de": "Jetzt erfordert Node.js 20+, js-controller 6.0.11+, admin 7.6.20+\nMigrated admin UI to jsonConfig\nModernisierte interne Tooling (Release-script, ESLint 9, ioBroker-Testaktionen)",
