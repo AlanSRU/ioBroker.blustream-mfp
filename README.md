@@ -139,6 +139,8 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 * (Alan Paris) Initial release with support for AMF42AU, MFP62, MFP72, MFP112, WMF51, WMF72
 * (Alan Paris) Added CEC control, preset management, and picture controls
 
+[Older changelogs can be found there](CHANGELOG_OLD.md)
+
 ## License
 
 MIT License
