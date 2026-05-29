@@ -119,7 +119,7 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
+### 0.3.5 (2026-05-29)
 * (Alan Paris) Raised minimum Node.js to 22 and updated CI workflows to Node.js 24
 * (Alan Paris) Removed chai/mocha devDependencies (provided by @iobroker/testing) and migrated tooling to @tsconfig/node22
 * (Alan Paris) Cleared remaining repochecker findings: dependabot @types/node ignore rule, cron schedules, auto-merge.yml, manual-review release plugin, and CHANGELOG_OLD.md
