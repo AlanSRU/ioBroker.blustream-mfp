@@ -119,6 +119,11 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
+### __WORK IN PROGRESS__
+* (Alan Paris) Raised minimum Node.js to 22 and updated CI workflows to Node.js 24
+* (Alan Paris) Removed chai/mocha devDependencies (provided by @iobroker/testing) and migrated tooling to @tsconfig/node22
+* (Alan Paris) Cleared remaining repochecker findings: dependabot @types/node ignore rule, cron schedules, auto-merge.yml, manual-review release plugin, and CHANGELOG_OLD.md
+
 ### 0.3.4 (2026-05-28)
 * (Alan Paris) Cleared repochecker findings and unblocked CI after dependabot conflicts
 * (Alan Paris) Added tsconfig.json and @tsconfig/node20 for type checking
@@ -131,13 +136,6 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 
 ### 0.3.2 (2026-03-24)
 * (Alan Paris) Improved telnet response parsing
-
-### 0.3.1 (2025-12-21)
-* (Alan Paris) Fixed adapter checker warnings; added translations for news entries
-
-### 0.3.0 (2025-12-21)
-* (Alan Paris) Initial release with support for AMF42AU, MFP62, MFP72, MFP112, WMF51, WMF72
-* (Alan Paris) Added CEC control, preset management, and picture controls
 
 ## License
 
