@@ -137,6 +137,8 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 ### 0.3.2 (2026-03-24)
 * (Alan Paris) Improved telnet response parsing
 
+[Older changelogs can be found there](CHANGELOG_OLD.md)
+
 ## License
 
 MIT License
