@@ -119,7 +119,7 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
-### **WORK IN PROGRESS**
+### 0.4.0 (2026-07-02)
 * (Alan Paris) Writes to all writable states are now processed in onStateChange; previously many controls (picture, CEC, presets, WiFi, standby, sidebar, layout, audio mode, per-LAN DHCP) were silently ignored
 * (Alan Paris) WiFi frequency and channel are now sent together as the single command the device requires
 * (Alan Paris) Sensitive values (e.g. WiFi password) are masked in the debug state-change log
@@ -143,11 +143,6 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 * (Alan Paris) Raised minimum Node.js to 22 and updated CI workflows to Node.js 24
 * (Alan Paris) Removed chai/mocha devDependencies (provided by @iobroker/testing) and migrated tooling to @tsconfig/node22
 * (Alan Paris) Cleared remaining repochecker findings: dependabot @types/node ignore rule, cron schedules, auto-merge.yml, manual-review release plugin, and CHANGELOG_OLD.md
-
-### 0.3.4 (2026-05-28)
-* (Alan Paris) Cleared repochecker findings and unblocked CI after dependabot conflicts
-* (Alan Paris) Added tsconfig.json and @tsconfig/node20 for type checking
-* (Alan Paris) Filled in missing admin translations for jsonConfig help texts
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 

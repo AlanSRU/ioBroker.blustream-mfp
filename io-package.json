@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "blustream-mfp",
-    "version": "0.3.8",
+    "version": "0.4.0",
     "news": {
+      "0.4.0": {
+        "en": "Writes to all writable states are now processed in onStateChange; previously many controls (picture, CEC, presets, WiFi, standby, sidebar, layout, audio mode, per-LAN DHCP) were silently ignored\nWiFi frequency and channel are now sent together as the single command the device requires\nSensitive values (e.g. WiFi password) are masked in the debug state-change log\nPolling and reconnect intervals are now clamped to safe bounds in code, not only in the admin UI",
+        "de": "Schreibvorgänge in alle beschreibbaren Zustände werden nun in onStateChange verarbeitet; zuvor wurden viele Steuerelemente (Bild, CEC, Voreinstellungen, WLAN, Standby, Seitenleiste, Layout, Audiomodus, DHCP pro LAN) stillschweigend ignoriert.\nWLAN-Frequenz und Kanal werden nun zusammen als ein einziger Befehl gesendet, den das Gerät benötigt.\nSensible Werte (z. B. WLAN-Passwort) werden im Debug-Statusänderungsprotokoll maskiert.\nDie Abfrage- und Wiederverbindungsintervalle sind nun im Code auf sichere Grenzen beschränkt, nicht nur in der Admin-Benutzeroberfläche.",
+        "ru": "Теперь запись во все доступные для записи состояния обрабатывается в методе onStateChange; ранее многие элементы управления (изображение, CEC, предустановки, Wi-Fi, режим ожидания, боковая панель, макет, режим звука, DHCP для каждой локальной сети) молча игнорировались.\nТеперь частота и канал Wi-Fi передаются вместе в виде единой команды, необходимой устройству.\nКонфиденциальные значения (например, пароль от Wi-Fi) скрываются в журнале отладочных изменений состояния.\nИнтервалы опроса и переподключения теперь ограничены безопасными значениями в коде, а не только в административном интерфейсе.",
+        "pt": "As gravações em todos os estados graváveis agora são processadas em `onStateChange`; anteriormente, muitos controles (imagem, CEC, predefinições, Wi-Fi, modo de espera, barra lateral, layout, modo de áudio, DHCP por LAN) eram ignorados silenciosamente.\nA frequência e o canal do Wi-Fi agora são enviados juntos como um único comando que o dispositivo requer.\nValores sensíveis (por exemplo, a senha do Wi-Fi) são mascarados no registro de alterações de estado de depuração.\nOs intervalos de sondagem e reconexão agora são limitados a valores seguros no código, e não apenas na interface administrativa.",
+        "nl": "Schrijfbewerkingen naar alle beschrijfbare statussen worden nu verwerkt in onStateChange; voorheen werden veel besturingselementen (beeld, CEC, presets, wifi, standby, zijbalk, lay-out, audiomodus, DHCP per LAN) stilzwijgend genegeerd.\nDe wifi-frequentie en het kanaal worden nu samen verzonden als één enkel commando dat het apparaat nodig heeft.\nGevoelige waarden (bijv. wifi-wachtwoord) worden gemaskeerd in het logboek voor statuswijzigingen van de debugmodus.\nDe intervallen voor polling en herverbinding worden nu in de code beperkt tot veilige waarden, niet alleen in de beheerdersinterface.",
+        "fr": "Les écritures dans tous les états accessibles en écriture sont désormais traitées dans la fonction onStateChange ; auparavant, de nombreuses commandes (image, CEC, préréglages, Wi-Fi, veille, barre latérale, disposition, mode audio, DHCP par réseau local) étaient ignorées silencieusement.\nLa fréquence et le canal Wi-Fi sont désormais envoyés ensemble, constituant ainsi la seule commande requise par l'appareil.\nLes valeurs sensibles (par exemple, le mot de passe Wi-Fi) sont masquées dans le journal des changements d'état de débogage\nLes intervalles d'interrogation et de reconnexion sont désormais limités à des valeurs sûres dans le code, et non plus seulement dans l'interface d'administration.",
+        "it": "Le scritture in tutti gli stati scrivibili vengono ora elaborate in onStateChange; in precedenza molti controlli (immagine, CEC, preset, WiFi, standby, barra laterale, layout, modalità audio, DHCP per LAN) venivano silenziosamente ignorati\nLa frequenza e il canale WiFi vengono ora inviati insieme come unico comando richiesto dal dispositivo\nI valori sensibili (ad esempio, la password del Wi-Fi) vengono mascherati nel registro delle modifiche di stato di debug.\nGli intervalli di polling e di riconnessione sono ora limitati a valori di sicurezza nel codice, non solo nell'interfaccia utente di amministrazione.",
+        "es": "Las escrituras en todos los estados modificables ahora se procesan en onStateChange; anteriormente, muchos controles (imagen, CEC, preajustes, WiFi, modo de espera, barra lateral, diseño, modo de audio, DHCP por LAN) se ignoraban silenciosamente.\nLa frecuencia y el canal WiFi ahora se envían juntos como el único comando que requiere el dispositivo.\nLos valores confidenciales (por ejemplo, la contraseña de WiFi) se ocultan en el registro de cambios de estado de depuración.\nLos intervalos de sondeo y reconexión ahora están limitados a límites seguros en el código, no solo en la interfaz de administración.",
+        "pl": "Zapisy do wszystkich zapisywalnych stanów są teraz przetwarzane w onStateChange; wcześniej wiele elementów sterujących (obraz, CEC, ustawienia wstępne, WiFi, tryb gotowości, pasek boczny, układ, tryb audio, DHCP dla sieci LAN) było ignorowanych\nCzęstotliwość i kanał WiFi są teraz wysyłane razem jako pojedyncze polecenie wymagane przez urządzenie\nWartości wrażliwe (np. hasło Wi-Fi) są maskowane w dzienniku zmian stanu debugowania\nInterwały sondowania i ponownego łączenia są teraz ograniczone do bezpiecznych granic w kodzie, a nie tylko w interfejsie administratora",
+        "uk": "Записи у всі стани, придатні для запису, тепер обробляються в onStateChange; раніше багато елементів керування (зображення, CEC, пресети, Wi-Fi, режим очікування, бічна панель, макет, режим звуку, DHCP для кожної локальної мережі) непомітно ігнорувалися.\nЧастота та канал Wi-Fi тепер надсилаються разом як одна команда, яка потрібна пристрою\nКонфіденційні значення (наприклад, пароль Wi-Fi) маскуються в журналі змін стану налагодження.\nІнтервали опитування та повторного підключення тепер обмежені безпечними межами в коді, а не лише в інтерфейсі адміністратора.",
+        "zh-cn": "现在所有可写状态的写入操作都在 onStateChange 事件中处理；之前许多控件（图片、CEC、预设、WiFi、待机、侧边栏、布局、音频模式、局域网 DHCP）会被静默忽略。\n现在，WiFi 频率和信道会作为设备所需的单个命令一起发送。\n调试状态更改日志中会屏蔽敏感值（例如 WiFi 密码）。\n现在，轮询和重连间隔已在代码中（而不仅仅是在管理界面中）限制在安全范围内。"
+      },
       "0.3.8": {
         "en": "Fixed CEC output states being created for outputs the model does not have (missing intermediate object, E3009)\nPreset save/apply/clear states now have read=true as required by the \"level\" role (E1010)\nAudited every adapter object definition against the ioBroker state-role rules",
         "de": "Es werden feste CEC-Ausgabezustände für Ausgaben erstellt, die das Modell nicht besitzt (fehlendes Zwischenobjekt, E3009).\nVoreingestellte Speicher-/Anwendungs-/Löschzustände haben nun, wie von der Rolle \"level\" gefordert, den Wert read=true (E1010).\nJede Adapterobjektdefinition wurde anhand der ioBroker-Status-Rollenregeln geprüft.",
@@ -80,19 +93,6 @@
         "pl": "Teraz wymaga Node.js 20 +, kontroler js- 6.0.11 +, admin 7.6.20 +\nMigrated admin UI to jsonConfig\nZmodernizowane oprzyrządowanie wewnętrzne (release- script, ESLint 9, joBroker testing actions)",
         "uk": "Тепер вимагає Node.js 20+, js-controller 6.0.11+, admin 7.6.20+\nMigrated admin UI до jsonConfig\nМодернізований внутрішній інструментарій (видання-script, ESLint 9, ioBroker test action)",
         "zh-cn": "现在需要节点20+,js控制器6.0.11+,admin 7.6.20+\n将管理员 UI 移到 jsonConfig\n现代化的内部工具(发布-script,ESLint 9,ioBroker测试行动)"
-      },
-      "0.3.2": {
-        "en": "Added better response parsing",
-        "de": "Verbesserte Antwortanalyse hinzugefügt",
-        "ru": "Добавлен улучшенный разбор ответов",
-        "pt": "Adicionada melhor análise de resposta",
-        "nl": "Verbeterde responsverwerking toegevoegd",
-        "fr": "Amélioration de l'analyse des réponses",
-        "it": "Aggiunta una migliore analisi delle risposte",
-        "es": "Añadido mejor análisis de respuestas",
-        "pl": "Dodano lepsze parsowanie odpowiedzi",
-        "uk": "Додано покращений розбір відповідей",
-        "zh-cn": "添加了更好的响应解析"
       }
     },
     "titleLang": {

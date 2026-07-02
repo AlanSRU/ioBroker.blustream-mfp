@@ -6,6 +6,11 @@
 ### 0.3.0 (2025-12-21)
 * (Alan Paris) Initial release with support for AMF42AU, MFP62, MFP72, MFP112, WMF51, WMF72
 * (Alan Paris) Added CEC control, preset management, and picture controls
+## 0.3.4 (2026-05-28)
+* (Alan Paris) Cleared repochecker findings and unblocked CI after dependabot conflicts
+* (Alan Paris) Added tsconfig.json and @tsconfig/node20 for type checking
+* (Alan Paris) Filled in missing admin translations for jsonConfig help texts
+
 ## 0.3.3 (2026-05-20)
 * (Alan Paris) Now requires Node.js 20+, js-controller 6.0.11+, admin 7.6.20+
 * (Alan Paris) Migrated admin UI to jsonConfig
