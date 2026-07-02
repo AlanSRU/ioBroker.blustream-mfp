@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "blustream-mfp",
-    "version": "0.3.5",
+    "version": "0.3.6",
     "news": {
+      "0.3.6": {
+        "en": "Use ioBroker framework timers so they are cleaned up on adapter unload (repochecker E5004/E5005)\nUpdated @alcalzone/release-script to 5.2.1 and @iobroker/adapter-core to 3.4.1 (repochecker E0036/W0034)\nLinked CHANGELOG_OLD.md from the README changelog",
+        "de": "Verwenden Sie die Timer des ioBroker-Frameworks, damit diese beim Entladen des Adapters bereinigt werden (Repochecker E5004/E5005).\n@alcalzone/release-script wurde auf Version 5.2.1 und @iobroker/adapter-core auf Version 3.4.1 aktualisiert (Repochecker E0036/W0034).\nDie Datei CHANGELOG_OLD.md wurde aus dem Änderungsprotokoll der README-Datei verlinkt.",
+        "ru": "Используйте таймеры фреймворка ioBroker, чтобы они очищались при выгрузке адаптера (repochecker E5004/E5005).\nОбновлены @alcalzone/release-script до версии 5.2.1 и @iobroker/adapter-core до версии 3.4.1 (repochecker E0036/W0034)\nСсылка на файл CHANGELOG_OLD.md добавлена в файл README с указанием изменений.",
+        "pt": "Use os temporizadores do framework ioBroker para que sejam limpos ao descarregar o adaptador (repochecker E5004/E5005)\nAtualizei @alcalzone/release-script para a versão 5.2.1 e @iobroker/adapter-core para a versão 3.4.1 (repochecker E0036/W0034)\nO arquivo CHANGELOG_OLD.md está vinculado ao changelog do README.",
+        "nl": "Gebruik de timers van het ioBroker-framework zodat ze worden opgeruimd wanneer de adapter wordt ontladen (repochecker E5004/E5005).\n@alcalzone/release-script bijgewerkt naar 5.2.1 en @iobroker/adapter-core naar 3.4.1 (repochecker E0036/W0034)\nDe link naar CHANGELOG_OLD.md is afkomstig uit het changelog van de README.",
+        "fr": "Utilisez les minuteurs du framework ioBroker afin qu'ils soient nettoyés lors du déchargement de l'adaptateur (repochecker E5004/E5005).\nMise à jour de @alcalzone/release-script vers la version 5.2.1 et de @iobroker/adapter-core vers la version 3.4.1 (repochecker E0036/W0034)\nFichier CHANGELOG_OLD.md lié au journal des modifications du fichier README",
+        "it": "Utilizzare i timer del framework ioBroker in modo che vengano eliminati allo scaricamento dell'adattatore (repochecker E5004/E5005).\nAggiornati @alcalzone/release-script alla versione 5.2.1 e @iobroker/adapter-core alla versione 3.4.1 (repochecker E0036/W0034)\nFile CHANGELOG_OLD.md collegato al registro delle modifiche del file README.",
+        "es": "Utilice los temporizadores del framework ioBroker para que se limpien al descargar el adaptador (repochecker E5004/E5005).\nSe actualizó @alcalzone/release-script a la versión 5.2.1 y @iobroker/adapter-core a la versión 3.4.1 (repochecker E0036/W0034).\nEnlace al archivo CHANGELOG_OLD.md del archivo README changelog.",
+        "pl": "Użyj timerów frameworka ioBroker, aby wyczyścić je podczas rozładowywania adaptera (repochecker E5004/E5005)\nZaktualizowano @alcalzone/release-script do wersji 5.2.1 i @iobroker/adapter-core do wersji 3.4.1 (repochecker E0036/W0034)\nPołączono CHANGELOG_OLD.md z dziennika zmian README",
+        "uk": "Використовуйте таймери фреймворку ioBroker, щоб вони очищалися під час вивантаження адаптера (repochecker E5004/E5005)\nОновлено @alcalzone/release-script до версії 5.2.1 та @iobroker/adapter-core до версії 3.4.1 (repochecker E0036/W0034)\nПосилання на CHANGELOG_OLD.md з журналу змін README",
+        "zh-cn": "使用 ioBroker 框架定时器，以便在适配器卸载时进行清理（repochecker E5004/E5005）\n已将 @alcalzone/release-script 更新至 5.2.1，并将 @iobroker/adapter-core 更新至 3.4.1（repochecker E0036/W0034）\n从 README 变更日志中链接了 CHANGELOG_OLD.md"
+      },
       "0.3.5": {
         "en": "Raised minimum Node.js to 22 and updated CI workflows to Node.js 24\nRemoved chai/mocha devDependencies (provided by @iobroker/testing) and migrated tooling to @tsconfig/node22\nCleared remaining repochecker findings: dependabot @types/node ignore rule, cron schedules, auto-merge.yml, manual-review release plugin, and CHANGELOG_OLD.md",
         "de": "Erhöhte minimale Node.js auf 22 und aktualisierte CI-Workflows auf Node.js 24\nRemoved chai/mocha devDependencies (provided by @iobroker/testing) und migriert tooling to @tsconfig/node22\nGelöschte verbleibende Repochecker-Ergebnisse: abhängigabot @types/node ignorieren Regel, Cron-Zeitpläne, auto-merge.yml, manuell-Review-Veröffentlichungs-Plugin und CHANGELOG OLD.md",
