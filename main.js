@@ -1757,7 +1757,8 @@ class BlustreamAdapter extends utils.Adapter {
             this.clearTimeout(this.reconnectTimer);
         }
 
-        const interval = this.config.reconnectInterval || 10000;
+        // Clamp to sane bounds (UI limits alone are not authoritative)
+        const interval = Math.min(Math.max(this.config.reconnectInterval || 10000, 5000), 60000);
         this.log.info(`Scheduling reconnect in ${interval}ms...`);
 
         this.reconnectTimer = this.setTimeout(() => {
@@ -2246,7 +2247,8 @@ class BlustreamAdapter extends utils.Adapter {
             this.clearInterval(this.pollingTimer);
         }
 
-        const interval = this.config.pollingInterval || 30000;
+        // Clamp to sane bounds (UI limits alone are not authoritative)
+        const interval = Math.min(Math.max(this.config.pollingInterval || 30000, 5000), 300000);
 
         // Initial status request
         this.sendCommand('STATUS');
@@ -2318,7 +2320,9 @@ class BlustreamAdapter extends utils.Adapter {
         }
 
         const stateId = id.split('.').slice(2).join('.');
-        this.log.debug(`State change: ${stateId} = ${state.val}`);
+        // Avoid logging sensitive values (e.g. WiFi password) in plain text
+        const loggedVal = /password/i.test(stateId) ? '***' : state.val;
+        this.log.debug(`State change: ${stateId} = ${loggedVal}`);
 
         // Handle HDMI input audio (MFP112)
         const hdmiAudioMatch = stateId.match(/^audio\.hdmi\.input(\d)$/);
@@ -2349,6 +2353,64 @@ class BlustreamAdapter extends utils.Adapter {
         if (outputEnableMatch) {
             const outputNum = outputEnableMatch[1];
             this.sendCommand(`OUT ${outputNum.padStart(2, '0')} ${state.val ? 'ON' : 'OFF'}`);
+            return;
+        }
+
+        // Handle output sidebar (WMF series)
+        const sidebarMatch = stateId.match(/^output\.(\d)\.sidebar$/);
+        if (sidebarMatch) {
+            // WMF72 has dual outputs (xx=1 Main, 2 Sub); WMF51 is single output (no index)
+            if (this.modelDef && this.modelDef.outputs > 1) {
+                this.sendCommand(`OUT ${sidebarMatch[1]} SIDEBAR ${state.val ? 'ON' : 'OFF'}`);
+            } else {
+                this.sendCommand(`OUT SIDEBAR ${state.val ? 'ON' : 'OFF'}`);
+            }
+            return;
+        }
+
+        // Handle output picture / mute / audio-mix / CEC controls (AMF series)
+        const outputPictureMatch = stateId.match(
+            /^output\.(\d)\.(brightness|contrast|pictureMode|colourTemp|videoMute|audioMix|cecEnabled)$/,
+        );
+        if (outputPictureMatch) {
+            const out = outputPictureMatch[1].padStart(2, '0');
+            switch (outputPictureMatch[2]) {
+                case 'brightness':
+                    this.sendCommand(`OUT ${out} BRIGHTNESS ${String(state.val).padStart(2, '0')}`);
+                    break;
+                case 'contrast':
+                    this.sendCommand(`OUT ${out} CONTRAST ${String(state.val).padStart(2, '0')}`);
+                    break;
+                case 'pictureMode':
+                    this.sendCommand(`OUT ${out} PICTUREMODE ${state.val}`);
+                    break;
+                case 'colourTemp':
+                    this.sendCommand(`OUT ${out} COLOURTEMP ${state.val}`);
+                    break;
+                case 'videoMute':
+                    this.sendCommand(`OUT ${out} MUTE ${state.val ? 'ON' : 'OFF'}`);
+                    break;
+                case 'audioMix':
+                    this.sendCommand(`OUT ${out} MIX ${state.val}`);
+                    break;
+                case 'cecEnabled':
+                    this.sendCommand(`OUT ${out} CEC ${state.val ? 'ENABLE' : 'DISABLE'}`);
+                    break;
+            }
+            return;
+        }
+
+        // Handle input CEC enable/disable (AMF series)
+        const cecInputMatch = stateId.match(/^cec\.input(\d)$/);
+        if (cecInputMatch) {
+            this.sendCommand(`IN ${cecInputMatch[1].padStart(2, '0')} CEC ${state.val ? 'ENABLE' : 'DISABLE'}`);
+            return;
+        }
+
+        // Handle per-LAN DHCP (WMF series dual LAN)
+        const lanDhcpMatch = stateId.match(/^network\.lan(\d)\.dhcp$/);
+        if (lanDhcpMatch) {
+            this.sendCommand(`LAN ${lanDhcpMatch[1]} DHCP ${state.val ? 'ON' : 'OFF'}`);
             return;
         }
 
@@ -2512,9 +2574,131 @@ class BlustreamAdapter extends utils.Adapter {
                 }
                 break;
 
+            // Video mute (WMF: single output; AMF: all outputs)
+            case 'system.videoMute':
+                this.sendCommand(
+                    this.modelDef && this.modelDef.isWireless
+                        ? `OUT MUTE ${state.val ? 'ON' : 'OFF'}`
+                        : `OUT 00 MUTE ${state.val ? 'ON' : 'OFF'}`,
+                );
+                break;
+
+            // Auto standby (WMF series)
+            case 'system.standbyMode':
+                this.sendCommand(state.val ? 'STBYON' : 'STBYOFF');
+                break;
+
+            case 'system.standbyDelay':
+                this.sendCommand(`STBDLY ${String(state.val).padStart(2, '0')}`);
+                break;
+
+            // No-signal standby (AMF series)
+            case 'system.noSignalStandby':
+                this.sendCommand(`NOSIGSTANDBY ${state.val ? 'ON' : 'OFF'}`);
+                break;
+
+            case 'system.noSignalDelay':
+                this.sendCommand(`NOSIGDLY ${state.val}`);
+                break;
+
+            // HDBT POC output (AMF series)
+            case 'system.pocOutput':
+                this.sendCommand(`POCOUT ${state.val ? 'ON' : 'OFF'}`);
+                break;
+
+            // System reboot (WMF series)
+            case 'system.reboot':
+                if (state.val) {
+                    this.sendCommand('REBOOT');
+                }
+                break;
+
+            // Dual display mode / multiview layout (WMF72)
+            case 'output.displayMode':
+                this.sendCommand(`OUT DISPLAY MODE ${state.val}`);
+                break;
+
+            case 'output.layout':
+                this.sendCommand(`OUT LAYOUT ${state.val}`);
+                break;
+
+            // Audio mode / output selection (WMF72)
+            case 'audio.mode':
+                this.sendCommand(`AUDIO MODE ${state.val}`);
+                break;
+
+            case 'audio.output':
+                this.sendCommand(`AUD OUT ${state.val}`);
+                break;
+
+            // Presets (AMF series)
+            case 'presets.save':
+                this.sendCommand(`PRESET ${String(state.val).padStart(2, '0')} SAVE`);
+                break;
+
+            case 'presets.apply':
+                this.sendCommand(`PRESET ${String(state.val).padStart(2, '0')} APPLY`);
+                break;
+
+            case 'presets.clear':
+                this.sendCommand(`PRESET ${String(state.val).padStart(2, '0')} CLR`);
+                break;
+
+            // Go to home screen (WMF series)
+            case 'commands.homeScreen':
+                if (state.val) {
+                    this.sendCommand('OSD HOME');
+                }
+                break;
+
+            // WiFi hotspot controls (WMF series)
+            case 'wifi.enabled':
+                this.sendCommand(`WIFI ${state.val ? 'ON' : 'OFF'}`);
+                break;
+
+            case 'wifi.frequency':
+                await this.sendWifiFreqChannel(state.val, null);
+                break;
+
+            case 'wifi.channel':
+                await this.sendWifiFreqChannel(null, state.val);
+                break;
+
+            case 'wifi.ssid':
+                this.sendCommand(`WIFI SSID ${state.val}`);
+                break;
+
+            case 'wifi.password':
+                this.sendCommand(`WIFI PASS ${state.val}`);
+                break;
+
             default:
                 this.log.debug(`Unhandled state change: ${stateId}`);
         }
+    }
+
+    /**
+     * Send the combined WiFi frequency + channel command (WMF series).
+     * The device expects both values in a single command, so the value not
+     * being changed is read back from its current state.
+     *
+     * @param freqOverride New frequency value, or null to read the current state
+     * @param channelOverride New channel value, or null to read the current state
+     */
+    async sendWifiFreqChannel(freqOverride, channelOverride) {
+        let freq = freqOverride;
+        let channel = channelOverride;
+
+        if (freq === null || freq === undefined) {
+            const freqState = await this.getStateAsync('wifi.frequency');
+            freq = freqState && freqState.val != null ? freqState.val : '2';
+        }
+        if (channel === null || channel === undefined) {
+            const channelState = await this.getStateAsync('wifi.channel');
+            channel = channelState && channelState.val != null ? channelState.val : 'auto';
+        }
+
+        this.sendCommand(`WIFI FREQ ${freq} CH ${channel}`);
     }
 
     onUnload(callback) {
