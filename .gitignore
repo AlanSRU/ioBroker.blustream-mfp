@@ -36,3 +36,6 @@ iobroker-data/
 
 # Object dumps for repository review (not part of the adapter)
 blustream-mfp.*.json
+
+# npm pack / build artifacts
+*.tgz
