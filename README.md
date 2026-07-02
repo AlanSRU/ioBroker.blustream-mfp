@@ -119,7 +119,7 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
-### **WORK IN PROGRESS**
+### 0.3.7 (2026-07-02)
 * (Alan Paris) Fixed invalid state roles flagged by the object checker: network IP/gateway/subnet now use role "text" (writable), telnet/TCP ports use read-only "info.port", and LAN1/LAN2 network states are read-only "info.ip" (E1008/E1011)
 * (Alan Paris) Added missing JSDoc parameter descriptions
 
@@ -142,9 +142,6 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 * (Alan Paris) Now requires Node.js 20+, js-controller 6.0.11+, admin 7.6.20+
 * (Alan Paris) Migrated admin UI to jsonConfig
 * (Alan Paris) Modernized internal tooling (release-script, ESLint 9, ioBroker testing actions)
-
-### 0.3.2 (2026-03-24)
-* (Alan Paris) Improved telnet response parsing
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 

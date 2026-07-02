@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "blustream-mfp",
-    "version": "0.3.6",
+    "version": "0.3.7",
     "news": {
+      "0.3.7": {
+        "en": "Fixed invalid state roles flagged by the object checker: network IP/gateway/subnet now use role \"text\" (writable), telnet/TCP ports use read-only \"info.port\", and LAN1/LAN2 network states are read-only \"info.ip\" (E1008/E1011)\nAdded missing JSDoc parameter descriptions",
+        "de": "Vom Objektprüfer als ungültig gekennzeichnete Statusrollen wurden korrigiert: Netzwerk-IP/Gateway/Subnetz verwenden nun die Rolle \"text\" (beschreibbar), Telnet-/TCP-Ports verwenden die schreibgeschützte Rolle \"info.port\" und die Netzwerkstatus LAN1/LAN2 sind schreibgeschützt \"info.ip\" (E1008/E1011).\nFehlende JSDoc-Parameterbeschreibungen hinzugefügt",
+        "ru": "Исправлены недопустимые роли состояний, отмеченные средством проверки объектов: IP-адрес сети/шлюз/подсеть теперь используют роль \"текст\" (доступна для записи), порты telnet/TCP используют роль \"info.port\" только для чтения, а состояния сети LAN1/LAN2 — роль \"info.ip\" только для чтения (E1008/E1011)\nДобавлены отсутствующие описания параметров JSDoc.",
+        "pt": "Corrigidos os problemas de funções de estado inválidas sinalizadas pelo verificador de objetos: o IP/gateway/sub-rede da rede agora usam a função \"texto\" (gravável), as portas telnet/TCP usam a função somente leitura \"info.port\" e os estados de rede LAN1/LAN2 são somente leitura \"info.ip\" (E1008/E1011)\nAdicionadas descrições de parâmetros JSDoc que estavam faltando.",
+        "nl": "De ongeldige statusrollen die door de objectcontrole werden aangegeven, zijn gecorrigeerd: netwerk-IP/gateway/subnet gebruiken nu de rol \"tekst\" (schrijfbaar), telnet/TCP-poorten gebruiken de alleen-lezen rol \"info.port\", en de netwerkstatussen LAN1/LAN2 zijn alleen-lezen \"info.ip\" (E1008/E1011).\nOntbrekende JSDoc-parameterbeschrijvingen toegevoegd.",
+        "fr": "Correction des rôles d'état invalides signalés par le vérificateur d'objets : l'adresse IP/la passerelle/le sous-réseau du réseau utilisent désormais le rôle « text » (accessible en écriture), les ports telnet/TCP utilisent le rôle en lecture seule « info.port » et les états du réseau LAN1/LAN2 sont en lecture seule « info.ip » (E1008/E1011).\nAjout des descriptions de paramètres JSDoc manquantes",
+        "it": "Corretti i ruoli di stato non validi segnalati dal controllo degli oggetti: IP di rete/gateway/subnet ora utilizzano il ruolo \"text\" (scrivibile), le porte telnet/TCP utilizzano il ruolo di sola lettura \"info.port\" e gli stati di rete LAN1/LAN2 sono di sola lettura \"info.ip\" (E1008/E1011)\nAggiunte le descrizioni dei parametri JSDoc mancanti",
+        "es": "Se corrigieron los roles de estado no válidos señalados por el verificador de objetos: la IP de red/puerta de enlace/subred ahora usan el rol \"texto\" (escribible), los puertos telnet/TCP usan \"info.port\" de solo lectura y los estados de red LAN1/LAN2 son \"info.ip\" de solo lectura (E1008/E1011).\nSe agregaron las descripciones de parámetros JSDoc faltantes.",
+        "pl": "Naprawiono nieprawidłowe role stanu oznaczone przez moduł sprawdzania obiektów: adres IP sieci/brama/podsieć używają teraz roli „text” (zapisywalnej), porty telnet/TCP używają roli tylko do odczytu „info.port”, a stany sieci LAN1/LAN2 są rolami tylko do odczytu „info.ip” (E1008/E1011)\nDodano brakujące opisy parametrów JSDoc",
+        "uk": "Виправлено недійсні ролі стану, позначені перевіркою об'єктів: IP-адреса мережі/шлюз/підмережа тепер використовують роль \"текст\" (доступна для запису), порти telnet/TCP використовують лише для читання \"info.port\", а стани мережі LAN1/LAN2 доступні лише для читання \"info.ip\" (E1008/E1011).\nДодано відсутні описи параметрів JSDoc",
+        "zh-cn": "修复了对象检查器标记的无效状态角色：网络 IP/网关/子网现在使用角色“text”（可写），telnet/TCP 端口使用只读的“info.port”，LAN1/LAN2 网络状态为只读的“info.ip”（E1008/E1011）\n添加了缺失的JSDoc参数描述"
+      },
       "0.3.6": {
         "en": "Use ioBroker framework timers so they are cleaned up on adapter unload (repochecker E5004/E5005)\nUpdated @alcalzone/release-script to 5.2.1 and @iobroker/adapter-core to 3.4.1 (repochecker E0036/W0034)\nLinked CHANGELOG_OLD.md from the README changelog",
         "de": "Verwenden Sie die Timer des ioBroker-Frameworks, damit diese beim Entladen des Adapters bereinigt werden (Repochecker E5004/E5005).\n@alcalzone/release-script wurde auf Version 5.2.1 und @iobroker/adapter-core auf Version 3.4.1 aktualisiert (Repochecker E0036/W0034).\nDie Datei CHANGELOG_OLD.md wurde aus dem Änderungsprotokoll der README-Datei verlinkt.",
@@ -80,19 +93,6 @@
         "pl": "Naprawiono ostrzeżenia sprawdzania adaptera, dodano tłumaczenia",
         "uk": "Виправлено попередження перевірки адаптера, додано переклади",
         "zh-cn": "修复适配器检查器警告，添加翻译"
-      },
-      "0.3.0": {
-        "en": "Initial release with support for AMF42AU, MFP62, MFP72, MFP112, WMF51, WMF72; CEC, presets, picture controls",
-        "de": "Erstveröffentlichung mit Unterstützung für AMF42AU, MFP62, MFP72, MFP112, WMF51, WMF72; CEC, Presets, Bildsteuerung",
-        "ru": "Первый выпуск с поддержкой AMF42AU, MFP62, MFP72, MFP112, WMF51, WMF72; CEC, пресеты, управление изображением",
-        "pt": "Lançamento inicial com suporte para AMF42AU, MFP62, MFP72, MFP112, WMF51, WMF72; CEC, predefinições, controles de imagem",
-        "nl": "Eerste release met ondersteuning voor AMF42AU, MFP62, MFP72, MFP112, WMF51, WMF72; CEC, presets, beeldbesturing",
-        "fr": "Version initiale avec support pour AMF42AU, MFP62, MFP72, MFP112, WMF51, WMF72; CEC, préréglages, contrôles d'image",
-        "it": "Rilascio iniziale con supporto per AMF42AU, MFP62, MFP72, MFP112, WMF51, WMF72; CEC, preset, controlli immagine",
-        "es": "Lanzamiento inicial con soporte para AMF42AU, MFP62, MFP72, MFP112, WMF51, WMF72; CEC, preajustes, controles de imagen",
-        "pl": "Pierwsze wydanie z obsługą AMF42AU, MFP62, MFP72, MFP112, WMF51, WMF72; CEC, presety, sterowanie obrazem",
-        "uk": "Перший випуск з підтримкою AMF42AU, MFP62, MFP72, MFP112, WMF51, WMF72; CEC, пресети, керування зображенням",
-        "zh-cn": "初始版本，支持AMF42AU、MFP62、MFP72、MFP112、WMF51、WMF72；CEC、预设、图像控制"
       }
     },
     "titleLang": {
