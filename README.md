@@ -119,6 +119,11 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
+### **WORK IN PROGRESS**
+* (Alan Paris) Fixed CEC output states being created for outputs the model does not have (missing intermediate object, E3009)
+* (Alan Paris) Preset save/apply/clear states now have read=true as required by the "level" role (E1010)
+* (Alan Paris) Audited every adapter object definition against the ioBroker state-role rules
+
 ### 0.3.7 (2026-07-02)
 * (Alan Paris) Fixed invalid state roles flagged by the object checker: network IP/gateway/subnet now use role "text" (writable), telnet/TCP ports use read-only "info.port", and LAN1/LAN2 network states are read-only "info.ip" (E1008/E1011)
 * (Alan Paris) Added missing JSDoc parameter descriptions

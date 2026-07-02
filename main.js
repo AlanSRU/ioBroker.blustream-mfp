@@ -1535,7 +1535,7 @@ class BlustreamAdapter extends utils.Adapter {
                     role: 'level',
                     name: 'Save to Preset',
                     type: 'number',
-                    read: false,
+                    read: true,
                     write: true,
                     min: 1,
                     max: 9,
@@ -1549,7 +1549,7 @@ class BlustreamAdapter extends utils.Adapter {
                     role: 'level',
                     name: 'Apply Preset',
                     type: 'number',
-                    read: false,
+                    read: true,
                     write: true,
                     min: 1,
                     max: 9,
@@ -1563,7 +1563,7 @@ class BlustreamAdapter extends utils.Adapter {
                     role: 'level',
                     name: 'Clear Preset',
                     type: 'number',
-                    read: false,
+                    read: true,
                     write: true,
                     min: 1,
                     max: 9,
@@ -1580,8 +1580,8 @@ class BlustreamAdapter extends utils.Adapter {
                 native: {},
             });
 
-            // Output CEC
-            for (let i = 1; i <= 3; i++) {
+            // Output CEC (only for outputs this model actually has)
+            for (let i = 1; i <= def.outputs; i++) {
                 await this.setObjectNotExistsAsync(`output.${i}.cecEnabled`, {
                     type: 'state',
                     common: {
