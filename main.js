@@ -1126,7 +1126,7 @@ class BlustreamAdapter extends utils.Adapter {
             await this.setObjectNotExistsAsync('network.ip', {
                 type: 'state',
                 common: {
-                    role: 'info.ip',
+                    role: 'text',
                     name: 'IP Address',
                     type: 'string',
                     read: true,
@@ -1138,7 +1138,7 @@ class BlustreamAdapter extends utils.Adapter {
             await this.setObjectNotExistsAsync('network.gateway', {
                 type: 'state',
                 common: {
-                    role: 'info.ip',
+                    role: 'text',
                     name: 'Gateway',
                     type: 'string',
                     read: true,
@@ -1150,7 +1150,7 @@ class BlustreamAdapter extends utils.Adapter {
             await this.setObjectNotExistsAsync('network.subnet', {
                 type: 'state',
                 common: {
-                    role: 'info.ip',
+                    role: 'text',
                     name: 'Subnet Mask',
                     type: 'string',
                     read: true,
@@ -1162,13 +1162,11 @@ class BlustreamAdapter extends utils.Adapter {
             await this.setObjectNotExistsAsync('network.telnetPort', {
                 type: 'state',
                 common: {
-                    role: 'value.port',
+                    role: 'info.port',
                     name: 'Telnet Port',
-                    type: 'number',
+                    type: 'string',
                     read: true,
-                    write: true,
-                    min: 1,
-                    max: 65535,
+                    write: false,
                 },
                 native: {},
             });
@@ -1203,25 +1201,25 @@ class BlustreamAdapter extends utils.Adapter {
 
                     await this.setObjectNotExistsAsync(`network.${lan}.ip`, {
                         type: 'state',
-                        common: { role: 'info.ip', name: 'IP Address', type: 'string', read: true, write: true },
+                        common: { role: 'info.ip', name: 'IP Address', type: 'string', read: true, write: false },
                         native: {},
                     });
 
                     await this.setObjectNotExistsAsync(`network.${lan}.gateway`, {
                         type: 'state',
-                        common: { role: 'info.ip', name: 'Gateway', type: 'string', read: true, write: true },
+                        common: { role: 'info.ip', name: 'Gateway', type: 'string', read: true, write: false },
                         native: {},
                     });
 
                     await this.setObjectNotExistsAsync(`network.${lan}.subnet`, {
                         type: 'state',
-                        common: { role: 'info.ip', name: 'Subnet Mask', type: 'string', read: true, write: true },
+                        common: { role: 'info.ip', name: 'Subnet Mask', type: 'string', read: true, write: false },
                         native: {},
                     });
 
                     await this.setObjectNotExistsAsync(`network.${lan}.tcpPort`, {
                         type: 'state',
-                        common: { role: 'value.port', name: 'TCP Port', type: 'number', read: true, write: true },
+                        common: { role: 'info.port', name: 'TCP Port', type: 'string', read: true, write: false },
                         native: {},
                     });
                 }
@@ -1772,7 +1770,7 @@ class BlustreamAdapter extends utils.Adapter {
      * Responds to DO/WILL requests with WONT/DONT to refuse options
      * Returns the data buffer with IAC sequences stripped out
      *
-     * @param data
+     * @param data Raw buffer received from the socket, possibly containing IAC sequences
      */
     handleTelnetIAC(data) {
         const cleanedBytes = [];
@@ -1846,8 +1844,8 @@ class BlustreamAdapter extends utils.Adapter {
     /**
      * Send a Telnet IAC response
      *
-     * @param command
-     * @param option
+     * @param command Telnet command byte (e.g. WILL, WONT, DO, DONT)
+     * @param option Telnet option byte the command refers to
      */
     sendTelnetResponse(command, option) {
         if (this.socket && this.connected) {
@@ -2488,10 +2486,6 @@ class BlustreamAdapter extends utils.Adapter {
 
             case 'network.subnet':
                 this.sendCommand(`NET SM ${state.val}`);
-                break;
-
-            case 'network.telnetPort':
-                this.sendCommand(`NET TN ${state.val}`);
                 break;
 
             case 'network.reboot':
