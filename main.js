@@ -1756,13 +1756,13 @@ class BlustreamAdapter extends utils.Adapter {
 
     scheduleReconnect() {
         if (this.reconnectTimer) {
-            clearTimeout(this.reconnectTimer);
+            this.clearTimeout(this.reconnectTimer);
         }
 
         const interval = this.config.reconnectInterval || 10000;
         this.log.info(`Scheduling reconnect in ${interval}ms...`);
 
-        this.reconnectTimer = setTimeout(() => {
+        this.reconnectTimer = this.setTimeout(() => {
             this.connect();
         }, interval);
     }
@@ -1885,7 +1885,7 @@ class BlustreamAdapter extends utils.Adapter {
 
         // Clear command timeout on response
         if (this.commandTimeout) {
-            clearTimeout(this.commandTimeout);
+            this.clearTimeout(this.commandTimeout);
             this.commandTimeout = null;
         }
 
@@ -2245,7 +2245,7 @@ class BlustreamAdapter extends utils.Adapter {
 
     startPolling() {
         if (this.pollingTimer) {
-            clearInterval(this.pollingTimer);
+            this.clearInterval(this.pollingTimer);
         }
 
         const interval = this.config.pollingInterval || 30000;
@@ -2253,7 +2253,7 @@ class BlustreamAdapter extends utils.Adapter {
         // Initial status request
         this.sendCommand('STATUS');
 
-        this.pollingTimer = setInterval(() => {
+        this.pollingTimer = this.setInterval(() => {
             if (this.connected) {
                 this.sendCommand('STATUS');
             }
@@ -2262,7 +2262,7 @@ class BlustreamAdapter extends utils.Adapter {
 
     stopPolling() {
         if (this.pollingTimer) {
-            clearInterval(this.pollingTimer);
+            this.clearInterval(this.pollingTimer);
             this.pollingTimer = null;
         }
     }
@@ -2301,7 +2301,7 @@ class BlustreamAdapter extends utils.Adapter {
                 this.socket.write(cmdWithCR);
             }
 
-            this.commandTimeout = setTimeout(() => {
+            this.commandTimeout = this.setTimeout(() => {
                 this.log.warn(`Command timeout for: ${command}`);
                 this.currentCommand = null;
                 this.processCommandQueue();
@@ -2530,12 +2530,12 @@ class BlustreamAdapter extends utils.Adapter {
             this.stopPolling();
 
             if (this.reconnectTimer) {
-                clearTimeout(this.reconnectTimer);
+                this.clearTimeout(this.reconnectTimer);
                 this.reconnectTimer = null;
             }
 
             if (this.commandTimeout) {
-                clearTimeout(this.commandTimeout);
+                this.clearTimeout(this.commandTimeout);
                 this.commandTimeout = null;
             }
 
