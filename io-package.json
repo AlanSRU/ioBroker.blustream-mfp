@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "blustream-mfp",
-    "version": "0.3.7",
+    "version": "0.3.8",
     "news": {
+      "0.3.8": {
+        "en": "Fixed CEC output states being created for outputs the model does not have (missing intermediate object, E3009)\nPreset save/apply/clear states now have read=true as required by the \"level\" role (E1010)\nAudited every adapter object definition against the ioBroker state-role rules",
+        "de": "Es werden feste CEC-Ausgabezustände für Ausgaben erstellt, die das Modell nicht besitzt (fehlendes Zwischenobjekt, E3009).\nVoreingestellte Speicher-/Anwendungs-/Löschzustände haben nun, wie von der Rolle \"level\" gefordert, den Wert read=true (E1010).\nJede Adapterobjektdefinition wurde anhand der ioBroker-Status-Rollenregeln geprüft.",
+        "ru": "Исправлена ошибка, из-за которой создавались выходные состояния CEC для выходных данных, которых нет у модели (отсутствует промежуточный объект, E3009).\nВ предварительно заданных состояниях сохранения/применения/очистки теперь установлено значение read=true, как того требует роль \"level\" (E1010).\nПроведена проверка каждого определения объекта адаптера на соответствие правилам state-role ioBroker.",
+        "pt": "Corrigido o problema de criação de estados de saída CEC para saídas que o modelo não possui (objeto intermediário ausente, E3009).\nOs estados predefinidos de salvar/aplicar/limpar agora têm read=true conforme exigido pela função \"nível\" (E1010)\nAuditei todas as definições de objetos adaptadores em relação às regras de estado e função do ioBroker.",
+        "nl": "Er worden vaste CEC-uitvoerstatussen aangemaakt voor uitvoer die het model niet heeft (ontbrekend tussenliggend object, E3009).\nVooraf ingestelde statussen voor opslaan/toepassen/wissen hebben nu read=true, zoals vereist door de rol \"level\" (E1010).\nElke adapterobjectdefinitie is gecontroleerd aan de hand van de ioBroker-status-rolregels.",
+        "fr": "Des états de sortie CEC fixes sont créés pour les sorties que le modèle ne possède pas (objet intermédiaire manquant, E3009).\nLes états prédéfinis de sauvegarde/application/effacement ont désormais la propriété read=true comme l'exige le rôle « niveau » (E1010).\nChaque définition d'objet adaptateur a été vérifiée par rapport aux règles de rôle d'état d'ioBroker.",
+        "it": "Vengono creati stati di output CEC fissi per output che il modello non possiede (oggetto intermedio mancante, E3009)\nGli stati di salvataggio/applicazione/cancellazione dei preset ora hanno read=true come richiesto dal ruolo \"livello\" (E1010)\nHo verificato ogni definizione di oggetto adattatore rispetto alle regole di ruolo e stato di ioBroker.",
+        "es": "Se corrigió el estado de salida CEC que se creaba para salidas que el modelo no tiene (objeto intermedio faltante, E3009).\nLos estados preestablecidos de guardar/aplicar/borrar ahora tienen read=true como lo requiere el rol \"level\" (E1010).\nSe auditó cada definición de objeto adaptador según las reglas de rol de estado de ioBroker.",
+        "pl": "Naprawiono tworzenie stanów wyjściowych CEC dla wyjść, których model nie posiada (brak obiektu pośredniego, E3009)\nWstępnie ustawione stany zapisywania/zastosowania/czyszczenia mają teraz wartość read=true, zgodnie z wymaganiami roli „poziom” (E1010)\nPrzeprowadzono audyt każdej definicji obiektu adaptera pod kątem reguł roli stanu ioBroker",
+        "uk": "Виправлено створення вихідних станів CEC для виходів, яких модель не має (відсутній проміжний об'єкт, E3009)\nСтан збереження/застосування/очищення попередньо встановлених параметрів тепер має значення read=true, як того вимагає роль \"level\" (E1010).\nПеревірено кожне визначення об'єкта адаптера на відповідність правилам ролі стану ioBroker",
+        "zh-cn": "修复了为模型中不存在的输出创建 CEC 输出状态的问题（缺少中间对象，E3009）\n预设的保存/应用/清除状态现在已按“级别”角色 (E1010) 的要求设置为 read=true\n根据 ioBroker 状态角色规则审核了每个适配器对象定义。"
+      },
       "0.3.7": {
         "en": "Fixed invalid state roles flagged by the object checker: network IP/gateway/subnet now use role \"text\" (writable), telnet/TCP ports use read-only \"info.port\", and LAN1/LAN2 network states are read-only \"info.ip\" (E1008/E1011)\nAdded missing JSDoc parameter descriptions",
         "de": "Vom Objektprüfer als ungültig gekennzeichnete Statusrollen wurden korrigiert: Netzwerk-IP/Gateway/Subnetz verwenden nun die Rolle \"text\" (beschreibbar), Telnet-/TCP-Ports verwenden die schreibgeschützte Rolle \"info.port\" und die Netzwerkstatus LAN1/LAN2 sind schreibgeschützt \"info.ip\" (E1008/E1011).\nFehlende JSDoc-Parameterbeschreibungen hinzugefügt",
@@ -80,19 +93,6 @@
         "pl": "Dodano lepsze parsowanie odpowiedzi",
         "uk": "Додано покращений розбір відповідей",
         "zh-cn": "添加了更好的响应解析"
-      },
-      "0.3.1": {
-        "en": "Fixed adapter checker warnings, added translations",
-        "de": "Adapter-Checker-Warnungen behoben, Übersetzungen hinzugefügt",
-        "ru": "Исправлены предупреждения проверки адаптера, добавлены переводы",
-        "pt": "Corrigidos avisos do verificador de adaptador, traduções adicionadas",
-        "nl": "Adapter checker waarschuwingen opgelost, vertalingen toegevoegd",
-        "fr": "Corrections des avertissements du vérificateur d'adaptateur, traductions ajoutées",
-        "it": "Corretti avvisi del controllo adattatore, aggiunte traduzioni",
-        "es": "Corregidas advertencias del verificador de adaptador, traducciones añadidas",
-        "pl": "Naprawiono ostrzeżenia sprawdzania adaptera, dodano tłumaczenia",
-        "uk": "Виправлено попередження перевірки адаптера, додано переклади",
-        "zh-cn": "修复适配器检查器警告，添加翻译"
       }
     },
     "titleLang": {

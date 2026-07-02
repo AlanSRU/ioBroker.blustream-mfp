@@ -119,7 +119,7 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
-### **WORK IN PROGRESS**
+### 0.3.8 (2026-07-02)
 * (Alan Paris) Fixed CEC output states being created for outputs the model does not have (missing intermediate object, E3009)
 * (Alan Paris) Preset save/apply/clear states now have read=true as required by the "level" role (E1010)
 * (Alan Paris) Audited every adapter object definition against the ioBroker state-role rules
@@ -142,11 +142,6 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 * (Alan Paris) Cleared repochecker findings and unblocked CI after dependabot conflicts
 * (Alan Paris) Added tsconfig.json and @tsconfig/node20 for type checking
 * (Alan Paris) Filled in missing admin translations for jsonConfig help texts
-
-### 0.3.3 (2026-05-20)
-* (Alan Paris) Now requires Node.js 20+, js-controller 6.0.11+, admin 7.6.20+
-* (Alan Paris) Migrated admin UI to jsonConfig
-* (Alan Paris) Modernized internal tooling (release-script, ESLint 9, ioBroker testing actions)
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
