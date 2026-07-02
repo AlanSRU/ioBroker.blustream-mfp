@@ -33,3 +33,6 @@ coverage/
 # ioBroker specific
 iobroker-data/
 .commitinfo
+
+# Object dumps for repository review (not part of the adapter)
+blustream-mfp.*.json

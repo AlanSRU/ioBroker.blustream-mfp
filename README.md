@@ -119,6 +119,11 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
+### **WORK IN PROGRESS**
+* (Alan Paris) Use ioBroker framework timers so they are cleaned up on adapter unload (repochecker E5004/E5005)
+* (Alan Paris) Updated @alcalzone/release-script to 5.2.1 and @iobroker/adapter-core to 3.4.1 (repochecker E0036/W0034)
+* (Alan Paris) Linked CHANGELOG_OLD.md from the README changelog
+
 ### 0.3.5 (2026-05-29)
 * (Alan Paris) Raised minimum Node.js to 22 and updated CI workflows to Node.js 24
 * (Alan Paris) Removed chai/mocha devDependencies (provided by @iobroker/testing) and migrated tooling to @tsconfig/node22
