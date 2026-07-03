@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "blustream-mfp",
-    "version": "0.4.0",
+    "version": "0.4.1",
     "news": {
+      "0.4.1": {
+        "en": "Removed unused state paths that were never created from the internal cleanup list, so it now matches the states the adapter actually creates",
+        "de": "Unbenutzte Zustandspfade, die nie erstellt wurden, wurden aus der internen Bereinigungsliste entfernt, sodass sie nun den vom Adapter tatsächlich erzeugten Zuständen entspricht.",
+        "ru": "Из внутреннего списка очистки удалены неиспользуемые пути состояний, которые так и не были созданы, поэтому теперь они соответствуют состояниям, которые фактически создает адаптер.",
+        "pt": "Removemos da lista de limpeza interna os caminhos de estado não utilizados que nunca foram criados, de forma que agora corresponda aos estados que o adaptador realmente cria.",
+        "nl": "Ongebruikte statuspaden die nooit zijn aangemaakt, zijn verwijderd uit de interne opschoonlijst, zodat deze nu overeenkomt met de statussen die de adapter daadwerkelijk aanmaakt.",
+        "fr": "Les chemins d'état inutilisés qui n'ont jamais été créés ont été supprimés de la liste de nettoyage interne, afin qu'elle corresponde désormais aux états réellement créés par l'adaptateur.",
+        "it": "Sono stati rimossi dall'elenco di pulizia interno i percorsi di stato inutilizzati che non sono mai stati creati, in modo che ora corrispondano agli stati effettivamente creati dall'adattatore.",
+        "es": "Se eliminaron de la lista de limpieza interna las rutas de estado no utilizadas que nunca se crearon, por lo que ahora coincide con los estados que realmente crea el adaptador.",
+        "pl": "Usunięto nieużywane ścieżki stanu, które nigdy nie zostały utworzone z wewnętrznej listy czyszczenia, dzięki czemu teraz odpowiadają one stanom, które adapter faktycznie tworzy",
+        "uk": "Видалено невикористані шляхи станів, які ніколи не створювалися, зі списку внутрішнього очищення, тому тепер він відповідає станам, які адаптер фактично створює.",
+        "zh-cn": "从内部清理列表中移除了从未创建过的未使用状态路径，使其与适配器实际创建的状态相匹配。"
+      },
       "0.4.0": {
         "en": "Writes to all writable states are now processed in onStateChange; previously many controls (picture, CEC, presets, WiFi, standby, sidebar, layout, audio mode, per-LAN DHCP) were silently ignored\nWiFi frequency and channel are now sent together as the single command the device requires\nSensitive values (e.g. WiFi password) are masked in the debug state-change log\nPolling and reconnect intervals are now clamped to safe bounds in code, not only in the admin UI",
         "de": "Schreibvorgänge in alle beschreibbaren Zustände werden nun in onStateChange verarbeitet; zuvor wurden viele Steuerelemente (Bild, CEC, Voreinstellungen, WLAN, Standby, Seitenleiste, Layout, Audiomodus, DHCP pro LAN) stillschweigend ignoriert.\nWLAN-Frequenz und Kanal werden nun zusammen als ein einziger Befehl gesendet, den das Gerät benötigt.\nSensible Werte (z. B. WLAN-Passwort) werden im Debug-Statusänderungsprotokoll maskiert.\nDie Abfrage- und Wiederverbindungsintervalle sind nun im Code auf sichere Grenzen beschränkt, nicht nur in der Admin-Benutzeroberfläche.",
@@ -80,19 +93,6 @@
         "pl": "Wyczyszczone wyniki badań repocheckera i odblokowany CI po konfliktach zależnościowych\nDodano tsconfig.json i @ tsconfig / node20 do sprawdzania typu\nWypełniona brakującymi tłumaczeniami administracyjnymi dla tekstów pomocy jsonConfig",
         "uk": "Очищені репочекерські пошуки та розблоковані ТПП після конфліктів залежного\nДодано tsconfig.json і @tsconfig/node20 для перевірки типу\nЗаповнені відсутніми перекладами адміністратора для jsonConfig допомагають тексти",
         "zh-cn": "已清查的复检结果和在依赖冲突后解锁 CI\n添加 tsconfig.json 和 @ tsconfig/ node20 用于类型检查\n填充 jsonConfig 帮助文本的缺失管理员翻译"
-      },
-      "0.3.3": {
-        "en": "Now requires Node.js 20+, js-controller 6.0.11+, admin 7.6.20+\nMigrated admin UI to jsonConfig\nModernized internal tooling (release-script, ESLint 9, ioBroker testing actions)",
-        "de": "Jetzt erfordert Node.js 20+, js-controller 6.0.11+, admin 7.6.20+\nMigrated admin UI to jsonConfig\nModernisierte interne Tooling (Release-script, ESLint 9, ioBroker-Testaktionen)",
-        "ru": "Теперь требуется Node.js 20+, js-контроллер 6.0.11+, админ 7.6.20+\nМиграционный админ UI для jsonConfig\nМодернизированный внутренний инструментарий (релиз-скрипт, ESLint 9, действия тестирования ioBroker)",
-        "pt": "Agora requer Node.js 20+, js-controller 6.0.11+, admin 7.6.20+\nIU de administrador migrado para jsonConfig\nFerramentas internas modernizadas (release-script, ESLint 9, ações de teste do ioBroker)",
-        "nl": "Nu vereist Node.js 20+, js-controller 6.0.11+, admin 7.6.20+\nMigrated admin UI to jsonConfig\nGemoderniseerde interne tooling (release-script, ESLint 9, ioBroker testing actions)",
-        "fr": "Maintenant nécessite Node.js 20+, js-controller 6.0.11+, admin 7.6.20+\nMigred admin UI to jsonConfig\nOutils internes modernisés (release-script, ESLint 9, ioBroker testing actions)",
-        "it": "Ora richiede Node.js 20+, js-controller 6.0.11+, admin 7.6.20+\nAdmin migrato UI a jsonConfig\nStrumenti interni modernizzati (release-script, ESLint 9, ioBroker azioni di test)",
-        "es": "Ahora requiere Node.js 20+, js-controller 6.0.11+, admin 7.6.20+\nMigrated admin UI to jsonConfig\nHerramientas internas modernizadas (release-script, ESLint 9, ioBroker testing actions)",
-        "pl": "Teraz wymaga Node.js 20 +, kontroler js- 6.0.11 +, admin 7.6.20 +\nMigrated admin UI to jsonConfig\nZmodernizowane oprzyrządowanie wewnętrzne (release- script, ESLint 9, joBroker testing actions)",
-        "uk": "Тепер вимагає Node.js 20+, js-controller 6.0.11+, admin 7.6.20+\nMigrated admin UI до jsonConfig\nМодернізований внутрішній інструментарій (видання-script, ESLint 9, ioBroker test action)",
-        "zh-cn": "现在需要节点20+,js控制器6.0.11+,admin 7.6.20+\n将管理员 UI 移到 jsonConfig\n现代化的内部工具(发布-script,ESLint 9,ioBroker测试行动)"
       }
     },
     "titleLang": {
