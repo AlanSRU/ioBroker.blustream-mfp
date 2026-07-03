@@ -119,6 +119,9 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
+### **WORK IN PROGRESS**
+* (Alan Paris) Removed unused state paths that were never created from the internal cleanup list, so it now matches the states the adapter actually creates
+
 ### 0.4.0 (2026-07-02)
 * (Alan Paris) Writes to all writable states are now processed in onStateChange; previously many controls (picture, CEC, presets, WiFi, standby, sidebar, layout, audio mode, per-LAN DHCP) were silently ignored
 * (Alan Paris) WiFi frequency and channel are now sent together as the single command the device requires
