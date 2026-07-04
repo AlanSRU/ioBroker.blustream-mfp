@@ -119,6 +119,10 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
+### __WORK IN PROGRESS__
+* (Alan Paris) WiFi password state is now write-only (`read: false`) so the value cannot be read back from the object tree once set
+* (Alan Paris) Removed the accidentally committed npm pack artifact (`.tgz`) from the repository
+
 ### 0.4.1 (2026-07-03)
 * (Alan Paris) Removed unused state paths that were never created from the internal cleanup list, so it now matches the states the adapter actually creates
 

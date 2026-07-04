@@ -1249,7 +1249,7 @@ class BlustreamAdapter extends utils.Adapter {
 
             await this.setObjectNotExistsAsync('wifi.password', {
                 type: 'state',
-                common: { role: 'text', name: 'Password', type: 'string', read: true, write: true },
+                common: { role: 'text', name: 'Password', type: 'string', read: false, write: true },
                 native: {},
             });
         }
