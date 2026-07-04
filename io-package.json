@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "blustream-mfp",
-    "version": "0.4.1",
+    "version": "0.4.2",
     "news": {
+      "0.4.2": {
+        "en": "WiFi password state is now write-only (`read: false`) so the value cannot be read back from the object tree once set\nRemoved the accidentally committed npm pack artifact (`.tgz`) from the repository",
+        "de": "Der WLAN-Passwortstatus ist nun schreibgeschützt (`read: false`), daher kann der Wert nach dem Festlegen nicht mehr aus dem Objektbaum ausgelesen werden.\nDas versehentlich eingecheckte npm-Pack-Artefakt (`.tgz`) wurde aus dem Repository entfernt.",
+        "ru": "Теперь пароль Wi-Fi доступен только для записи (`read: false`), поэтому его нельзя будет прочитать из дерева объектов после установки.\nУдалён случайно добавленный в репозиторий артефакт npm pack (`.tgz`).",
+        "pt": "O estado da senha do Wi-Fi agora é somente para escrita (`read: false`), portanto, o valor não pode ser lido de volta da árvore de objetos depois de definido.\nRemovi o artefato `npm pack` (`.tgz`) que havia sido adicionado acidentalmente ao repositório.",
+        "nl": "De status van het wifi-wachtwoord is nu alleen-schrijven (`read: false`), waardoor de waarde niet meer uit de objectstructuur kan worden teruggelezen nadat deze is ingesteld.\nHet per ongeluk gecompileerde npm pack-artefact (`.tgz`) is uit de repository verwijderd.",
+        "fr": "L'état du mot de passe Wi-Fi est désormais en écriture seule (`read: false`), sa valeur ne peut donc plus être lue à partir de l'arborescence d'objets une fois définie.\nSuppression de l'artefact npm pack (`.tgz`) ajouté par erreur au dépôt",
+        "it": "Lo stato della password WiFi è ora di sola scrittura (`read: false`), quindi il valore non può essere letto dall'albero degli oggetti una volta impostato.\nRimosso dal repository l'artefatto del pacchetto npm (`.tgz`) inserito per errore.",
+        "es": "El estado de la contraseña WiFi ahora es de solo escritura (`read: false`), por lo que el valor no se puede leer del árbol de objetos una vez establecido.\nSe eliminó del repositorio el artefacto npm pack (`.tgz`) que se había subido accidentalmente.",
+        "pl": "Stan hasła WiFi jest teraz tylko do zapisu (`odczyt: fałsz`), więc po ustawieniu wartości nie można jej odczytać z drzewa obiektów\nUsunięto przypadkowo zatwierdzony artefakt pakietu npm (`.tgz`) z repozytorium",
+        "uk": "Пароль WiFi тепер доступний лише для запису (`читання: false`), тому значення не можна зчитати з дерева об'єктів після встановлення.\nВидалено випадково закомітований артефакт npm-пакета (`.tgz`) з репозиторію",
+        "zh-cn": "WiFi 密码状态现在设置为只写（`read: false`），因此一旦设置，就无法从对象树中读取该值。\n从仓库中移除了意外提交的 npm 打包产物（`.tgz`）。"
+      },
       "0.4.1": {
         "en": "Removed unused state paths that were never created from the internal cleanup list, so it now matches the states the adapter actually creates",
         "de": "Unbenutzte Zustandspfade, die nie erstellt wurden, wurden aus der internen Bereinigungsliste entfernt, sodass sie nun den vom Adapter tatsächlich erzeugten Zuständen entspricht.",
@@ -80,19 +93,6 @@
         "pl": "Podwyższone minimum Node.js do 22 i zaktualizowane przepływy pracy CI do Node.js 24\nUsunięty chai / mocha devDevendences (dostarczany przez @ iobroker / testing) i migrated tooling to @ tsconfig / node22\nWyczyszczone pozostałe wyniki repocheckera: zasada ignorowania dependabot @ types / node, harmonogramy cron, auto- merge.yml, wtyczka do wydania manual- review i CHANGELOG _ OLD.md",
         "uk": "Перероблений мінімум Node.js до 22 і оновлений CI-роботи до Node.js 24\nВилучено chai/mocha devDepencies (відповіли @iobroker/testing) і мігрований інструмент для @tsconfig/node22\nОчищені залишилися репочекерні знахідки: залежності @types/node ігнорувати правило, графіки cron, auto-merge.yml, плагін для ручного перегляду та CHANGELOG OLD.md",
         "zh-cn": "将最低节点js提高到22个,更新CI工作流程至节点js 24\n已删除 chai/mocha devdependenies(由@iobroster/ testing 提供) 并将工具迁移到@tsconfig/node22\n清除剩余复检结果 : defabot@types/node 忽略规则, cron 调度表, auto- merge. yml, 手动审查发布插件, 以及 CHANGELOG  OLD. md"
-      },
-      "0.3.4": {
-        "en": "Cleared repochecker findings and unblocked CI after dependabot conflicts\nAdded tsconfig.json and @tsconfig/node20 for type checking\nFilled in missing admin translations for jsonConfig help texts",
-        "de": "Geklärte Repochecker-Ergebnisse und entsperrte CI nach Abhängigkeitabot-Konflikten\nTsconfig.json und @tsconfig/node20 für Typprüfung hinzugefügt\nGefüllt in fehlenden Admin-Übersetzungen für jsonConfig Hilfetexte",
-        "ru": "Очищенные результаты репочекера и разблокированный CI после конфликтов с иждивенцами\nДобавлены tsconfig.json и @tsconfig/node20 для проверки типа\nЗаполненные недостающие переводы администратора для текстов помощи jsonConfig",
-        "pt": "Achados de repochecker limpos e IC desbloqueado após conflitos dependentes\nAdicionado tsconfig.json e @tsconfig/node20 para verificação do tipo\nPreenchido em traduções de administrador ausentes para textos de ajuda do jsonConfig",
-        "nl": "Duidelijke bevindingen van de repochecker en ontblokte CI na afhankelijke-botconflicten\nToegevoegd tsconfig.json en @tsconfig/node20 voor typecontrole\nIngevulde ontbrekende admin vertalingen voor jsonConfig help teksten",
-        "fr": "Conclusions de repochecker effacées et IC débloquée après conflits de dépendance\nAjouté tsconfig.json et @tsconfig/node20 pour la vérification de type\nRemplir les traductions d'administration manquantes pour les textes d'aide de jsonConfig",
-        "it": "Risultati riposizionatori cancellati e sbloccato CI dopo conflitti dipendeabot\nAggiunto tsconfig.json e @tsconfig/node20 per il controllo del tipo\nRiempito nelle traduzioni di amministratore mancanti per i testi di aiuto di jsonConfig",
-        "es": "Los hallazgos de los recicladores y la CI desbloqueada después de conflictos de los dependientes\nAñadido tsconfig.json y @tsconfig/node20 para la comprobación de tipo\nFilled in missing admin translations for jsonConfig help texts",
-        "pl": "Wyczyszczone wyniki badań repocheckera i odblokowany CI po konfliktach zależnościowych\nDodano tsconfig.json i @ tsconfig / node20 do sprawdzania typu\nWypełniona brakującymi tłumaczeniami administracyjnymi dla tekstów pomocy jsonConfig",
-        "uk": "Очищені репочекерські пошуки та розблоковані ТПП після конфліктів залежного\nДодано tsconfig.json і @tsconfig/node20 для перевірки типу\nЗаповнені відсутніми перекладами адміністратора для jsonConfig допомагають тексти",
-        "zh-cn": "已清查的复检结果和在依赖冲突后解锁 CI\n添加 tsconfig.json 和 @ tsconfig/ node20 用于类型检查\n填充 jsonConfig 帮助文本的缺失管理员翻译"
       }
     },
     "titleLang": {

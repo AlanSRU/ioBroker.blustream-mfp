@@ -119,7 +119,7 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
+### 0.4.2 (2026-07-04)
 * (Alan Paris) WiFi password state is now write-only (`read: false`) so the value cannot be read back from the object tree once set
 * (Alan Paris) Removed the accidentally committed npm pack artifact (`.tgz`) from the repository
 
@@ -140,11 +140,6 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 ### 0.3.7 (2026-07-02)
 * (Alan Paris) Fixed invalid state roles flagged by the object checker: network IP/gateway/subnet now use role "text" (writable), telnet/TCP ports use read-only "info.port", and LAN1/LAN2 network states are read-only "info.ip" (E1008/E1011)
 * (Alan Paris) Added missing JSDoc parameter descriptions
-
-### 0.3.6 (2026-07-02)
-* (Alan Paris) Use ioBroker framework timers so they are cleaned up on adapter unload (repochecker E5004/E5005)
-* (Alan Paris) Updated @alcalzone/release-script to 5.2.1 and @iobroker/adapter-core to 3.4.1 (repochecker E0036/W0034)
-* (Alan Paris) Linked CHANGELOG_OLD.md from the README changelog
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
