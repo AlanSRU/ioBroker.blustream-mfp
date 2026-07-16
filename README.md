@@ -123,7 +123,7 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
+### 0.5.1 (2026-07-16)
 * (Alan Paris) Every state object now defines a default (`def`) value, so states have a defined initial value before the first device poll
 * (Alan Paris) Admin config: all device-model descriptions and option labels are now translatable and provided in all 11 ioBroker languages
 
@@ -145,11 +145,6 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 * (Alan Paris) WiFi frequency and channel are now sent together as the single command the device requires
 * (Alan Paris) Sensitive values (e.g. WiFi password) are masked in the debug state-change log
 * (Alan Paris) Polling and reconnect intervals are now clamped to safe bounds in code, not only in the admin UI
-
-### 0.3.8 (2026-07-02)
-* (Alan Paris) Fixed CEC output states being created for outputs the model does not have (missing intermediate object, E3009)
-* (Alan Paris) Preset save/apply/clear states now have read=true as required by the "level" role (E1010)
-* (Alan Paris) Audited every adapter object definition against the ioBroker state-role rules
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 

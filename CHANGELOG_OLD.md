@@ -6,6 +6,11 @@
 ### 0.3.0 (2025-12-21)
 * (Alan Paris) Initial release with support for AMF42AU, MFP62, MFP72, MFP112, WMF51, WMF72
 * (Alan Paris) Added CEC control, preset management, and picture controls
+## 0.3.8 (2026-07-02)
+* (Alan Paris) Fixed CEC output states being created for outputs the model does not have (missing intermediate object, E3009)
+* (Alan Paris) Preset save/apply/clear states now have read=true as required by the "level" role (E1010)
+* (Alan Paris) Audited every adapter object definition against the ioBroker state-role rules
+
 ## 0.3.7 (2026-07-02)
 * (Alan Paris) Fixed invalid state roles flagged by the object checker: network IP/gateway/subnet now use role "text" (writable), telnet/TCP ports use read-only "info.port", and LAN1/LAN2 network states are read-only "info.ip" (E1008/E1011)
 * (Alan Paris) Added missing JSDoc parameter descriptions
