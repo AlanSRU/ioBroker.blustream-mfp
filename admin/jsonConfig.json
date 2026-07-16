@@ -22,7 +22,9 @@
                 { "value": "mfp72", "label": "MFP72 (4x2 Matrix)" },
                 { "value": "mfp112", "label": "MFP112 (5x2 with HDBaseT)" },
                 { "value": "wmf51", "label": "WMF51 (Wireless Presenter)" },
-                { "value": "wmf72", "label": "WMF72 (Wireless Dual Display)" }
+                { "value": "wmf72", "label": "WMF72 (Wireless Dual Display)" },
+                { "value": "c66", "label": "C66 (6x6 HDBaseT Matrix)" },
+                { "value": "c88", "label": "C88 (8x8 HDBaseT Matrix)" }
             ],
             "newLine": true,
             "xs": 12,
@@ -85,6 +87,26 @@
             "type": "staticText",
             "text": "WMF72: Wireless presentation, 2 HDMI out (4K + 1080p), 11 multiview layouts, audio mixer, PIN/encryption, WiFi, dual LAN, USB host. Built-in TCP control.",
             "hidden": "data.deviceModel !== 'wmf72'",
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 6,
+            "xl": 6
+        },
+        "_modelInfoC66": {
+            "type": "staticText",
+            "text": "C66: 6 HDMI in / 6 HDBaseT + HDMI out crosspoint matrix, 4K HDCP 2.2, per-output PoC, 9 presets, EDID management. RS232 (57600) or TCP/IP control.",
+            "hidden": "data.deviceModel !== 'c66'",
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 6,
+            "xl": 6
+        },
+        "_modelInfoC88": {
+            "type": "staticText",
+            "text": "C88: 8 HDMI in / 8 HDBaseT + HDMI out crosspoint matrix, 4K HDCP 2.2, per-output PoC, 9 presets, EDID management. RS232 (57600) or TCP/IP control.",
+            "hidden": "data.deviceModel !== 'c88'",
             "xs": 12,
             "sm": 12,
             "md": 6,

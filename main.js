@@ -290,6 +290,49 @@ const MODEL_DEFINITIONS = {
         },
         dualLAN: true,
     },
+    // C Series - Contractor HDBaseT Matrix (crosspoint, non-scaling)
+    c66: {
+        name: 'C66',
+        description: '6x6 HDBaseT Matrix',
+        category: 'C',
+        isMatrix: true,
+        hasNetwork: true,
+        hasOutputEnable: true,
+        hasPresets: true,
+        hasPOC: true,
+        hasHDBT: true,
+        outputs: 6,
+        inputs: {
+            '01': 'HDMI 1',
+            '02': 'HDMI 2',
+            '03': 'HDMI 3',
+            '04': 'HDMI 4',
+            '05': 'HDMI 5',
+            '06': 'HDMI 6',
+        },
+    },
+    c88: {
+        name: 'C88',
+        description: '8x8 HDBaseT Matrix',
+        category: 'C',
+        isMatrix: true,
+        hasNetwork: true,
+        hasOutputEnable: true,
+        hasPresets: true,
+        hasPOC: true,
+        hasHDBT: true,
+        outputs: 8,
+        inputs: {
+            '01': 'HDMI 1',
+            '02': 'HDMI 2',
+            '03': 'HDMI 3',
+            '04': 'HDMI 4',
+            '05': 'HDMI 5',
+            '06': 'HDMI 6',
+            '07': 'HDMI 7',
+            '08': 'HDMI 8',
+        },
+    },
 };
 
 // Union of every state path any supported model creates. Used only to purge
@@ -326,6 +369,7 @@ const ALL_MODEL_STATES = [
     'output.1.colourTemp',
     'output.1.audioMix',
     'output.1.cecEnabled',
+    'output.1.poc',
     'output.2',
     'output.2.source',
     'output.2.enabled',
@@ -337,6 +381,33 @@ const ALL_MODEL_STATES = [
     'output.2.colourTemp',
     'output.2.audioMix',
     'output.2.cecEnabled',
+    'output.2.poc',
+    // Outputs 3-8 (C66/C88 matrix)
+    'output.3',
+    'output.3.source',
+    'output.3.enabled',
+    'output.3.poc',
+    'output.4',
+    'output.4.source',
+    'output.4.enabled',
+    'output.4.poc',
+    'output.5',
+    'output.5.source',
+    'output.5.enabled',
+    'output.5.poc',
+    'output.6',
+    'output.6.source',
+    'output.6.enabled',
+    'output.6.poc',
+    'output.7',
+    'output.7.source',
+    'output.7.enabled',
+    'output.7.poc',
+    'output.8',
+    'output.8.source',
+    'output.8.enabled',
+    'output.8.poc',
+    'output.allSource',
     'output.mode',
     'output.bypass',
     'output.resolution',
@@ -431,6 +502,7 @@ class BlustreamAdapter extends utils.Adapter {
         this.modelDef = null;
         this._statusHeaders = null;
         this._responseLines = null;
+        this._c66Table = null;
 
         this.on('ready', this.onReady.bind(this));
         this.on('stateChange', this.onStateChange.bind(this));
@@ -690,8 +762,26 @@ class BlustreamAdapter extends utils.Adapter {
             }
         }
 
-        // Output mode (splitter/matrix) - for MFP72/MFP112
-        if (!def.hasAutoSwitch) {
+        // Route-all control (C66/C88 matrix): OUT 00 FR yy sets every output to
+        // one input. Write-only (there is no single "current" value for all).
+        if (def.isMatrix) {
+            await this.setObjectNotExistsAsync('output.allSource', {
+                type: 'state',
+                common: {
+                    role: 'media.input',
+                    name: 'All Outputs Source',
+                    type: 'string',
+                    read: false,
+                    write: true,
+                    states: { ...def.inputs },
+                },
+                native: {},
+            });
+        }
+
+        // Output mode (splitter/matrix) - for MFP72/MFP112. True crosspoint
+        // matrices (C66/C88) have no SP/MX toggle, so exclude them.
+        if (!def.hasAutoSwitch && !def.isMatrix) {
             await this.setObjectNotExistsAsync('output.mode', {
                 type: 'state',
                 common: {
@@ -1317,13 +1407,29 @@ class BlustreamAdapter extends utils.Adapter {
             });
         }
 
-        // POC output (AMF series)
-        if (def.hasPOC) {
+        // POC output. AMF series has a single global toggle; matrices (C66/C88)
+        // control PoC per HDBaseT output.
+        if (def.hasPOC && !def.isMatrix) {
             await this.setObjectNotExistsAsync('system.pocOutput', {
                 type: 'state',
                 common: { role: 'switch.enable', name: 'HDBT POC Output', type: 'boolean', read: true, write: true },
                 native: {},
             });
+        }
+        if (def.hasPOC && def.isMatrix) {
+            for (let i = 1; i <= def.outputs; i++) {
+                await this.setObjectNotExistsAsync(`output.${i}.poc`, {
+                    type: 'state',
+                    common: {
+                        role: 'switch.enable',
+                        name: `Output ${i} PoC`,
+                        type: 'boolean',
+                        read: true,
+                        write: true,
+                    },
+                    native: {},
+                });
+            }
         }
 
         // Reboot command (WMF series)
@@ -1880,6 +1986,18 @@ class BlustreamAdapter extends utils.Adapter {
             // End of STATUS response — release command queue on separator
             if (/^={3,}$/.test(response)) {
                 this._statusHeaders = null;
+                this._c66Table = null;
+                this.currentCommand = null;
+                this.processCommandQueue();
+            }
+            return;
+        }
+
+        // C66/C88 matrix: fixed-width status tables + [SUCCESS]/[FAIL] confirmations
+        if (this.modelDef && this.modelDef.isMatrix) {
+            this.parseC66Response(response);
+            // Plain-language confirmations are terminal single-line responses
+            if (/^\[(SUCCESS|FAIL)\]/i.test(response)) {
                 this.currentCommand = null;
                 this.processCommandQueue();
             }
@@ -1917,6 +2035,123 @@ class BlustreamAdapter extends utils.Adapter {
         // Continue processing queue for non-STATUS responses
         this.currentCommand = null;
         this.processCommandQueue();
+    }
+
+    // C66/C88 status output is a set of space-padded, fixed-width tables. Each
+    // table starts with a header row; data rows are sliced by the character
+    // offset of each column name in that header. Also handles the plain-language
+    // [SUCCESS]/[FAIL] command confirmations the matrix returns.
+    parseC66Response(line) {
+        // Section dividers ("========" or "===== RS232 01") end the current table
+        if (/^=/.test(line)) {
+            this._c66Table = null;
+            return;
+        }
+
+        // Plain-language command confirmations
+        if (/^\[FAIL\]/i.test(line)) {
+            this.log.warn(`Device rejected command: ${line}`);
+            return;
+        }
+        if (/^\[SUCCESS\]/i.test(line)) {
+            let m;
+            if ((m = line.match(/Set output (\d+) connect from input (\d+)/i))) {
+                this.setStateAsync(`output.${parseInt(m[1], 10)}.source`, m[2].padStart(2, '0'), true);
+            } else if ((m = line.match(/Set output (\d+) (ON|OFF)/i))) {
+                this.setStateAsync(`output.${parseInt(m[1], 10)}.enabled`, m[2].toUpperCase() === 'ON', true);
+            } else if ((m = line.match(/Set POC (ON|OFF) on output (\d+)/i))) {
+                this.setStateAsync(`output.${parseInt(m[2], 10)}.poc`, m[1].toUpperCase() === 'ON', true);
+            }
+            return;
+        }
+
+        // Header rows: first token identifies the table. Record column offsets.
+        const tableDefs = {
+            Power: ['Power', 'IR', 'Key', 'LCD', 'Baud', 'IRPON', 'IRFV', 'Output1'],
+            Input: ['Input', 'Edid', 'HDMIcon', 'CECIn'],
+            Output: ['Output', 'FromIn', 'HDMIcon', 'OutputEn', 'OSP', 'PoC', 'RS232ctr', 'CECOut', 'IRctr', 'IRInput'],
+            DHCP: ['DHCP', 'IP', 'Gateway', 'SubnetMask'],
+            Telnet: ['Telnet', 'LAN MAC'],
+        };
+        const firstToken = line.trim().split(/\s+/)[0];
+        if (tableDefs[firstToken] && line.includes(tableDefs[firstToken][1].split(' ')[0])) {
+            const names = tableDefs[firstToken];
+            const offsets = names.map(n => line.indexOf(n));
+            // Bail if any expected column is missing from this header line
+            if (offsets.every(o => o >= 0)) {
+                this._c66Table = { type: firstToken, names, offsets };
+                return;
+            }
+        }
+
+        // Data rows: slice by the active table's column offsets
+        if (!this._c66Table) {
+            return;
+        }
+        const { type, names, offsets } = this._c66Table;
+        const data = {};
+        for (let i = 0; i < names.length; i++) {
+            data[names[i]] = line.substring(offsets[i], i + 1 < offsets.length ? offsets[i + 1] : line.length).trim();
+        }
+
+        switch (type) {
+            case 'Power':
+                if (data.Power) {
+                    this.setStateAsync('system.power', data.Power.toUpperCase() === 'ON', true);
+                }
+                if (data.IR) {
+                    this.setStateAsync('system.ir', data.IR.toUpperCase() === 'ON', true);
+                }
+                if (data.Key) {
+                    this.setStateAsync('system.key', data.Key.toUpperCase() === 'ON', true);
+                }
+                if (data.LCD) {
+                    this.setStateAsync('system.lcd', data.LCD.toUpperCase() === 'ON', true);
+                }
+                this._c66Table = null; // single-row table
+                break;
+
+            case 'Output': {
+                const outputNum = parseInt(data.Output, 10);
+                if (outputNum >= 1 && outputNum <= (this.modelDef.outputs || 8)) {
+                    if (data.FromIn) {
+                        this.setStateAsync(`output.${outputNum}.source`, data.FromIn.padStart(2, '0'), true);
+                    }
+                    if (data.OutputEn) {
+                        this.setStateAsync(`output.${outputNum}.enabled`, data.OutputEn.toUpperCase() === 'YES', true);
+                    }
+                    if (data.PoC) {
+                        this.setStateAsync(`output.${outputNum}.poc`, data.PoC.toUpperCase() === 'ON', true);
+                    }
+                }
+                break;
+            }
+
+            case 'DHCP':
+                if (data.DHCP) {
+                    this.setStateAsync('network.dhcp', data.DHCP.toUpperCase() === 'ON', true);
+                }
+                if (data.IP) {
+                    this.setStateAsync('network.ip', data.IP, true);
+                }
+                if (data.Gateway) {
+                    this.setStateAsync('network.gateway', data.Gateway, true);
+                }
+                if (data.SubnetMask) {
+                    this.setStateAsync('network.subnet', data.SubnetMask, true);
+                }
+                this._c66Table = null; // single-row table
+                break;
+
+            case 'Telnet':
+                if (data.Telnet && /^\d+$/.test(data.Telnet)) {
+                    this.setStateAsync('network.telnetPort', data.Telnet, true); // string state
+                }
+                this._c66Table = null; // single-row table
+                break;
+
+            // 'Input' table (EDID/CEC per input) intentionally not mapped yet
+        }
     }
 
     parseStatusTableRow(tableType, data) {
@@ -2330,11 +2565,25 @@ class BlustreamAdapter extends utils.Adapter {
             return;
         }
 
+        // Route all outputs to one input (C66/C88 matrix): OUT 00 FR yy
+        if (stateId === 'output.allSource') {
+            this.sendCommand(`OUT 00 FR ${state.val}`);
+            return;
+        }
+
         // Handle output enable changes
         const outputEnableMatch = stateId.match(/^output\.(\d)\.enabled$/);
         if (outputEnableMatch) {
             const outputNum = outputEnableMatch[1];
             this.sendCommand(`OUT ${outputNum.padStart(2, '0')} ${state.val ? 'ON' : 'OFF'}`);
+            return;
+        }
+
+        // Handle per-output PoC (C66/C88 matrix): POCOUT xx ON/OFF
+        const outputPocMatch = stateId.match(/^output\.(\d)\.poc$/);
+        if (outputPocMatch) {
+            const outputNum = outputPocMatch[1];
+            this.sendCommand(`POCOUT ${outputNum.padStart(2, '0')} ${state.val ? 'ON' : 'OFF'}`);
             return;
         }
 

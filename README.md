@@ -23,6 +23,8 @@ Control Blustream AMF/MFP/WMF series AV presentation switchers via RS232 serial 
 | **MFP112** | 5x2 Multi-Format Presentation Switcher with HDBaseT | IP (Telnet) |
 | **WMF51** | Wireless Media Presenter | IP (Telnet) |
 | **WMF72** | Wireless Media Presenter with Dual Display | IP (Telnet) |
+| **C66** | 6x6 Contractor HDBaseT Matrix | RS232 / IP |
+| **C88** | 8x8 Contractor HDBaseT Matrix | RS232 / IP |
 
 For more information about Blustream products, visit [Blustream](https://www.blustream.co.uk/).
 
@@ -84,17 +86,19 @@ The adapter creates states dynamically based on the selected device model. Commo
 
 ## Features by Model
 
-| Feature | AMF42AU | MFP62 | MFP72 | MFP112 | WMF51 | WMF72 |
-|---------|---------|-------|-------|--------|-------|-------|
-| Network Control | Yes | Yes | Yes | Yes | Yes | Yes |
-| RS232 Control | - | - | Yes | - | - | - |
-| CEC Control | Yes | - | - | - | - | - |
-| Microphone | Yes | Yes | - | - | - | - |
-| Presets | Yes | - | - | - | - | - |
-| Picture Control | Yes | - | - | - | - | - |
-| WiFi Control | - | - | - | - | Yes | Yes |
-| Multiview | - | - | - | - | Yes | Yes |
-| HDBaseT | - | - | - | Yes | - | - |
+| Feature | AMF42AU | MFP62 | MFP72 | MFP112 | WMF51 | WMF72 | C66 | C88 |
+|---------|---------|-------|-------|--------|-------|-------|-----|-----|
+| Network Control | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Yes |
+| RS232 Control | - | - | Yes | - | - | - | Yes | Yes |
+| Matrix Routing | - | - | - | - | - | - | Yes | Yes |
+| CEC Control | Yes | - | - | - | - | - | - | - |
+| Microphone | Yes | Yes | - | - | - | - | - | - |
+| Presets | Yes | - | - | - | - | - | Yes | Yes |
+| Picture Control | Yes | - | - | - | - | - | - | - |
+| WiFi Control | - | - | - | - | Yes | Yes | - | - |
+| Multiview | - | - | - | - | Yes | Yes | - | - |
+| HDBaseT | - | - | - | Yes | - | - | Yes | Yes |
+| PoC (per output) | - | - | - | - | - | - | Yes | Yes |
 
 ## Troubleshooting
 
@@ -119,6 +123,11 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
+### __WORK IN PROGRESS__
+* (Alan Paris) Added support for the Blustream C66 (6x6) and C88 (8x8) Contractor HDBaseT matrices: crosspoint routing across up to 8 outputs, route-all (`output.allSource`), per-output enable, per-output PoC, and 9 presets
+* (Alan Paris) Added a dedicated parser for the C66/C88 fixed-width STATUS/OUTSTA tables and the `[SUCCESS]`/`[FAIL]` command confirmations, so routing, enable, PoC and network states reflect the device
+* (Alan Paris) Added `protocols/c66.txt` documenting the C66/C88 RS-232 / Telnet command set (verified against FW V1.0.1d)
+
 ### 0.4.2 (2026-07-04)
 * (Alan Paris) WiFi password state is now write-only (`read: false`) so the value cannot be read back from the object tree once set
 * (Alan Paris) Removed the accidentally committed npm pack artifact (`.tgz`) from the repository

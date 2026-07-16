@@ -1,0 +1,125 @@
+              Blustream C66 / C88 Contractor HDBaseT Matrix — RS-232 / Telnet Command Reference
+
+Applies to: C66 (6x6) and C88 (8x8) HDBaseT matrix switchers.
+  - C66: inputs xx=[01..06], outputs xx=[01..06]
+  - C88: inputs xx=[01..08], outputs xx=[01..08]
+
+VERIFIED against C66 hardware, FW Version V1.0.1d (2026-07). Where this file and
+the C66CS/C88CS manual disagree, the values below reflect what the real unit does.
+Note: the plain C66/C88 has no per-output custom scaling (the "CS"/CSC variants add
+that); scaling commands are omitted here.
+
+Connection:
+  RS-232: 57600 baud, 8 data bits, 1 stop bit, no parity (8N1). DB9 female.
+  Telnet: TCP, configurable port (NET TN). Default IP 192.168.0.200. Default port 23 (verified).
+  Web GUI: default user "blustream", password "1234".
+  Command terminator: carriage return (CR / 0x0D). Both spaced (OUT 01 FR 02) and
+  unspaced (OUT01FR02) forms are accepted — VERIFIED on hardware.
+
+Response formats (VERIFIED):
+  - Command confirmations are plain-language strings, NOT command echoes:
+        [SUCCESS]Set output 01 connect from input 02.
+        [SUCCESS]Set output 01 ON.        [SUCCESS]Set output 01 OFF.
+        [SUCCESS]Set POC ON on output 01. [SUCCESS]Set POC OFF on output 01.
+        [SUCCESS]Save current output connection to preset 09.
+  - Rejected commands return:  [FAIL]Invalid Command.
+  - STATUS / INSTA / OUTSTA / CTRLSTA / PRESETSTATUS return space-padded, fixed-width
+    TABLES (parse by column offset from the header row), NOT KEY:VALUE pairs.
+    OUTSTA "Output/FromIn/OutputEn/PoC" columns give routing/enable/PoC feedback.
+
+============= System Information / Status
+?                 Print help information
+HELP              Print help information
+STATUS            Print system status and port status
+INSTA             Print all inputs status
+OUTSTA            Print all outputs status
+CTRLSTA           Print all controls status
+PRESETSTATUS      Print all preset configurations
+
+============= System Control
+PON               Power On, system run on normal state
+POFF              Power Off, system run on power save state
+RESET             Reset system to default setting
+KEY ON/OFF        Set front panel KEY control On or Off
+
+============= Output Routing / Control
+OUT xx FR yy      Set Output xx from Input yy
+                  xx=00: all outputs; xx=[01..08]: output N
+                  yy=[01..08]: input N
+OUT xx ON         Set Output xx on   (xx=00 all)
+OUT xx OFF        Set Output xx off  (xx=00 all)
+
+============= Power over Cable (PoC)
+POCOUT xx ON      Set PoC on on output xx
+POCOUT xx OFF     Set PoC off on output xx
+
+============= Presets
+PRESET pp SAVE    Save current output connections to preset pp   (pp=[00..09], 00=all)
+PRESET pp APPLY   Recall/apply preset pp        (pp=[01..09])   <-- verb is APPLY (VERIFIED; SET returns [FAIL])
+PRESET pp CLR     Delete preset pp              (pp=[00..09], 00=all)
+
+============= EDID
+EDID xx DF zz     Change EDID for input xx to default table zz
+                  xx=00 all inputs; zz=00 (1080p 2CH default) ... 19/20 = User EDID 1/2
+EDID xx CP yy     Copy EDID from output yy to input xx (xx=00 all inputs; yy=[01..06])
+EDID SAVE yy TO zz  Save external EDID yy into slot zz
+                  yy=[01..06] EDID copy output; yy=00 EDID via RS232 sent to matrix
+                  zz=00 all user EDID; zz=01 or 19 User EDID 1; zz=02 or 20 User EDID 2
+
+============= Output HDMI/HDBaseT select (output 1 has simultaneous HDMI+HDBT)
+OUTxx EH          Output xx use HDMI
+OUTxx ET          Output xx use HDBaseT
+
+============= IR follow-video / power-over-cable-on-IR-off
+IRFV ON/OFF       Local matrix IR out follows video switching
+IRPON ENABLE/DISABLE  Keep PoC enabled when matrix powered off via IR (no effect for RS232/GUI/Telnet off)
+
+============= RS-232 Pass-through / Remote Control (over HDBT)
+RS232BAUD z       Set local RS232 baud: 1=2400 2=4800 3=9600 4=19200 5=38400 6=57600(def) 7=115200
+RS232OUT xx ON    Enable RS232 remote-control mode on HDBT output xx (control matrix from remote PC)
+RS232OUT xx OFF   Disable RS232 remote-control mode on HDBT output xx
+RS232ONOUT xx y:z:a:b   Auto-send command when a triggering signal IS detected on output xx
+                        y=command type (1 display-on, 2 input-select, 3 user cmd1, 4 user cmd2)
+                        z=a ASCII / z=h HEX
+                        a=baud (1..7 as RS232BAUD); b=RS232 command payload
+RS232ONOUT xx DISABLE   Disable automatic RS232 commands when detecting signal on output xx
+RS232OFFOUT xx z:a:b    Auto-send command when a triggering signal is NOT detected on output xx
+RS232OFFOUT xx DISABLE  Disable automatic RS232 commands when not detecting signal on output xx
+
+============= IR Routing
+IROUT xx ON       Enable IR remote-control mode on HDBT output xx (control matrix from Rx IR)
+IROUT xx OFF      Disable IR remote-control mode on HDBT output xx
+MXIR xx FR yy     Local matrix IR out xx from remote Rx IR in yy
+                  xx=[01..08] local IR out; yy=[01..08] remote Rx IR in; yy=00 all
+
+============= Network
+NET IP xxx.xxx.xxx.xxx    Set IP address
+NET GW xxx.xxx.xxx.xxx    Set gateway address
+NET SM xxx.xxx.xxx.xxx    Set subnet mask
+NET RB                    Network reboot and apply new config
+NET TN xxxx               Set telnet port
+NET DHCP ON/OFF           Set auto IP (DHCP) on or off
+
+============= CEC — per Input (source-side)
+IN xx CECPON      Power on           IN xx CECPOFF     Power off
+IN xx CECOK       Confirm/Enter      IN xx CECRETURN   Back to submenu
+IN xx CECUP       Up                 IN xx CECDOWN     Down
+IN xx CECLEFT     Left               IN xx CECRIGHT    Right
+IN xx CECEXIT     Exit
+IN xx CECVOLUP    Volume up          IN xx CECVOLDOWN  Volume down
+IN xx CECPLAY     Play               IN xx CECSTOP     Stop
+IN xx CECPAUSE    Pause              IN xx CECRECORD   Record
+IN xx CECREWIND   Rewind            IN xx CECFF       Fast forward
+IN xx CECFWD      Forward            IN xx CECBWD      Backward
+
+============= CEC — per Output (display-side)
+OUT xx CECPON     Power on           OUT xx CECPOFF    Power off
+OUT xx CECVOLUP   Volume up          OUT xx CECVOLDOWN Volume down
+OUT xx CECMUTE    Mute toggle
+OUT xx CECOK/UP/DOWN/LEFT/RIGHT/RETURN/EXIT/PLAY/STOP/PAUSE/RECORD   (as per input set)
+OUT xx CECINPUT yy   CEC input yy selection on output xx
+                     xx=00 all outputs; xx=[01..08]; yy=[01..08] HDMI in port
+
+NOTE for adapter integration: CEC on the C66/C88 is a set of discrete ACTION commands
+(momentary), NOT an enable/disable toggle like the AMF series. Model these as button
+states (role button) per input/output, not a boolean switch.
