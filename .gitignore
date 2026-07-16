@@ -39,3 +39,5 @@ blustream-mfp.*.json
 
 # npm pack / build artifacts
 *.tgz
+
+.review/
