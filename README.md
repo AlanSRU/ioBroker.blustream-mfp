@@ -123,7 +123,7 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
+### 0.5.0 (2026-07-16)
 * (Alan Paris) Added support for the Blustream C66 (6x6) and C88 (8x8) Contractor HDBaseT matrices: crosspoint routing across up to 8 outputs, route-all (`output.allSource`), per-output enable, per-output PoC, and 9 presets
 * (Alan Paris) Added a dedicated parser for the C66/C88 fixed-width STATUS/OUTSTA tables and the `[SUCCESS]`/`[FAIL]` command confirmations, so routing, enable, PoC and network states reflect the device
 * (Alan Paris) Scaler, resolution and audio states are no longer created for the C66/C88 crosspoint matrices (they have no scaler/audio path), so the object tree only exposes controls the device actually implements
@@ -146,10 +146,6 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 * (Alan Paris) Fixed CEC output states being created for outputs the model does not have (missing intermediate object, E3009)
 * (Alan Paris) Preset save/apply/clear states now have read=true as required by the "level" role (E1010)
 * (Alan Paris) Audited every adapter object definition against the ioBroker state-role rules
-
-### 0.3.7 (2026-07-02)
-* (Alan Paris) Fixed invalid state roles flagged by the object checker: network IP/gateway/subnet now use role "text" (writable), telnet/TCP ports use read-only "info.port", and LAN1/LAN2 network states are read-only "info.ip" (E1008/E1011)
-* (Alan Paris) Added missing JSDoc parameter descriptions
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 

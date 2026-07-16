@@ -6,6 +6,10 @@
 ### 0.3.0 (2025-12-21)
 * (Alan Paris) Initial release with support for AMF42AU, MFP62, MFP72, MFP112, WMF51, WMF72
 * (Alan Paris) Added CEC control, preset management, and picture controls
+## 0.3.7 (2026-07-02)
+* (Alan Paris) Fixed invalid state roles flagged by the object checker: network IP/gateway/subnet now use role "text" (writable), telnet/TCP ports use read-only "info.port", and LAN1/LAN2 network states are read-only "info.ip" (E1008/E1011)
+* (Alan Paris) Added missing JSDoc parameter descriptions
+
 ## 0.3.6 (2026-07-02)
 * (Alan Paris) Use ioBroker framework timers so they are cleaned up on adapter unload (repochecker E5004/E5005)
 * (Alan Paris) Updated @alcalzone/release-script to 5.2.1 and @iobroker/adapter-core to 3.4.1 (repochecker E0036/W0034)
