@@ -741,6 +741,7 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'string',
                     read: true,
                     write: true,
+                    def: '',
                     states: sources,
                 },
                 native: {},
@@ -773,6 +774,7 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'string',
                     read: false,
                     write: true,
+                    def: '',
                     states: { ...def.inputs },
                 },
                 native: {},
@@ -790,6 +792,7 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'string',
                     read: true,
                     write: true,
+                    def: '',
                     states: {
                         SP: 'Splitter',
                         MX: 'Matrix',
@@ -826,6 +829,7 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'string',
                     read: true,
                     write: true,
+                    def: '',
                     states: def.resolutions,
                 },
                 native: {},
@@ -839,6 +843,7 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'string',
                     read: true,
                     write: true,
+                    def: '',
                     states: {
                         AUTO: 'Auto',
                         FORCE: 'Force',
@@ -858,6 +863,7 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'string',
                     read: true,
                     write: true,
+                    def: '',
                     states: {
                         '00': 'Full Screen',
                         '01': 'Keep Aspect Ratio',
@@ -878,6 +884,7 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'number',
                     read: true,
                     write: true,
+                    def: 0,
                     min: 0,
                     max: 8,
                     states: {
@@ -905,6 +912,7 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'number',
                     read: true,
                     write: true,
+                    def: 0,
                     min: 0,
                     max: 8,
                     states: {
@@ -941,6 +949,7 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'number',
                     read: true,
                     write: true,
+                    def: 0,
                     min: 0,
                     max: def.volumeMax,
                     unit: '',
@@ -969,6 +978,7 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'string',
                     read: true,
                     write: true,
+                    def: '',
                     states: {
                         ORG: 'Follow Video',
                         ANA: 'Analog Input',
@@ -987,6 +997,7 @@ class BlustreamAdapter extends utils.Adapter {
                         type: 'string',
                         read: true,
                         write: true,
+                        def: '',
                         states: {
                             SCA: 'Scaler Process',
                             BYP: 'Bypass',
@@ -1069,6 +1080,7 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'number',
                     read: true,
                     write: true,
+                    def: 0,
                     min: 0,
                     max: 100,
                 },
@@ -1127,6 +1139,7 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'number',
                     read: true,
                     write: true,
+                    def: 0,
                     min: 0,
                     max: 100,
                     unit: '%',
@@ -1142,6 +1155,7 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'number',
                     read: true,
                     write: true,
+                    def: 1,
                     min: 1,
                     max: 20,
                     unit: 's',
@@ -1157,6 +1171,7 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'number',
                     read: true,
                     write: true,
+                    def: 0,
                     min: 0,
                     max: 20,
                     unit: 'x0.5s',
@@ -1172,6 +1187,7 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'number',
                     read: true,
                     write: true,
+                    def: 0,
                     min: 0,
                     max: 20,
                     unit: 'x0.5s',
@@ -1209,6 +1225,7 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'string',
                     read: true,
                     write: true,
+                    def: '',
                 },
                 native: {},
             });
@@ -1221,6 +1238,7 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'string',
                     read: true,
                     write: true,
+                    def: '',
                 },
                 native: {},
             });
@@ -1233,6 +1251,7 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'string',
                     read: true,
                     write: true,
+                    def: '',
                 },
                 native: {},
             });
@@ -1245,6 +1264,7 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'string',
                     read: true,
                     write: false,
+                    def: '',
                 },
                 native: {},
             });
@@ -1257,6 +1277,7 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'boolean',
                     read: false,
                     write: true,
+                    def: false,
                 },
                 native: {},
             });
@@ -1273,31 +1294,59 @@ class BlustreamAdapter extends utils.Adapter {
 
                     await this.setObjectNotExistsAsync(`network.${lan}.dhcp`, {
                         type: 'state',
-                        common: { role: 'switch.enable', name: 'DHCP', type: 'boolean', read: true, write: true },
+                        common: {
+                            role: 'switch.enable',
+                            name: 'DHCP',
+                            type: 'boolean',
+                            read: true,
+                            write: true,
+                            def: false,
+                        },
                         native: {},
                     });
 
                     await this.setObjectNotExistsAsync(`network.${lan}.ip`, {
                         type: 'state',
-                        common: { role: 'info.ip', name: 'IP Address', type: 'string', read: true, write: false },
+                        common: {
+                            role: 'info.ip',
+                            name: 'IP Address',
+                            type: 'string',
+                            read: true,
+                            write: false,
+                            def: '',
+                        },
                         native: {},
                     });
 
                     await this.setObjectNotExistsAsync(`network.${lan}.gateway`, {
                         type: 'state',
-                        common: { role: 'info.ip', name: 'Gateway', type: 'string', read: true, write: false },
+                        common: { role: 'info.ip', name: 'Gateway', type: 'string', read: true, write: false, def: '' },
                         native: {},
                     });
 
                     await this.setObjectNotExistsAsync(`network.${lan}.subnet`, {
                         type: 'state',
-                        common: { role: 'info.ip', name: 'Subnet Mask', type: 'string', read: true, write: false },
+                        common: {
+                            role: 'info.ip',
+                            name: 'Subnet Mask',
+                            type: 'string',
+                            read: true,
+                            write: false,
+                            def: '',
+                        },
                         native: {},
                     });
 
                     await this.setObjectNotExistsAsync(`network.${lan}.tcpPort`, {
                         type: 'state',
-                        common: { role: 'info.port', name: 'TCP Port', type: 'string', read: true, write: false },
+                        common: {
+                            role: 'info.port',
+                            name: 'TCP Port',
+                            type: 'string',
+                            read: true,
+                            write: false,
+                            def: '',
+                        },
                         native: {},
                     });
                 }
@@ -1314,7 +1363,14 @@ class BlustreamAdapter extends utils.Adapter {
 
             await this.setObjectNotExistsAsync('wifi.enabled', {
                 type: 'state',
-                common: { role: 'switch.enable', name: 'WiFi Enabled', type: 'boolean', read: true, write: true },
+                common: {
+                    role: 'switch.enable',
+                    name: 'WiFi Enabled',
+                    type: 'boolean',
+                    read: true,
+                    write: true,
+                    def: false,
+                },
                 native: {},
             });
 
@@ -1326,6 +1382,7 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'string',
                     read: true,
                     write: true,
+                    def: '',
                     states: { 2: '2.4GHz', 5: '5GHz' },
                 },
                 native: {},
@@ -1333,19 +1390,19 @@ class BlustreamAdapter extends utils.Adapter {
 
             await this.setObjectNotExistsAsync('wifi.channel', {
                 type: 'state',
-                common: { role: 'state', name: 'WiFi Channel', type: 'string', read: true, write: true },
+                common: { role: 'state', name: 'WiFi Channel', type: 'string', read: true, write: true, def: '' },
                 native: {},
             });
 
             await this.setObjectNotExistsAsync('wifi.ssid', {
                 type: 'state',
-                common: { role: 'text', name: 'SSID', type: 'string', read: true, write: true },
+                common: { role: 'text', name: 'SSID', type: 'string', read: true, write: true, def: '' },
                 native: {},
             });
 
             await this.setObjectNotExistsAsync('wifi.password', {
                 type: 'state',
-                common: { role: 'text', name: 'Password', type: 'string', read: false, write: true },
+                common: { role: 'text', name: 'Password', type: 'string', read: false, write: true, def: '' },
                 native: {},
             });
         }
@@ -1370,7 +1427,14 @@ class BlustreamAdapter extends utils.Adapter {
         if (def.hasStandby) {
             await this.setObjectNotExistsAsync('system.standbyMode', {
                 type: 'state',
-                common: { role: 'switch.enable', name: 'Auto Standby', type: 'boolean', read: true, write: true },
+                common: {
+                    role: 'switch.enable',
+                    name: 'Auto Standby',
+                    type: 'boolean',
+                    read: true,
+                    write: true,
+                    def: false,
+                },
                 native: {},
             });
 
@@ -1382,6 +1446,7 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'number',
                     read: true,
                     write: true,
+                    def: 0,
                     min: 0,
                     max: 30,
                 },
@@ -1393,7 +1458,14 @@ class BlustreamAdapter extends utils.Adapter {
         if (def.hasNoSignalStandby) {
             await this.setObjectNotExistsAsync('system.noSignalStandby', {
                 type: 'state',
-                common: { role: 'switch.enable', name: 'No Signal Standby', type: 'boolean', read: true, write: true },
+                common: {
+                    role: 'switch.enable',
+                    name: 'No Signal Standby',
+                    type: 'boolean',
+                    read: true,
+                    write: true,
+                    def: false,
+                },
                 native: {},
             });
 
@@ -1418,7 +1490,14 @@ class BlustreamAdapter extends utils.Adapter {
         if (def.hasPOC && !def.isMatrix) {
             await this.setObjectNotExistsAsync('system.pocOutput', {
                 type: 'state',
-                common: { role: 'switch.enable', name: 'HDBT POC Output', type: 'boolean', read: true, write: true },
+                common: {
+                    role: 'switch.enable',
+                    name: 'HDBT POC Output',
+                    type: 'boolean',
+                    read: true,
+                    write: true,
+                    def: false,
+                },
                 native: {},
             });
         }
@@ -1443,13 +1522,27 @@ class BlustreamAdapter extends utils.Adapter {
         if (def.isWireless) {
             await this.setObjectNotExistsAsync('system.reboot', {
                 type: 'state',
-                common: { role: 'button', name: 'Reboot System', type: 'boolean', read: false, write: true },
+                common: {
+                    role: 'button',
+                    name: 'Reboot System',
+                    type: 'boolean',
+                    read: false,
+                    write: true,
+                    def: false,
+                },
                 native: {},
             });
 
             await this.setObjectNotExistsAsync('commands.homeScreen', {
                 type: 'state',
-                common: { role: 'button', name: 'Go to Home Screen', type: 'boolean', read: false, write: true },
+                common: {
+                    role: 'button',
+                    name: 'Go to Home Screen',
+                    type: 'boolean',
+                    read: false,
+                    write: true,
+                    def: false,
+                },
                 native: {},
             });
         }
@@ -1465,6 +1558,7 @@ class BlustreamAdapter extends utils.Adapter {
                         type: 'boolean',
                         read: true,
                         write: true,
+                        def: false,
                     },
                     native: {},
                 });
@@ -1481,6 +1575,7 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'string',
                     read: true,
                     write: true,
+                    def: '',
                     states: def.displayModes,
                 },
                 native: {},
@@ -1497,6 +1592,7 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'string',
                     read: true,
                     write: true,
+                    def: '',
                     states: def.layouts,
                 },
                 native: {},
@@ -1513,6 +1609,7 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'string',
                     read: true,
                     write: true,
+                    def: '',
                     states: def.audioModes,
                 },
                 native: {},
@@ -1526,6 +1623,7 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'string',
                     read: true,
                     write: true,
+                    def: '',
                     states: { '00': 'Analog + HDMI', '01': 'HDMI Only', '02': 'Analog Only', '03': 'USB Only' },
                 },
                 native: {},
@@ -1543,6 +1641,7 @@ class BlustreamAdapter extends utils.Adapter {
                         type: 'number',
                         read: true,
                         write: true,
+                        def: 0,
                         min: 0,
                         max: 99,
                     },
@@ -1557,6 +1656,7 @@ class BlustreamAdapter extends utils.Adapter {
                         type: 'number',
                         read: true,
                         write: true,
+                        def: 0,
                         min: 0,
                         max: 99,
                     },
@@ -1571,6 +1671,7 @@ class BlustreamAdapter extends utils.Adapter {
                         type: 'string',
                         read: true,
                         write: true,
+                        def: '',
                         states: { '01': 'Soft', '02': 'Standard', '03': 'Vivid', '04': 'User' },
                     },
                     native: {},
@@ -1584,6 +1685,7 @@ class BlustreamAdapter extends utils.Adapter {
                         type: 'string',
                         read: true,
                         write: true,
+                        def: '',
                         states: { '01': 'Warm', '02': 'Standard', '03': 'Cool', '04': 'User' },
                     },
                     native: {},
@@ -1597,6 +1699,7 @@ class BlustreamAdapter extends utils.Adapter {
                         type: 'boolean',
                         read: true,
                         write: true,
+                        def: false,
                     },
                     native: {},
                 });
@@ -1609,6 +1712,7 @@ class BlustreamAdapter extends utils.Adapter {
                         type: 'string',
                         read: true,
                         write: true,
+                        def: '',
                         states: def.audioMixModes || {},
                     },
                     native: {},
@@ -1632,6 +1736,7 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'number',
                     read: true,
                     write: true,
+                    def: 1,
                     min: 1,
                     max: 9,
                 },
@@ -1646,6 +1751,7 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'number',
                     read: true,
                     write: true,
+                    def: 1,
                     min: 1,
                     max: 9,
                 },
@@ -1660,6 +1766,7 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'number',
                     read: true,
                     write: true,
+                    def: 1,
                     min: 1,
                     max: 9,
                 },
@@ -1685,6 +1792,7 @@ class BlustreamAdapter extends utils.Adapter {
                         type: 'boolean',
                         read: true,
                         write: true,
+                        def: false,
                     },
                     native: {},
                 });
@@ -1694,7 +1802,14 @@ class BlustreamAdapter extends utils.Adapter {
             for (let i = 1; i <= 4; i++) {
                 await this.setObjectNotExistsAsync(`cec.input${i}`, {
                     type: 'state',
-                    common: { role: 'switch.enable', name: `Input ${i} CEC`, type: 'boolean', read: true, write: true },
+                    common: {
+                        role: 'switch.enable',
+                        name: `Input ${i} CEC`,
+                        type: 'boolean',
+                        read: true,
+                        write: true,
+                        def: false,
+                    },
                     native: {},
                 });
             }
@@ -1710,6 +1825,7 @@ class BlustreamAdapter extends utils.Adapter {
                     type: 'boolean',
                     read: false,
                     write: true,
+                    def: false,
                 },
                 native: {},
             });

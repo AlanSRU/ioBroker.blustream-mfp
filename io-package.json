@@ -213,7 +213,8 @@
         "name": "Device model",
         "type": "string",
         "read": true,
-        "write": false
+        "write": false,
+        "def": ""
       },
       "native": {}
     },
@@ -285,7 +286,8 @@
         "name": "Send Raw Command",
         "type": "string",
         "read": false,
-        "write": true
+        "write": true,
+        "def": ""
       },
       "native": {}
     },
@@ -297,7 +299,8 @@
         "name": "Get Status",
         "type": "boolean",
         "read": false,
-        "write": true
+        "write": true,
+        "def": false
       },
       "native": {}
     }
