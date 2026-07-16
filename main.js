@@ -815,36 +815,38 @@ class BlustreamAdapter extends utils.Adapter {
             });
         }
 
-        // Resolution
-        await this.setObjectNotExistsAsync('output.resolution', {
-            type: 'state',
-            common: {
-                role: 'state',
-                name: 'Output Resolution',
-                type: 'string',
-                read: true,
-                write: true,
-                states: def.resolutions,
-            },
-            native: {},
-        });
-
-        // Frequency mode
-        await this.setObjectNotExistsAsync('output.freqMode', {
-            type: 'state',
-            common: {
-                role: 'state',
-                name: 'Frequency Mode',
-                type: 'string',
-                read: true,
-                write: true,
-                states: {
-                    AUTO: 'Auto',
-                    FORCE: 'Force',
+        // Resolution + frequency mode (scaling models only — crosspoint matrices
+        // C66/C88 have no scaler and do not implement OUT RES / OUT FREQ).
+        if (!def.isMatrix) {
+            await this.setObjectNotExistsAsync('output.resolution', {
+                type: 'state',
+                common: {
+                    role: 'state',
+                    name: 'Output Resolution',
+                    type: 'string',
+                    read: true,
+                    write: true,
+                    states: def.resolutions,
                 },
-            },
-            native: {},
-        });
+                native: {},
+            });
+
+            await this.setObjectNotExistsAsync('output.freqMode', {
+                type: 'state',
+                common: {
+                    role: 'state',
+                    name: 'Frequency Mode',
+                    type: 'string',
+                    read: true,
+                    write: true,
+                    states: {
+                        AUTO: 'Auto',
+                        FORCE: 'Force',
+                    },
+                },
+                native: {},
+            });
+        }
 
         // Aspect ratio, zoom, overscan (MFP72/MFP112)
         if (def.hasAspectRatio) {
@@ -921,131 +923,135 @@ class BlustreamAdapter extends utils.Adapter {
             });
         }
 
-        // Audio channel
-        await this.setObjectNotExistsAsync('audio', {
-            type: 'channel',
-            common: { name: 'Audio Control' },
-            native: {},
-        });
+        // Audio controls — scaling models only. Crosspoint matrices (C66/C88)
+        // have no audio processing path and do not implement VOL/MUTE/AUD.
+        if (!def.isMatrix) {
+            // Audio channel
+            await this.setObjectNotExistsAsync('audio', {
+                type: 'channel',
+                common: { name: 'Audio Control' },
+                native: {},
+            });
 
-        await this.setObjectNotExistsAsync('audio.volume', {
-            type: 'state',
-            common: {
-                role: 'level.volume',
-                name: 'Volume',
-                type: 'number',
-                read: true,
-                write: true,
-                min: 0,
-                max: def.volumeMax,
-                unit: '',
-            },
-            native: {},
-        });
-
-        await this.setObjectNotExistsAsync('audio.mute', {
-            type: 'state',
-            common: {
-                role: 'media.mute',
-                name: 'Mute',
-                type: 'boolean',
-                read: true,
-                write: true,
-                def: false,
-            },
-            native: {},
-        });
-
-        await this.setObjectNotExistsAsync('audio.source', {
-            type: 'state',
-            common: {
-                role: 'state',
-                name: 'Audio Source',
-                type: 'string',
-                read: true,
-                write: true,
-                states: {
-                    ORG: 'Follow Video',
-                    ANA: 'Analog Input',
+            await this.setObjectNotExistsAsync('audio.volume', {
+                type: 'state',
+                common: {
+                    role: 'level.volume',
+                    name: 'Volume',
+                    type: 'number',
+                    read: true,
+                    write: true,
+                    min: 0,
+                    max: def.volumeMax,
+                    unit: '',
                 },
-            },
-            native: {},
-        });
+                native: {},
+            });
 
-        // MFP62-specific audio PCM mode
-        if (model === 'mfp62') {
-            await this.setObjectNotExistsAsync('audio.pcmMode', {
+            await this.setObjectNotExistsAsync('audio.mute', {
+                type: 'state',
+                common: {
+                    role: 'media.mute',
+                    name: 'Mute',
+                    type: 'boolean',
+                    read: true,
+                    write: true,
+                    def: false,
+                },
+                native: {},
+            });
+
+            await this.setObjectNotExistsAsync('audio.source', {
                 type: 'state',
                 common: {
                     role: 'state',
-                    name: 'PCM Audio Mode',
+                    name: 'Audio Source',
                     type: 'string',
                     read: true,
                     write: true,
                     states: {
-                        SCA: 'Scaler Process',
-                        BYP: 'Bypass',
+                        ORG: 'Follow Video',
+                        ANA: 'Analog Input',
                     },
                 },
                 native: {},
             });
 
-            // Per-input audio for MFP62 (RX inputs)
-            await this.setObjectNotExistsAsync('audio.rx', {
-                type: 'channel',
-                common: { name: 'Input Audio Settings' },
-                native: {},
-            });
-
-            const rxInputNames = ['HDMI1', 'HDMI2', 'HDMI3', 'DP', 'USB-C'];
-            for (let i = 1; i <= 5; i++) {
-                await this.setObjectNotExistsAsync(`audio.rx.input${i}`, {
+            // MFP62-specific audio PCM mode
+            if (model === 'mfp62') {
+                await this.setObjectNotExistsAsync('audio.pcmMode', {
                     type: 'state',
                     common: {
                         role: 'state',
-                        name: `${rxInputNames[i - 1]} Audio Mode`,
+                        name: 'PCM Audio Mode',
                         type: 'string',
                         read: true,
                         write: true,
                         states: {
-                            ORG: 'Original HDMI/DVI',
-                            ANA: 'Embed Analog L/R',
+                            SCA: 'Scaler Process',
+                            BYP: 'Bypass',
                         },
-                        def: 'ORG',
                     },
                     native: {},
                 });
-            }
-        }
 
-        // MFP112-specific per-input audio
-        if (def.hasPerInputAudio) {
-            await this.setObjectNotExistsAsync('audio.hdmi', {
-                type: 'channel',
-                common: { name: 'HDMI Input Audio Settings' },
-                native: {},
-            });
-
-            for (let i = 1; i <= 4; i++) {
-                await this.setObjectNotExistsAsync(`audio.hdmi.input${i}`, {
-                    type: 'state',
-                    common: {
-                        role: 'state',
-                        name: `HDMI Input ${i} Audio Mode`,
-                        type: 'string',
-                        read: true,
-                        write: true,
-                        states: {
-                            ORG: 'Original HDMI/DVI',
-                            ANA: 'Embed Analog L/R',
-                            AUTO: 'Auto (Analog when DVI)',
-                        },
-                        def: 'ORG',
-                    },
+                // Per-input audio for MFP62 (RX inputs)
+                await this.setObjectNotExistsAsync('audio.rx', {
+                    type: 'channel',
+                    common: { name: 'Input Audio Settings' },
                     native: {},
                 });
+
+                const rxInputNames = ['HDMI1', 'HDMI2', 'HDMI3', 'DP', 'USB-C'];
+                for (let i = 1; i <= 5; i++) {
+                    await this.setObjectNotExistsAsync(`audio.rx.input${i}`, {
+                        type: 'state',
+                        common: {
+                            role: 'state',
+                            name: `${rxInputNames[i - 1]} Audio Mode`,
+                            type: 'string',
+                            read: true,
+                            write: true,
+                            states: {
+                                ORG: 'Original HDMI/DVI',
+                                ANA: 'Embed Analog L/R',
+                            },
+                            def: 'ORG',
+                        },
+                        native: {},
+                    });
+                }
             }
-        }
+
+            // MFP112-specific per-input audio
+            if (def.hasPerInputAudio) {
+                await this.setObjectNotExistsAsync('audio.hdmi', {
+                    type: 'channel',
+                    common: { name: 'HDMI Input Audio Settings' },
+                    native: {},
+                });
+
+                for (let i = 1; i <= 4; i++) {
+                    await this.setObjectNotExistsAsync(`audio.hdmi.input${i}`, {
+                        type: 'state',
+                        common: {
+                            role: 'state',
+                            name: `HDMI Input ${i} Audio Mode`,
+                            type: 'string',
+                            read: true,
+                            write: true,
+                            states: {
+                                ORG: 'Original HDMI/DVI',
+                                ANA: 'Embed Analog L/R',
+                                AUTO: 'Auto (Analog when DVI)',
+                            },
+                            def: 'ORG',
+                        },
+                        native: {},
+                    });
+                }
+            }
+        } // end if (!def.isMatrix) audio controls
 
         // Microphone controls (MFP62 only)
         if (def.hasMicrophone) {
@@ -1426,6 +1432,7 @@ class BlustreamAdapter extends utils.Adapter {
                         type: 'boolean',
                         read: true,
                         write: true,
+                        def: true,
                     },
                     native: {},
                 });
