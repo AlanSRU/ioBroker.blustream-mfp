@@ -202,14 +202,18 @@ const ALL_MODEL_STATES = [
     'cec.input2',
     'cec.input3',
     'cec.input4',
-    // KVM (MX44KVM) GPIO + USB cascade telemetry (fixed 4 ports each)
+    // KVM (MX44KVM) GPIO + USB cascade telemetry (fixed 4 ports each).
+    // Channels first, then the leaf states created under them. (Recursive delete
+    // of gpio/usb would purge children anyway, but keep the list in sync.)
     'gpio',
+    'gpio.output',
+    'gpio.input',
     'usb',
+    'usb.cascadeOut',
+    'usb.cascadeFrom',
     ...Array.from({ length: 4 }, (_, k) => k + 1).flatMap(i => [
         `gpio.output.${i}`,
-        `gpio.output.${i}.mode`,
         `gpio.input.${i}`,
-        `gpio.input.${i}.mode`,
         `usb.cascadeOut.${i}`,
         `usb.cascadeFrom.${i}`,
     ]),
@@ -1575,25 +1579,40 @@ class BlustreamAdapter extends utils.Adapter {
         // KVM (MX44KVM): GPIO port modes + USB cascade routing. Read-only STATUS
         // telemetry (GPIOSTATUS / CASCADESTATUS), parsed by lib/statusParser.js.
         if (def.routePrefix === 'USBOUT') {
-            await this.setObjectNotExistsAsync('gpio', {
-                type: 'channel',
-                common: { name: 'GPIO Ports' },
-                native: {},
-            });
-            await this.setObjectNotExistsAsync('usb', {
-                type: 'channel',
-                common: { name: 'USB Cascade' },
-                native: {},
-            });
+            // Parent channels for every dotted segment (avoids E3009).
+            for (const ch of [
+                ['gpio', 'GPIO Ports'],
+                ['gpio.output', 'GPIO Outputs'],
+                ['gpio.input', 'GPIO Inputs'],
+                ['usb', 'USB Cascade'],
+                ['usb.cascadeOut', 'Cascade Output (per Device)'],
+                ['usb.cascadeFrom', 'Cascade From (per Host)'],
+            ]) {
+                await this.setObjectNotExistsAsync(ch[0], { type: 'channel', common: { name: ch[1] }, native: {} });
+            }
             for (let i = 1; i <= 4; i++) {
-                await this.setObjectNotExistsAsync(`gpio.output.${i}.mode`, {
+                await this.setObjectNotExistsAsync(`gpio.output.${i}`, {
                     type: 'state',
-                    common: { role: 'text', name: `GPIO Output ${i} Mode`, type: 'string', read: true, write: false },
+                    common: {
+                        role: 'text',
+                        name: `GPIO Output ${i} Mode`,
+                        type: 'string',
+                        read: true,
+                        write: false,
+                        def: '',
+                    },
                     native: {},
                 });
-                await this.setObjectNotExistsAsync(`gpio.input.${i}.mode`, {
+                await this.setObjectNotExistsAsync(`gpio.input.${i}`, {
                     type: 'state',
-                    common: { role: 'text', name: `GPIO Input ${i} Mode`, type: 'string', read: true, write: false },
+                    common: {
+                        role: 'text',
+                        name: `GPIO Input ${i} Mode`,
+                        type: 'string',
+                        read: true,
+                        write: false,
+                        def: '',
+                    },
                     native: {},
                 });
                 await this.setObjectNotExistsAsync(`usb.cascadeOut.${i}`, {

@@ -205,8 +205,8 @@ describe('statusParser — MX44KVM (USB crosspoint)', () => {
         expect(state['output.4.source']).to.equal('01');
     });
     it('GPIO in/out modes', () => {
-        expect(state['gpio.output.1.mode']).to.equal('Close');
-        expect(state['gpio.input.4.mode']).to.equal('Close');
+        expect(state['gpio.output.1']).to.equal('Close');
+        expect(state['gpio.input.4']).to.equal('Close');
     });
     it('cascade OUT/FR (0 = none)', () => {
         expect(state['usb.cascadeOut.1']).to.equal(0);
@@ -215,8 +215,8 @@ describe('statusParser — MX44KVM (USB crosspoint)', () => {
 
     it('GPIOSTATUS capture parses GPIO in isolation', () => {
         const g = parseFile('mx44kvm', 'MX44KVM_GPIOSTATUS.txt').state;
-        expect(g['gpio.output.1.mode']).to.equal('Close');
-        expect(g['gpio.input.1.mode']).to.equal('Close');
+        expect(g['gpio.output.1']).to.equal('Close');
+        expect(g['gpio.input.1']).to.equal('Close');
     });
     it('CASCADESTATUS capture parses cascade in isolation', () => {
         const c = parseFile('mx44kvm', 'MX44KVM_CASCADESTATUS.txt').state;

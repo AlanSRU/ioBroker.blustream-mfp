@@ -72,7 +72,7 @@ input.{1..N}.audioEmbed                       # audio embed (Pro-Matrix)
 output.{bypass, mode, aspectRatio, zoom, overscan, freqMode}
 audio.{volume, mute, source, pcmMode, hdmi.input{1-4}, rx.input{1-5}}
 audio.{volume, mute, arcMode}                 # Dante-DSP master read-back (SW42DA, hasDanteDsp) — read-only
-gpio.{output,input}.{1-4}.mode                # KVM GPIO port modes (MX44KVM) — read-only
+gpio.{output,input}.{1-4}                     # KVM GPIO port modes (MX44KVM) — read-only string
 usb.{cascadeOut,cascadeFrom}.{1-4}            # KVM USB cascade routing (MX44KVM) — read-only
 microphone.{volume, mute, mixMode, autoBg, bgVolume, bgDelay, rampUp, rampDown}
 network.{dhcp, ip, gateway, subnet, telnetPort, lan{1-2}.*}
