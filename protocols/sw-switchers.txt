@@ -1,0 +1,148 @@
+        Blustream SW-Series HDMI / HDBaseT Switchers — RS-232 / Telnet Command Reference
+
+Applies to (adapter model keys):
+  sw41hdbt (SW41HDBT)   — 4-way HDBaseT/HDMI input switch. SPACED dialect,
+                          fixed-width INSTA/OUTSTA/CTRLSTA status tables
+                          (parseC66Response). PoC verb "POC OUT xx" / "POC IN xx".
+  sw41abv2, sw41ab8k, sw42da, sw21abv2, sw21abv3
+                        — basic HDMI switchers. NO-SPACE dialect and, being single
+                          HDMI output, they route with NO output index:
+                              OUTFRyy   (e.g. OUTFR04)   — select source yy
+                              OUTON / OUTOFF             — output on/off
+                              OUT AUTO ON/OFF            — auto-switch (stays spaced)
+                          (adapter: commandStyle 'nospace' + noOutputIndex).
+                          STATUS reply is free-text, not the C-series table.
+
+Connection: RS-232 57600 baud 8N1; Telnet TCP/IP. Terminator CR (0x0D).
+The SW-AB manuals note spaces are optional: "OUTFR03" or "OUT FR 03" both work.
+
+ADAPTER STATUS (v0.6.0): source selection (output.1.source) + auto-switch
+implemented for all. SW41HDBT additionally has EDID (EDID xx DF/CP), per-output
+& per-input CEC actions (OUT/IN xx CEC ...) and PoC wired. Scaling (OUT xx
+SCALING) and SW-AB audio breakout are not yet wired; free-text STATUS not parsed.
+
+Sources:
+  SW41HDBT commands — blustream.co.uk DownloadFile?downloadId=652 ("SW41HDBT.txt")
+  SW41AB-V2 manual  — DownloadFile?downloadId=232
+  SW41HDBT QRG      — DownloadFile?downloadId=168
+
+================================================================================
+========== SW41HDBT — full command list (verbatim, SPACED dialect) =============
+                       SW41HDBT 
+============= System Information Commands
+?/HELP                      Print Help Information
+STATUS                 Print System Status And Port Status
+INSTA                  Print All Input Status
+OUTSTA                 Print All Output Status
+CTRLSTA                Print All Control Status
+FWVERSION              Print FW version
+============= System Control Commands
+PON/OFF                Set System Power On Or Off
+KEY ON/OFF             Set System Key Control On Or Off
+IR ON/OFF              Set System IR Control On Or Off
+OUT xx GUEST ON/OFF    Set System Guest Mode xx On Or Off
+                       xx = 00: All HDBT output
+                       xx = 01: HDBT output 1
+IN xx GUEST ON/OFF     Set System Guest Mode xx On Or Off
+                       xx = 00: All HDBT input
+                       xx = 01: HDBT input 1
+                       xx = 02: HDBT input 2
+OUT xx IRHEXSEND b     Send Pronto Hex Code To Remote End
+                       xx = 00: All HDBT output
+                       xx = 01: HDBT output 1
+                       b  = IR Value(Hex Format)
+IN xx IRHEXSEND b      Send Pronto Hex Code To Remote End
+                       xx = 00: All HDBT input
+                       xx = 01: HDBT input 1
+                       xx = 02: HDBT input 2
+                       b  = IR Value(Hex Format)
+RESET                  Reset System To Default Setting
+                       (Type Yes To Confirm, No To Discard)
+============= Input Port Control Commands
+POC IN xx ON/OFF       Set POC Input xx On/Off
+                       xx = [00]: All HDBT Input Ports, [01...02]: HDBT Input Po                                                                                                             rt
+============= Output Port Control Commands
+POC OUT xx ON/OFF      Set POC Output xx On/Off
+                       xx=[00...01]: HDBT Output Port
+OUT xx FR yy           Set Output xx From Input yy
+                       xx = 00: All Outputs
+                       xx = 01: All Outputs
+                       yy = 01: HDBT input 1
+                       yy = 02: HDBT input 2
+                       yy = 03: HDMI input 3
+                       yy = 04: HDMI input 4
+OUT xx SWITCH yy       Set Output xx Switching To yy
+                       xx = 00: All Output Ports
+                       xx = 01: All Output Ports
+                       yy = AUTO: Auto Switching On - Auto Mode
+                       yy = MAN: Auto Switching Off - Manual Mode
+AUTOTRG x              Set The Trigger Method x On Input To Perform Auto Switchi                                                                                                             ng
+                       x = 1 - HDMI (5V)
+                       x = 2 - HDMI (TMDS)
+OUT xx SCALING ON/OFF  Set Output xx Scaling On Or Off
+                       xx = [00...01]: HDBT Output Port
+============= EDID Control Commands
+EDID xx CP yy          Set Input xx EDID Copy From Output yy
+                       xx = [00]: All Input Ports, [01...04]: Input Port
+                       yy = [01]: Output 1 (HDBT)
+                       yy = [02]: Output 2 (HDMI)
+EDID SAVE zz           Save EDID File From PC Into User Slot zz
+                       zz=22: User EDID 1
+                       zz=23: User EDID 2
+EDID xx DF zz          Set Input xx EDID To Default EDID zz
+                       xx=[00]: All Input Port, [01...04]: Input Port
+                       zz=00: HDMI 1080p@60Hz, Audio 2CH PCM(default)
+                       zz=01: HDMI 1080p@60Hz, Audio 5.1CH DTS/DOLBY
+                       zz=02: HDMI 1080p@60Hz, Audio 7.1CH DTS/DOLBY/HD
+                       zz=03: HDMI 1080i@60Hz, Audio 2CH PCM
+                       zz=04: HDMI 1080i@60Hz, Audio 5.1CH DTS/DOLBY
+                       zz=05: HDMI 1080i@60Hz, Audio 7.1CH DTS/DOLBY/HD
+                       zz=06: HDMI 1080p@60Hz/3D, Audio 2CH PCM
+                       zz=07: HDMI 1080p@60Hz/3D, Audio 5.1CH DTS/DOLBY
+                       zz=08: HDMI 1080p@60Hz/3D, Audio 7.1CH DTS/DOLBY/HD
+                       zz=09: HDMI 4K@30Hz 4:4:4, Audio 2CH PCM
+                       zz=10: HDMI 4K@30Hz 4:4:4, Audio 5.1CH DTS/DOLBY
+                       zz=11: HDMI 4K@30Hz 4:4:4, Audio 7.1CH DTS/DOLBY/HD
+                       zz=12: HDMI 4K@60Hz 4:2:0/4K@30Hz 4:4:4, Audio 2CH PCM
+                       zz=13: HDMI 4K@60Hz 4:2:0/4K@30Hz 4:4:4, Audio 5.1CH DTS/                                                                                                             DOLBY
+                       zz=14: HDMI 4K@60Hz 4:2:0/4K@30Hz 4:4:4, Audio 7.1CH DTS/                                                                                                             DOLBY/HD
+                       zz=15: HDMI 4K@60Hz 4:4:4, Audio 2CH PCM
+                       zz=16: HDMI 4K@60Hz 4:4:4, Audio 5.1CH DTS/DOLBY
+                       zz=17: HDMI 4K@60Hz 4:4:4, Audio 7.1CH DTS/DOLBY/HD
+                       zz=18: DVI 1280x1024@60Hz, Audio None
+                       zz=19: DVI 1920x1080@60Hz, Audio None
+                       zz=20: DVI 1920x1200@60Hz, Audio None
+                       zz=21: HDMI 1920x1200@60Hz, 2CH/6CH PCM
+                       zz=22: Copy User EDID 1
+                       zz=23: Copy User EDID 2
+                       zz=24: EDID Passthrough(Copy From HDBT OUT Sink)
+                       zz=25: EDID Passthrough(Copy From HDMI OUT Sink)
+============= Outputs CEC Control Commands
+OUT xx CEC ENABLE      Enable CEC Control On Output xx
+OUT xx CEC DISABLE     Disable CEC Control On Output xx
+OUT xx CEC VOLUP       Send CEC Volume Up To Output xx
+OUT xx CEC VOLDOWN     Send CEC Volume Down To Output xx
+OUT xx CEC MUTE        Send CEC Mute Toggle To Output xx
+OUT xx CEC INPUT       Send CEC Input Selection To Output xx
+OUT xx CEC POFF        Send CEC Power Off To Output xx
+OUT xx CEC PON         Send CEC Power On To Output xx
+                       xx = 00: All Outputs
+                       xx = 01: HDBT Output
+                       xx = 02: HDMI Output
+OUT xx CEC yy:yy:...   Send User-defined CEC Command To Output xx
+                       xx = 00: All Outputs
+                       xx = 01: HDBT Output
+                       xx = 02: HDMI Output
+                       yy = CEC Command Data
+============= Inputs CEC Control Commands
+IN xx CEC ENABLE       Enable CEC Control On Input xx
+IN xx CEC DISABLE      Disable CEC Control On Input xx
+IN xx CEC VOLUP        Send CEC Volume Up To Input xx
+IN xx CEC VOLDOWN      Send CEC Volume Down To Input xx
+IN xx CEC UP           Send CEC Up To Input xx
+IN xx CEC DOWN         Send CEC Down To Input xx
+IN xx CEC LEFT         Send CEC Left To Input xx
+IN xx CEC RIGHT        Send CEC Right To Input xx
+IN xx CEC MENU         Send CEC Menu To Input xx
+IN xx CEC RETURN       Send CEC Return To Input xx
+IN xx CEC OK           Send CEC OK To Input xx

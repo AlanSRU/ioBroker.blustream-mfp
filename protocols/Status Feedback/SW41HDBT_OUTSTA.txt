@@ -1,0 +1,9 @@
+OUTSTA
+=============================================================
+              SW41HDBT - 4x1 HDBaseT Switch w/ HDBaseT and HDMI output
+              FW Version V1.2.0
+
+OutputPort   SelectInput   OSP   POC   Switch   Trgon   CEC   Scaling
+1            1             SNK   On    Auto     TMDS    On    On
+2            1             SNK   N/A   Auto     TMDS    On    N/A
+=============================================================

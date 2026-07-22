@@ -1,0 +1,95 @@
+        Blustream MX44KVM — 4x4 USB 3.0 KVM Matrix — RS-232 / Telnet Command Reference
+
+Applies to (adapter model key): mx44kvm (MX44KVM).
+
+Dialect: SPACED. Status uses fixed-width INSTA/OUTSTA/GPIOSTATUS/CASCADESTATUS
+tables (C-series style, parseC66Response). USB routing verb is USBOUT (adapter
+routePrefix = 'USBOUT'); there is no "all hosts" route form (adapter noAllSource).
+
+Adapter state mapping:
+  output.N.source  -> USBOUT xx FR yy   (USB Host xx follows USB Device yy)
+  presets.*        -> PRESET pp SAVE/APPLY/CLR
+
+Not yet mapped (follow-ups): DEVICE xx ON/OFF (USB data), DEVICE xx PON/POFF (USB
+power), HOST xx FR yy / DEVICE xx OUT yy (USB<->AV pairing), GPIO (GPIOENABLE,
+OUTPIN/INPIN), cascade.
+
+Connection: RS-232 57600 8N1; Telnet TCP/IP; default IP 192.168.0.200. CR terminator.
+
+Source: blustream.co.uk DownloadFile?downloadId=641 ("MX44KVM..."). Verbatim below.
+================================================================================
+              MX44KVM 4x4 USB 3.0 Matrix Switcher
+===================System Information Commands
+STATUS             Print System Status And Port Status
+INSTA              Print All Input Status
+OUTSTA             Print All Output Status
+GPIOSTATUS         Print All GPIO Status
+CASCADESTATUS      Print All Cascade Status
+===================System Control Commands
+PON/OFF            Set System Power On Or Off
+IR ON/OFF          Set System IR Control On Or Off
+KEY ON/OFF         Set System Key Control On Or Off
+RESET              Reset System To Default Setting
+                   (Type 'Yes' To Confirm, Or Send Other Command To Discard)
+USBOUT xx FR yy    Set USB Host From Device:yy
+                   xx = [01-04] : USB Host 1 - 4
+                   yy = [01-04] : USB Device 1 - 4
+                   yy = 00 : All USB Device
+DEVICE xx ON/OFF   Set Disable USB Device Data Connection
+                   xx = 0 : All Devices
+                   xx = [01-04] : Device 1 - 4
+DEVICE xx PON/POFF Set Disable USB Device Power
+                   xx = 0 : All Devices
+                   xx = [01-04] : Device 1 - 4
+PRESET pp SAVE     Save Current Output Connections To Preset pp Config
+                   pp = [01-09] : Preset 1 - 9
+PRESET pp CLR      Delete Preset pp Config
+                   pp = [00-09] : 00 : All Presets, pp = [01-09]: Preset 1 - 9
+PRESET pp APPLY    Apply Preset pp Config To Output Connection
+                   pp = [01-09] : Preset 1 - 9
+GPIOENABLE x       Set GPIO Enable/Disable
+                   x = [0-1] 0 : Disable, 1 : Enable
+HOST xx FR yy      Set The Relationship Between MX44KVM Output And AV Input
+                   xx = [01-04] : USB Host 1 - 4
+                   yy = 00 : Off
+                   yy = [01-16] : AV Input 1 - 16
+DEVICE xx OUT yy   Set The Relationship Between MX44KVM Input And AV Output
+                   xx = [01-04] : USB Device 1 - 4
+                   yy = 00 : Off
+                   yy = [01-16] : AV Output 1 - 16
+OUTPIN xx MODE yy  TIME zzzz   Set GPIO xx Output Mode To yy Trigger Time zzzz
+                   xx = 00 : All GPIO
+                   xx = [01-04] : GPIO 1 - 4
+                   yy = 00 : Close Output Mode
+                   yy = [01-03] : Mode 1 - 3 (1: output 5v 50mA, 2: output 12v 5                                                                                                             0mA, 3: Contact Closure)
+                   zzzz = [0005-1800] : time 0.5s - 180s
+INPIN xx MODE yy SN z  Set GPIO xx Input Mode To yy Trigger Level z
+                   xx = 00 : All GPIO
+                   xx = [01-04] : GPIO 1 - 4
+                   yy = [00-02] : Mode 0 - 2 (0-Turn Off All Detection Modes,1-T                                                                                                             urn On Standby Mode Detection,2-Turn On Auto Switching Mode Detection)
+                   z = [0-1] : SN 0 - 1 (Trigger Level: 0 - Low Level Valid, 1 -                                                                                                              High Level Valid)
+==================RS232 Control Commands
+RS232PASSFEED ON/OFF  Set RS232-2 Feedback On Or Off
+AUTOSWITCHING ON/OFF  Set Auto Switching Mode On Or Off
+RS232PASS xx          Set The RS232 Transparent Transmission Mode
+                      xx = 01 : Local Control Of MX44KVM & Passthrough To Rs-232                                                                                                              Port 2
+                      xx = 02 : Local Control Of MX44KVM Only
+                      xx = 03 : Passthrough To RS-232 Port 2 Only
+RS232BAUD z           Set RS232-1 & RS232-2 Baud Rate To xx
+                      z = 1 - 2400, 2 - 4800, 3 - 9600, 4 - 19200, 5 - 38400, 6                                                                                                              - 57600 (Default), 7 - 115200
+RS232ONOUT a:b:c:d    Send The RS232 Command d To Port a At Baud Rate c And Form                                                                                                             at b
+                      a = 1 - RS232-1, 2 - RS232-2
+                      b = a ASCII, h HEX
+                      c = 1 - 2400, 2 - 4800, 3 - 9600, 4 - 19200, 5 - 38400, 6                                                                                                              - 57600 (Default), 7 - 115200
+                      d = RS232 Command
+================ Network Control Commands
+NET DHCP ON/OFF         Set Auto IP(DHCP) On Or Off
+NET MDNS ON/OFF         Set mDNS On Or Off
+NET IP xxx.xxx.xxx.xxx  Set IP Address
+NET GW xxx.xxx.xxx.xxx  Set Gateway Address
+NET SM xxx.xxx.xxx.xxx  Set Subnet Mask Address
+NET RB                  Set Network Reboot And Apply New Config!!!
+NET TN xxxx             Set Telnet Port
+NET TN ON/OFF           Set Telnet Port On Or Off
+NET TN8000 ON/OFF       Set Telnet Port 8000 On Or Off
+================================================================

@@ -1,0 +1,20 @@
+outsta
+================================================================
+              C88CS 8x8 HDBaseT Matrix
+              FW Version: V1.6.0
+
+Power      IR         Key        LCD        Baud       IRFV       Output1   
+ON         ON         ON         OFF        57600      ON         HDBT       
+
+Output     FromIn     HDMIcon    OutputEn   OSP        PoC        RS232ctr   CECOut     Scaling    IRctr      GuestMode  
+01         04         No         ON         SNK        ON         OFF        ON         ON         ON         OFF       
+02         04         No         ON         SNK        ON         OFF        ON         ON         ON         OFF       
+03         04         No         ON         SNK        ON         OFF        ON         ON         ON         OFF       
+04         04         No         ON         SNK        ON         OFF        ON         ON         ON         OFF       
+05         04         No         ON         SNK        ON         OFF        ON         ON         ON         OFF       
+06         04         No         ON         SNK        ON         OFF        ON         ON         ON         OFF       
+07         04         No         ON         SNK        ON         OFF        ON         ON         ON         OFF       
+08         04         No         ON         SNK        ON         OFF        ON         ON         ON         OFF       
+
+================================================================
+

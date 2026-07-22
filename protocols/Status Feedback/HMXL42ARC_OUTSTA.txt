@@ -1,0 +1,17 @@
+outsta
+================================================================
+              HMXL42ARC-KIT 4x2 HDBT Matrix With ARC
+              FW Version: V1.6.0
+
+Power      IR         Key        Baud       IRFV       Output1   
+ON         ON         ON         57600      ON         HDBT      
+
+OutputPort InputPort  Connected  OSP        Switch     PoC        RS232ctr   CEC        Scaling    IRctr      EnableOutput GuestMode  
+1          1          No         SNK        Manual     ON         OFF        ON         ON         ON         ON           OFF       
+2          2          No         SNK        Manual     ON         OFF        ON         ON         ON         ON           OFF       
+
+OutputPort AudioFrom  Optical    Analog     AnalogVol  AnalogMute 
+1          HDBT01     ON         ON         68         OFF       
+2          HDBT02     ON         ON         68         OFF       
+
+================================================================

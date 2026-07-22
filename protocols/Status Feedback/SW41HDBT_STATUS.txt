@@ -1,0 +1,48 @@
+STATUS
+================================================================
+              SW41HDBT - 4x1 HDBaseT Switch w/ HDBaseT and HDMI output
+              FW Version V1.2.0
+
+Power   IR    Key   Baud     RS232Mode
+On      On    On    57600    CTRL
+
+InputPort    EdidIndex     POC    Connected   CEC
+1            Default_00    On     No          On
+2            Default_00    On     No          On
+3            Default_00    N/A    No          On
+4            Default_00    N/A    No          On
+
+OutputPort   SelectInput   OSP   POC   Switch   Trgon   CEC   Scaling
+1            1             SNK   On    Auto     TMDS    On    On
+2            1             SNK   N/A   Auto     TMDS    On    N/A
+
+==============HDBT Input 1 RS232
+RS232ONOUT01  Command User 1: Disabled
+RS232ONOUT01  Command User 2: Disabled
+RS232ONOUT01  Command User 3: Disabled
+RS232ONOUT01  Command User 4: Disabled
+RS232OFFOUT01 Command Off: Disabled
+RS232DLYOUT01 Time Delay: 3 Second(s)
+
+==============HDBT Input 2 RS232
+RS232ONOUT02  Command User 1: Disabled
+RS232ONOUT02  Command User 2: Disabled
+RS232ONOUT02  Command User 3: Disabled
+RS232ONOUT02  Command User 4: Disabled
+RS232OFFOUT02 Command Off: Disabled
+RS232DLYOUT02 Time Delay: 3 Second(s)
+
+==============HDBT Output RS232
+RS232ONOUT03  Command User 1: Disabled
+RS232ONOUT03  Command User 2: Disabled
+RS232ONOUT03  Command User 3: Disabled
+RS232ONOUT03  Command User 4: Disabled
+RS232OFFOUT03 Command Off: Disabled
+RS232DLYOUT03 Time Delay: 3 Second(s)
+
+DHCP        IP                 Gateway            SubnetMask
+On          192.168.000.200    192.168.000.001    255.255.255.000
+
+Telnet      Port8000    MAC
+0023        On          34:D0:B8:23:11:C8
+================================================================

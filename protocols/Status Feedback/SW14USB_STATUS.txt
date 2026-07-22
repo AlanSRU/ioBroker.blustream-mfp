@@ -1,0 +1,32 @@
+>SW14USB
+status
+================================================================
+              SW14USB 10Gbps USB 3.2 G2 Switcher
+              FW Version: V1.0.0f
+
+Power      Host       Switch     Baud       KEY        SystemLog  AutoStandby     StandbyTime     USBDPower       ChargeMode
+ON         01         Auto       57600      ON         OFF        OFF             0min            Follow Host     Follow Host
+
+Device     Current    Voltage
+01            0mA     0.0V
+02            0mA     0.0V
+03            0mA     0.0V
+04            0mA     0.0V
+
+USB-B Speed     USB-A Speed
+5Gbps           5Gbps
+
+GPI Mode        Level Low       Level High
+Disable         700mV           2200mV
+
+DHCP            IP              Gateway         SubnetMask
+OFF             192.168.111.245 192.168.111.001 255.255.255.000
+
+Telnet          Port8000        mDNS            mDNS Name
+23              ON              ON              SW14USB
+
+LAN MAC
+F0:76:AB:19:B3:09
+================================================================
+
+

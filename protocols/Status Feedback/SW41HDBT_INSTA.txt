@@ -1,0 +1,11 @@
+INSTA
+=============================================================
+              SW41HDBT - 4x1 HDBaseT Switch w/ HDBaseT and HDMI output
+              FW Version V1.2.0
+
+InputPort   EdidIndex     POC   Connected   CEC
+1           Default_00    On    No          On
+2           Default_00    On    No          On
+3           Default_00    N/A   No          On
+4           Default_00    N/A   No          On
+=============================================================

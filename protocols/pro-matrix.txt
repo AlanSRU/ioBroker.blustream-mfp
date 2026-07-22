@@ -1,0 +1,126 @@
+        Blustream Pro-Matrix / Custom Pro Modular Matrix — RS-232 / Telnet Command Reference
+
+Applies to (adapter model keys): pro48hbt, pro48hbtcs, pro88hbtcs, pro88hdmi,
+pro16hbtcs, custompro (CUSTOMPRO-HUB), custompro16 (CUSTOMPRO-HUB16).
+  - Input/output index xx is two-digit; xx=00 addresses ALL ports.
+  - Modular CUSTOMPRO hubs auto-configure I/O from installed boards (up to 8x8 /
+    16x16); the adapter exposes the chassis maximum.
+
+Dialect: SPACED (OUT xx FR yy). Command terminator: CR (0x0D).
+RS-232: 57600 baud 8N1. Telnet: TCP (NET TN sets port).
+PoC verb on this family is "POC TX yy ON/OFF" (adapter pocCommand = 'POC TX').
+
+ADAPTER STATUS (v0.6.0): routing + output enable + PoC (POC TX) + presets +
+per-input EDID (EDID xx DF/CP) + audio embed (AUD RX xx ORG/ANA/AUTO) + per-output
+audio mute (MUTE On/Off TX xx) wired. Not yet: OUT xx EH/ET, MXIR/MXRS RS232/IR
+routing. Free-text STATUS not parsed (no vendor sample of the reply exists).
+
+Source: blustream.co.uk DownloadFile?downloadId=647 ("PROHUB 8X8.txt") and the
+Custom Pro Matrix User Manual (downloadId=185). Verbatim command list follows.
+================================================================================
+
+              8X8 Pro-Matrix Help Info
+              
+
+============= System Information Command
+?/HELP        Print Help Information
+STATUS        Print System Status And Port Status
+============= System Control Command
+PON           Power On, System Run On Normal State
+POFF          Power Off, System Run On Power Save State
+IR ON/OFF     Set System IR Control On Or Off
+KEY ON/OFF    Set System KEY Control On Or Off
+BEEP ON/OFF   Set Onboard Beep On Or Off
+LCD ON/OFF    Set LCD Always On Or Auto Turn Off In Power On State
+RSB x         Set RS232 Baud Rate to X bps
+              x=[0:115200 1:57600, 2:38400, 3:19200, 4:9600]
+
+RESET         Reset System To Default Setting
+RESET ALL     Reset System And Network To Default Setting
+        (Should Type "Yes" To Confirm, "No" To Discard)
+============= Input And Output Port Connect Command
+OUT xx ON/OFF Set OUTPUT:xx On Or Off
+OUT xx FR yy  Set OUTPUT:xx From INPUT:yy
+OUT xx EH/ET  Set OUTPUT:xx Use HDMI/HDBT EDID
+        xx=[00]: All OUTPUT Port, [01...08]: OUTPUT Port
+        yy=[01...08]: INPUT Port
+
+POC TX yy ON/OFF Set OUTPUT:yy POC On Or Off
+        yy=[00]: All OUTPUT Port, [01...08]: OUTPUT Port
+
+PRESET STATUS : Print Preset Config Status
+PRESET pp SET aa,bb,cc,dd,ee,ff,gg,hh : Set Preset:pp Config
+PRESET pp SAVE : Save Current Output Connection To Preset:pp Config
+PRESET pp APPLY : Apply Preset:pp Config To Output Connection
+              pp=[01..08]: Select Preset Index
+              aa=[01..08]: Output 01 From aa, [00]: Not Set
+                 bb: Output 02 ... hh: Output 08
+============= EDID Control Command
+EDID xx CP yy Set Input:xx EDID Copy From Output:yy
+EDID xx DF zz Set Input:xx EDID To Default EDID:zz
+        xx=[00]: All INPUT Port, [01...08]: INPUT Port
+        yy=[01...08]: OUTPUT Port
+        zz=00: HDMI 1080p@60Hz, Audio 2CH PCM
+        zz=01: HDMI 1080p@60Hz, Audio 5.1CH DTS/DOLBY
+        zz=02: HDMI 1080p@60Hz, Audio 7.1CH DTS/DOLBY/HD
+        zz=03: HDMI 1080i@60Hz, Audio 2CH PCM
+        zz=04: HDMI 1080i@60Hz, Audio 5.1CH DTS/DOLBY
+        zz=05: HDMI 1080i@60Hz, Audio 7.1CH DTS/DOLBY/HD
+        zz=06: HDMI 1080p@60Hz/3D, Audio 2CH PCM
+        zz=07: HDMI 1080p@60Hz/3D, Audio 5.1CH DTS/DOLBY
+        zz=08: HDMI 1080p@60Hz/3D, Audio 7.1CH DTS/DOLBY/HD
+        zz=09: HDMI 4K@30Hz 4:4:4, Audio 2CH PCM
+        zz=10: HDMI 4K@30Hz 4:4:4, Audio 5.1CH DTS/DOLBY
+        zz=11: HDMI 4K@30Hz 4:4:4, Audio 7.1CH DTS/DOLBY/HD
+        zz=12: DVI 1280x1024@60Hz, Audio None
+        zz=13: DVI 1920x1080@60Hz, Audio None
+        zz=14: DVI 1920x1200@60Hz, Audio None
+        zz=15: User EDID 1
+        zz=16: User EDID 2
+        zz=17: GUI Download EDID
+        zz=18: HDMI 4K@60Hz 4:2:0, Audio 2CH PCM
+        zz=19: HDMI 4K@60Hz 4:2:0, Audio 5.1CH DTS/DOLBY
+        zz=20: HDMI 4K@60Hz 4:2:0, Audio 7.1CH DTS/DOLBY/HD
+        zz=21: HDMI 4K@60Hz 4:4:4, Audio 2CH PCM
+        zz=22: HDMI 4K@60Hz 4:4:4, Audio 5.1CH DTS/DOLBY
+        zz=23: HDMI 4K@60Hz 4:4:4, Audio 7.1CH DTS/DOLBY/HD
+============= Matrix IR&RS-232 Connect Command
+MXIR xx FR yy   Remote RX:xx IR Output From Local IR in:yy
+        xx=[00]: All Remote Rx IR Output, [01...08]: Remote Rx IR Output
+        yy=[01...08] Local IR In
+
+MXIR GI (+-)xx  Global All Ir In Signal Goes To Which IR Output:xx
+        xx=[09...16]: Local IR Output
+        xx=[17...24]: Remote HDBT Receiver IR Output
+        +: Add xx To Current Setting
+        -: Remove xx From Current Setting
+
+MXIR GO (+-)xx  Global All Ir Out Signal From Which IR Input:xx
+        xx=[09...16]: Local IR Input
+        xx=[17...24]: Remote HDBT Receiver IR Input
+        xx=[25]: Global All Ir In
+        +: Add xx To Current Setting
+        -: Remove xx From Current Setting
+
+MXRS xx TO yy   Local RS-232:xx Route To Remote HDBT:yy
+        xx=[09]: Global RS-232
+        yy=[00]: Not Connect To Any RS-232
+        yy=[09...16]: Remote HDBT Receiver
+
+MXSTA           Print Matrix IR And RS-232 Connect State
+============= Audio Connect Command
+AUD RX xx ORG   Input Port:xx Use Orginal Received HDMI/DVI Signal
+AUD RX xx ANA   Input Port:xx Embed Analog L/R To HDMI/DVI Signal
+AUD RX xx AUTO  Input Port:xx Embed Analog L/R When DVI Signal
+        xx==[00]: All Input Port, [01...08]: Input Port
+
+MUTE ON/OFF TX yy Set Output Audio:yy Mute On or Off
+        yy=[00]: All Output Audio, [01...08]: Output Audio
+AUD STA         Print Input/Output Port Audio Setting State
+============= Network Control Command
+NET DHCP ON/OFF : Set Auto IP(DHCP) ON Or OFF
+NET IP xxx.xxx.xxx.xxx : Set IP Address
+NET GW xxx.xxx.xxx.xxx : Set Gateway Address
+NET SM xxx.xxx.xxx.xxx : Set Subnet Mask Address
+NET RB : Set Network Reboot and Apply New Config!!!
+NET TN xxxx : Set Telnet Port

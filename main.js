@@ -2,6 +2,7 @@
 
 const utils = require('@iobroker/adapter-core');
 const net = require('node:net');
+const { MatrixStatusParser } = require('./lib/statusParser');
 
 // Telnet IAC (Interpret As Command) constants
 const IAC = 255; // Interpret As Command
@@ -12,327 +13,51 @@ const WILL = 251; // Agree to perform option
 const SB = 250; // Subnegotiation Begin
 const SE = 240; // Subnegotiation End
 
-// Model definitions with their capabilities and states
-const MODEL_DEFINITIONS = {
-    // AMF Series - Advanced Multi-Format
-    amf42au: {
-        name: 'AMF42AU',
-        description: '4x2 Advanced Multi-Format Switcher',
-        category: 'AMF',
-        hasNetwork: true,
-        hasBeep: false,
-        hasDebug: false,
-        hasMicrophone: true,
-        hasAutoSwitch: true,
-        hasOutputEnable: false,
-        hasVideoMute: true,
-        hasCEC: true,
-        hasPresets: true,
-        hasPictureControl: true,
-        hasHDBT: true,
-        hasPOC: true,
-        hasNoSignalStandby: true,
-        volumeMax: 100,
-        outputs: 2,
-        inputs: {
-            '01': 'HDMI 1',
-            '02': 'HDMI 2',
-            '03': 'HDMI 3',
-            '04': 'HDMI 4',
-        },
-        resolutions: {
-            '00': '1024x768@60Hz',
-            '01': '1280x800@60Hz',
-            '02': '1360x768@60Hz',
-            '03': '1440x900@60Hz',
-            '04': '1680x1050@60Hz',
-            '05': '1920x1200@60Hz',
-            '06': '720P@50Hz',
-            '07': '720P@60Hz',
-            '08': '1080P@50Hz',
-            '09': '1080P@60Hz',
-            10: '4K2K@30Hz',
-            11: '4K2K@50Hz',
-            12: '4K2K@60Hz',
-        },
-        audioMixModes: {
-            '01': 'HDMI Audio Only',
-            '02': 'Mic Audio Only',
-            '03': 'AUDEMBED Audio Only',
-            '04': 'HDMI + Mic',
-            '05': 'AUDEMBED + Mic',
-        },
-    },
-    // MFP Series - Multi-Format Presentation
-    mfp62: {
-        name: 'MFP62',
-        description: '6x2 4K Presentation Switcher',
-        category: 'MFP',
-        hasNetwork: true,
-        hasBeep: false,
-        hasDebug: false,
-        hasMicrophone: true,
-        hasAutoSwitch: true,
-        hasOutputEnable: true,
-        volumeMax: 100,
-        outputs: 2,
-        inputs: {
-            '01': 'HDMI 1',
-            '02': 'HDMI 2',
-            '03': 'HDMI 3',
-            '04': 'DisplayPort',
-            '05': 'USB-C',
-            '06': 'VGA',
-        },
-        resolutions: {
-            '00': '1024x768@60Hz',
-            '01': '1280x800@60Hz',
-            '02': '1360x768@60Hz',
-            '03': '1440x900@60Hz',
-            '04': '1680x1050@60Hz',
-            '05': '1920x1200@60Hz',
-            '06': '720P@50Hz',
-            '07': '720P@60Hz',
-            '08': '1080P@50Hz',
-            '09': '1080P@60Hz',
-            10: '4K2K@25Hz',
-            11: '4K2K@30Hz',
-            12: '4K2K@50Hz',
-            13: '4K2K@60Hz',
-            14: 'DCI 4K2K@25Hz',
-            15: 'DCI 4K2K@30Hz',
-            16: 'DCI 4K2K@50Hz',
-            17: 'DCI 4K2K@60Hz',
-            18: 'Auto',
-        },
-        audioInputs: ['01', '02', '03', '04', '05'], // HDMI1, HDMI2, HDMI3, DP, USB-C
-    },
-    mfp72: {
-        name: 'MFP72',
-        description: '4x2 Presentation Switcher',
-        category: 'MFP',
-        hasNetwork: false,
-        hasBeep: true,
-        hasDebug: true,
-        hasMicrophone: false,
-        hasAutoSwitch: false,
-        hasOutputEnable: false,
-        volumeMax: 30,
-        outputs: 2,
-        inputs: {
-            '01': 'HDMI 1',
-            '02': 'HDMI 2',
-            '03': 'HDMI 3',
-            '04': 'HDMI 4',
-        },
-        output2ExtraInputs: {
-            AV: 'AV',
-            YPBPR: 'Component',
-            VGA: 'VGA',
-        },
-        resolutions: {
-            '01': '1080P@50Hz',
-            '02': '1080P@60Hz',
-            '03': '720P@50Hz',
-            '04': '720P@60Hz',
-            '05': '1280x1024@60Hz',
-            '06': '1024x768@60Hz',
-            '07': '1360x768@60Hz',
-            '08': '1440x900@60Hz',
-            '09': '1680x1050@60Hz',
-        },
-        hasAspectRatio: true,
-        hasZoom: true,
-        hasOverscan: true,
-    },
-    mfp112: {
-        name: 'MFP112',
-        description: '5x2 Presentation Switcher with HDBaseT',
-        category: 'MFP',
-        hasNetwork: true, // Has built-in TCP port 8000
-        hasBeep: true,
-        hasDebug: true,
-        hasMicrophone: false,
-        hasAutoSwitch: false,
-        hasOutputEnable: true,
-        hasHDBaseT: true,
-        hasBypass: true,
-        hasIR232: true,
-        hasPerInputAudio: true,
-        volumeMax: 30,
-        outputs: 2,
-        inputs: {
-            '01': 'HDMI 1',
-            '02': 'HDMI 2',
-            '03': 'HDMI 3',
-            '04': 'HDMI 4',
-            HDBT: 'HDBaseT',
-        },
-        output2ExtraInputs: {
-            AV: 'AV',
-            YPBPR: 'Component',
-            VGA1: 'VGA 1',
-            VGA2: 'VGA 2',
-            VGA3: 'VGA 3',
-            VGA4: 'VGA 4',
-        },
-        resolutions: {
-            '01': '1080P@50Hz',
-            '02': '1080P@60Hz',
-            '03': '720P@50Hz',
-            '04': '720P@60Hz',
-            '05': '1280x1024@60Hz',
-            '06': '1024x768@60Hz',
-            '07': '1360x768@60Hz',
-            '08': '1440x900@60Hz',
-            '09': '1680x1050@60Hz',
-        },
-        hasAspectRatio: true,
-        hasZoom: true,
-        hasOverscan: true,
-    },
-    // WMF Series - Wireless Media
-    wmf51: {
-        name: 'WMF51',
-        description: 'Wireless Media Presenter',
-        category: 'WMF',
-        hasNetwork: true,
-        hasWifi: true,
-        hasBeep: false,
-        hasDebug: false,
-        hasMicrophone: false,
-        hasAutoSwitch: false,
-        hasOutputEnable: false,
-        hasVideoMute: true,
-        hasMultiview: true,
-        hasStandby: true,
-        hasSidebar: true,
-        isWireless: true,
-        volumeMax: 100,
-        outputs: 1,
-        inputs: {}, // Wireless inputs - dynamic
-        resolutions: {
-            '00': 'Auto',
-            '01': '720P@50Hz',
-            '02': '720P@60Hz',
-            '03': '1080P@30Hz',
-            '04': '1080P@50Hz',
-            '05': '1080P@60Hz',
-            '06': '4K@30Hz',
-            '07': '4K@50Hz',
-            '08': '4K@60Hz',
-        },
-        dualLAN: true,
-    },
-    wmf72: {
-        name: 'WMF72',
-        description: 'Wireless Media Presenter with Dual Display',
-        category: 'WMF',
-        hasNetwork: true,
-        hasWifi: true,
-        hasBeep: false,
-        hasDebug: false,
-        hasMicrophone: false,
-        hasAutoSwitch: true,
-        hasOutputEnable: false,
-        hasVideoMute: true,
-        hasMultiview: true,
-        hasStandby: true,
-        hasSidebar: true,
-        hasDualDisplay: true,
-        hasDisplayModes: true,
-        hasLayouts: true,
-        hasAudioModes: true,
-        hasSecurity: true,
-        hasUSBControl: true,
-        isWireless: true,
-        volumeMax: 100,
-        outputs: 2,
-        inputs: {}, // Wireless inputs - dynamic
-        resolutions: {
-            '00': 'Auto',
-            '01': '720P@50Hz',
-            '02': '720P@60Hz',
-            '03': '1080P@30Hz',
-            '04': '1080P@50Hz',
-            '05': '1080P@60Hz',
-            '06': '3840x2160@30Hz',
-            '07': '3840x2160@50Hz',
-            '08': '3840x2160@60Hz',
-            '09': '4096x2160@30Hz',
-            10: '4096x2160@50Hz',
-            11: '4096x2160@60Hz',
-        },
-        displayModes: {
-            1: 'Mirroring',
-            2: 'Multiview + Single',
-            3: 'Single + Multiview',
-        },
-        layouts: {
-            '01': 'Single',
-            '02': 'Dual',
-            '03': 'Triple-T',
-            '04': 'Triple-L',
-            '05': 'Triple-B',
-            '06': 'Triple-R',
-            '07': 'Quad',
-            '08': 'Quad-B',
-            '09': 'Quad-R',
-            10: 'Quad-T',
-            11: 'Quad-L',
-        },
-        audioModes: {
-            '01': 'Audio Mixer',
-            '02': 'Single Input Source',
-            '03': 'Single Input Window',
-            '04': 'First IN',
-            '05': 'Last IN',
-        },
-        dualLAN: true,
-    },
-    // C Series - Contractor HDBaseT Matrix (crosspoint, non-scaling)
-    c66: {
-        name: 'C66',
-        description: '6x6 HDBaseT Matrix',
-        category: 'C',
-        isMatrix: true,
-        hasNetwork: true,
-        hasOutputEnable: true,
-        hasPresets: true,
-        hasPOC: true,
-        hasHDBT: true,
-        outputs: 6,
-        inputs: {
-            '01': 'HDMI 1',
-            '02': 'HDMI 2',
-            '03': 'HDMI 3',
-            '04': 'HDMI 4',
-            '05': 'HDMI 5',
-            '06': 'HDMI 6',
-        },
-    },
-    c88: {
-        name: 'C88',
-        description: '8x8 HDBaseT Matrix',
-        category: 'C',
-        isMatrix: true,
-        hasNetwork: true,
-        hasOutputEnable: true,
-        hasPresets: true,
-        hasPOC: true,
-        hasHDBT: true,
-        outputs: 8,
-        inputs: {
-            '01': 'HDMI 1',
-            '02': 'HDMI 2',
-            '03': 'HDMI 3',
-            '04': 'HDMI 4',
-            '05': 'HDMI 5',
-            '06': 'HDMI 6',
-            '07': 'HDMI 7',
-            '08': 'HDMI 8',
-        },
-    },
+// Model definitions (see lib/models.js — kept dependency-free for reuse + tests)
+const { MODEL_DEFINITIONS } = require('./lib/models');
+
+// CEC discrete-action option maps (written to output.N.cecAction / input.N.cecAction,
+// each write sends `OUT/IN xx CEC <value>`). Superset from the HMX-18G API; SW41HDBT
+// implements a subset (unsupported actions are simply ignored by the device).
+const CEC_OUTPUT_ACTIONS = {
+    PON: 'Power On',
+    POFF: 'Power Off',
+    VOLUP: 'Volume Up',
+    VOLDOWN: 'Volume Down',
+    MUTE: 'Mute Toggle',
+    OK: 'OK / Enter',
+    UP: 'Up',
+    DOWN: 'Down',
+    LEFT: 'Left',
+    RIGHT: 'Right',
+    RETURN: 'Return',
+    EXIT: 'Exit',
+    PLAY: 'Play',
+    STOP: 'Stop',
+    PAUSE: 'Pause',
+    RECORD: 'Record',
+};
+const CEC_INPUT_ACTIONS = {
+    PON: 'Power On',
+    POFF: 'Power Off',
+    VOLUP: 'Volume Up',
+    VOLDOWN: 'Volume Down',
+    OK: 'OK / Enter',
+    UP: 'Up',
+    DOWN: 'Down',
+    LEFT: 'Left',
+    RIGHT: 'Right',
+    MENU: 'Menu',
+    RETURN: 'Return',
+    EXIT: 'Exit',
+    PLAY: 'Play',
+    STOP: 'Stop',
+    PAUSE: 'Pause',
+    RECORD: 'Record',
+    REWIND: 'Rewind',
+    FF: 'Fast Forward',
+    FWD: 'Forward',
+    BWD: 'Backward',
 };
 
 // Bump whenever the shape of the model-driven state tree changes in a way that
@@ -371,55 +96,24 @@ const ALL_MODEL_STATES = [
     'system.pocOutput',
     'system.reboot',
     'output',
-    'output.1',
-    'output.1.source',
-    'output.1.enabled',
-    'output.1.videoMute',
-    'output.1.sidebar',
-    'output.1.brightness',
-    'output.1.contrast',
-    'output.1.pictureMode',
-    'output.1.colourTemp',
-    'output.1.audioMix',
-    'output.1.cecEnabled',
-    'output.1.poc',
-    'output.2',
-    'output.2.source',
-    'output.2.enabled',
-    'output.2.videoMute',
-    'output.2.sidebar',
-    'output.2.brightness',
-    'output.2.contrast',
-    'output.2.pictureMode',
-    'output.2.colourTemp',
-    'output.2.audioMix',
-    'output.2.cecEnabled',
-    'output.2.poc',
-    // Outputs 3-8 (C66/C88 matrix)
-    'output.3',
-    'output.3.source',
-    'output.3.enabled',
-    'output.3.poc',
-    'output.4',
-    'output.4.source',
-    'output.4.enabled',
-    'output.4.poc',
-    'output.5',
-    'output.5.source',
-    'output.5.enabled',
-    'output.5.poc',
-    'output.6',
-    'output.6.source',
-    'output.6.enabled',
-    'output.6.poc',
-    'output.7',
-    'output.7.source',
-    'output.7.enabled',
-    'output.7.poc',
-    'output.8',
-    'output.8.source',
-    'output.8.enabled',
-    'output.8.poc',
+    // Per-output channels + every state any model attaches to them, for outputs
+    // 1..16 (largest matrix is 16x16: PRO16HBT / CUSTOMPRO-HUB16). Deleting
+    // `output.N` recursively also removes its children, but listing them keeps
+    // the purge explicit and order-independent.
+    ...Array.from({ length: 16 }, (_, k) => k + 1).flatMap(i => [
+        `output.${i}`,
+        `output.${i}.source`,
+        `output.${i}.enabled`,
+        `output.${i}.videoMute`,
+        `output.${i}.sidebar`,
+        `output.${i}.brightness`,
+        `output.${i}.contrast`,
+        `output.${i}.pictureMode`,
+        `output.${i}.colourTemp`,
+        `output.${i}.audioMix`,
+        `output.${i}.cecEnabled`,
+        `output.${i}.poc`,
+    ]),
     'output.allSource',
     'output.mode',
     'output.bypass',
@@ -430,6 +124,22 @@ const ALL_MODEL_STATES = [
     'output.freqMode',
     'output.displayMode',
     'output.layout',
+    'videowall',
+    'videowall.mode',
+    'videowall.vwSource',
+    'videowall.audioSource',
+    'input',
+    // Per-input channels + states any model attaches (up to 16 inputs on 16x16
+    // matrices). Recursive delete of `input.N` also removes its children.
+    ...Array.from({ length: 16 }, (_, k) => k + 1).flatMap(i => [
+        `input.${i}`,
+        `input.${i}.type`,
+        `input.${i}.edidProfile`,
+        `input.${i}.edidCopyFrom`,
+        `input.${i}.cecEnabled`,
+        `input.${i}.cecAction`,
+        `input.${i}.audioEmbed`,
+    ]),
     'presets',
     'presets.save',
     'presets.apply',
@@ -441,6 +151,7 @@ const ALL_MODEL_STATES = [
     'audio.pcmMode',
     'audio.mode',
     'audio.output',
+    'audio.arcMode',
     'audio.hdmi',
     'audio.hdmi.input1',
     'audio.hdmi.input2',
@@ -491,6 +202,17 @@ const ALL_MODEL_STATES = [
     'cec.input2',
     'cec.input3',
     'cec.input4',
+    // KVM (MX44KVM) GPIO + USB cascade telemetry (fixed 4 ports each)
+    'gpio',
+    'usb',
+    ...Array.from({ length: 4 }, (_, k) => k + 1).flatMap(i => [
+        `gpio.output.${i}`,
+        `gpio.output.${i}.mode`,
+        `gpio.input.${i}`,
+        `gpio.input.${i}.mode`,
+        `usb.cascadeOut.${i}`,
+        `usb.cascadeFrom.${i}`,
+    ]),
     'commands.vgaAutoAdjust',
     'commands.homeScreen',
 ];
@@ -515,7 +237,7 @@ class BlustreamAdapter extends utils.Adapter {
         this.modelDef = null;
         this._statusHeaders = null;
         this._responseLines = null;
-        this._c66Table = null;
+        this._matrixParser = new MatrixStatusParser();
 
         this.on('ready', this.onReady.bind(this));
         this.on('stateChange', this.onStateChange.bind(this));
@@ -811,9 +533,11 @@ class BlustreamAdapter extends utils.Adapter {
             }
         }
 
-        // Route-all control (C66/C88 matrix): OUT 00 FR yy sets every output to
-        // one input. Write-only (there is no single "current" value for all).
-        if (def.isMatrix) {
+        // Route-all control (multi-output matrices): OUT 00 FR yy sets every
+        // output to one input. Write-only (there is no single "current" value for
+        // all). Single-output switches (SW-series) don't need it, and the KVM
+        // matrix (noAllSource) has no "all hosts" route form.
+        if (def.isMatrix && def.outputs > 1 && !def.noAllSource) {
             await this.setObjectNotExistsAsync('output.allSource', {
                 type: 'state',
                 common: {
@@ -827,6 +551,288 @@ class BlustreamAdapter extends utils.Adapter {
                 },
                 native: {},
             });
+        }
+
+        // Video-wall / multi-view controls (MX44VW / MX44AVW / MV41). Matrix-mode
+        // and multi-view-window routing reuse output.N.source (OUT xx FR yy); these
+        // states add the mode switch, VW source, bezel and multi-view audio.
+        if (def.hasVideoWall) {
+            await this.setObjectNotExistsAsync('videowall', {
+                type: 'channel',
+                common: { name: 'Video Wall / Multi-View' },
+                native: {},
+            });
+            await this.setObjectNotExistsAsync('videowall.mode', {
+                type: 'state',
+                common: {
+                    role: 'state',
+                    name: 'Output Mode',
+                    type: 'string',
+                    read: true,
+                    write: true,
+                    def: 'MX',
+                    states: {
+                        MX: 'Matrix',
+                        MV: 'Multi-View',
+                        VW: 'Video Wall',
+                        VW22: 'Video Wall 2x2',
+                        VW41: 'Video Wall 4x1',
+                        VW14: 'Video Wall 1x4',
+                        MV0: 'Multi-View Layout 0',
+                        MV1: 'Multi-View Layout 1',
+                        MV2: 'Multi-View Layout 2',
+                        MV3: 'Multi-View Layout 3',
+                    },
+                },
+                native: {},
+            });
+            await this.setObjectNotExistsAsync('videowall.vwSource', {
+                type: 'state',
+                common: {
+                    role: 'media.input',
+                    name: 'Video Wall Source',
+                    type: 'string',
+                    read: false,
+                    write: true,
+                    def: '',
+                    states: { ...def.inputs },
+                },
+                native: {},
+            });
+            await this.setObjectNotExistsAsync('videowall.audioSource', {
+                type: 'state',
+                common: {
+                    role: 'media.input',
+                    name: 'Multi-View Audio Source',
+                    type: 'string',
+                    read: false,
+                    write: true,
+                    def: '',
+                    states: { '00': 'Follow Window 1', ...def.inputs },
+                },
+                native: {},
+            });
+            // Per-output bezel pixel-shift (video-wall mode), 0..100 px each edge
+            for (let i = 1; i <= def.outputs; i++) {
+                for (const edge of [
+                    ['bezelLeft', 'Left', 'VCL'],
+                    ['bezelRight', 'Right', 'VCR'],
+                    ['bezelTop', 'Top', 'VCT'],
+                    ['bezelBottom', 'Bottom', 'VCB'],
+                ]) {
+                    await this.setObjectNotExistsAsync(`output.${i}.${edge[0]}`, {
+                        type: 'state',
+                        common: {
+                            role: 'level',
+                            name: `Output ${i} Bezel ${edge[1]} (px)`,
+                            type: 'number',
+                            read: true,
+                            write: true,
+                            def: 0,
+                            min: 0,
+                            max: 100,
+                        },
+                        native: {},
+                    });
+                }
+            }
+        }
+
+        // Per-input features: signal type (VGA models), EDID management (all
+        // matrices), CEC input actions (HMX-18G / SW41HDBT), audio embed (Pro).
+        if (def.hasVGAInputs || def.hasEDID || def.hasCECActions || def.hasAudioEmbed) {
+            const inCount = def.inputCount || Object.keys(def.inputs || {}).length;
+            await this.setObjectNotExistsAsync('input', {
+                type: 'channel',
+                common: { name: 'Inputs' },
+                native: {},
+            });
+            for (let i = 1; i <= inCount; i++) {
+                await this.setObjectNotExistsAsync(`input.${i}`, {
+                    type: 'channel',
+                    common: { name: `Input ${i}` },
+                    native: {},
+                });
+                if (def.hasVGAInputs) {
+                    await this.setObjectNotExistsAsync(`input.${i}.type`, {
+                        type: 'state',
+                        common: {
+                            role: 'state',
+                            name: `Input ${i} Signal Type`,
+                            type: 'string',
+                            read: true,
+                            write: true,
+                            def: 'HDMI',
+                            states: { HDMI: 'HDMI', VGA: 'VGA' },
+                        },
+                        native: {},
+                    });
+                }
+                if (def.hasEDID) {
+                    await this.setObjectNotExistsAsync(`input.${i}.edidProfile`, {
+                        type: 'state',
+                        common: {
+                            role: 'level',
+                            name: `Input ${i} EDID Profile (see protocol doc)`,
+                            type: 'number',
+                            read: true,
+                            write: true,
+                            def: 0,
+                            min: 0,
+                            max: 40,
+                        },
+                        native: {},
+                    });
+                    await this.setObjectNotExistsAsync(`input.${i}.edidCopyFrom`, {
+                        type: 'state',
+                        common: {
+                            role: 'level',
+                            name: `Input ${i} EDID Copy From Output (0 = off)`,
+                            type: 'number',
+                            read: false,
+                            write: true,
+                            def: 0,
+                            min: 0,
+                            max: def.outputs,
+                        },
+                        native: {},
+                    });
+                }
+                if (def.hasCECActions) {
+                    await this.setObjectNotExistsAsync(`input.${i}.cecEnabled`, {
+                        type: 'state',
+                        common: {
+                            role: 'switch.enable',
+                            name: `Input ${i} CEC Enabled`,
+                            type: 'boolean',
+                            read: true,
+                            write: true,
+                            def: false,
+                        },
+                        native: {},
+                    });
+                    await this.setObjectNotExistsAsync(`input.${i}.cecAction`, {
+                        type: 'state',
+                        common: {
+                            role: 'state',
+                            name: `Input ${i} CEC Action`,
+                            type: 'string',
+                            read: false,
+                            write: true,
+                            def: '',
+                            states: CEC_INPUT_ACTIONS,
+                        },
+                        native: {},
+                    });
+                }
+                if (def.hasAudioEmbed) {
+                    await this.setObjectNotExistsAsync(`input.${i}.audioEmbed`, {
+                        type: 'state',
+                        common: {
+                            role: 'state',
+                            name: `Input ${i} Audio Embed`,
+                            type: 'string',
+                            read: true,
+                            write: true,
+                            def: 'ORG',
+                            states: { ORG: 'Original (HDMI)', ANA: 'Analogue L/R', AUTO: 'Auto (analogue on DVI)' },
+                        },
+                        native: {},
+                    });
+                }
+            }
+        }
+
+        // Per-output audio + CEC actions. Audio APIs differ by family:
+        //  hasAudioMatrix (HMX-18G): audio route/mute/volume/ARC per output.
+        //  hasAudioEmbed  (Pro-Matrix): per-output audio mute only.
+        //  hasCECActions  (HMX-18G/SW41HDBT): per-output CEC enable + action.
+        if (def.hasCECActions || def.hasAudioMatrix || def.hasAudioEmbed) {
+            for (let i = 1; i <= def.outputs; i++) {
+                if (def.hasCECActions) {
+                    await this.setObjectNotExistsAsync(`output.${i}.cecEnabled`, {
+                        type: 'state',
+                        common: {
+                            role: 'switch.enable',
+                            name: `Output ${i} CEC Enabled`,
+                            type: 'boolean',
+                            read: true,
+                            write: true,
+                            def: false,
+                        },
+                        native: {},
+                    });
+                    await this.setObjectNotExistsAsync(`output.${i}.cecAction`, {
+                        type: 'state',
+                        common: {
+                            role: 'state',
+                            name: `Output ${i} CEC Action`,
+                            type: 'string',
+                            read: false,
+                            write: true,
+                            def: '',
+                            states: CEC_OUTPUT_ACTIONS,
+                        },
+                        native: {},
+                    });
+                }
+                if (def.hasAudioMatrix) {
+                    await this.setObjectNotExistsAsync(`output.${i}.audioSource`, {
+                        type: 'state',
+                        common: {
+                            role: 'media.input',
+                            name: `Output ${i} Audio Source`,
+                            type: 'string',
+                            read: true,
+                            write: true,
+                            def: '',
+                            states: { ...def.inputs },
+                        },
+                        native: {},
+                    });
+                    await this.setObjectNotExistsAsync(`output.${i}.audioVolume`, {
+                        type: 'state',
+                        common: {
+                            role: 'level.volume',
+                            name: `Output ${i} Audio Volume`,
+                            type: 'number',
+                            read: true,
+                            write: true,
+                            def: 0,
+                            min: 0,
+                            max: 100,
+                        },
+                        native: {},
+                    });
+                    await this.setObjectNotExistsAsync(`output.${i}.arcMode`, {
+                        type: 'state',
+                        common: {
+                            role: 'state',
+                            name: `Output ${i} ARC Mode`,
+                            type: 'string',
+                            read: true,
+                            write: true,
+                            def: '',
+                            states: { '01': 'ARC from Optical', '02': 'ARC from HDMI' },
+                        },
+                        native: {},
+                    });
+                }
+                if (def.hasAudioMatrix || def.hasAudioEmbed) {
+                    await this.setObjectNotExistsAsync(`output.${i}.audioMute`, {
+                        type: 'state',
+                        common: {
+                            role: 'media.mute',
+                            name: `Output ${i} Audio Mute`,
+                            type: 'boolean',
+                            read: true,
+                            write: true,
+                            def: false,
+                        },
+                        native: {},
+                    });
+                }
+            }
         }
 
         // Output mode (splitter/matrix) - for MFP72/MFP112. True crosspoint
@@ -1566,6 +1572,98 @@ class BlustreamAdapter extends utils.Adapter {
             }
         }
 
+        // KVM (MX44KVM): GPIO port modes + USB cascade routing. Read-only STATUS
+        // telemetry (GPIOSTATUS / CASCADESTATUS), parsed by lib/statusParser.js.
+        if (def.routePrefix === 'USBOUT') {
+            await this.setObjectNotExistsAsync('gpio', {
+                type: 'channel',
+                common: { name: 'GPIO Ports' },
+                native: {},
+            });
+            await this.setObjectNotExistsAsync('usb', {
+                type: 'channel',
+                common: { name: 'USB Cascade' },
+                native: {},
+            });
+            for (let i = 1; i <= 4; i++) {
+                await this.setObjectNotExistsAsync(`gpio.output.${i}.mode`, {
+                    type: 'state',
+                    common: { role: 'text', name: `GPIO Output ${i} Mode`, type: 'string', read: true, write: false },
+                    native: {},
+                });
+                await this.setObjectNotExistsAsync(`gpio.input.${i}.mode`, {
+                    type: 'state',
+                    common: { role: 'text', name: `GPIO Input ${i} Mode`, type: 'string', read: true, write: false },
+                    native: {},
+                });
+                await this.setObjectNotExistsAsync(`usb.cascadeOut.${i}`, {
+                    type: 'state',
+                    common: {
+                        role: 'value',
+                        name: `Cascade Output (Device ${i}), 0 = none`,
+                        type: 'number',
+                        read: true,
+                        write: false,
+                        def: 0,
+                    },
+                    native: {},
+                });
+                await this.setObjectNotExistsAsync(`usb.cascadeFrom.${i}`, {
+                    type: 'state',
+                    common: {
+                        role: 'value',
+                        name: `Cascade From (Host ${i}), 0 = none`,
+                        type: 'number',
+                        read: true,
+                        write: false,
+                        def: 0,
+                    },
+                    native: {},
+                });
+            }
+        }
+
+        // Dante/audio-DSP telemetry (SW42DA-V2): master volume/mute + ARC mode.
+        // Read-only STATUS read-back (write commands not modelled).
+        if (def.hasDanteDsp) {
+            await this.setObjectNotExistsAsync('audio', {
+                type: 'channel',
+                common: { name: 'Audio' },
+                native: {},
+            });
+            await this.setObjectNotExistsAsync('audio.volume', {
+                type: 'state',
+                common: {
+                    role: 'level.volume',
+                    name: 'Master Output Volume',
+                    type: 'number',
+                    read: true,
+                    write: false,
+                    def: 0,
+                    min: 0,
+                    max: 100,
+                },
+                native: {},
+            });
+            await this.setObjectNotExistsAsync('audio.mute', {
+                type: 'state',
+                common: {
+                    role: 'media.mute',
+                    name: 'Master Output Mute',
+                    type: 'boolean',
+                    read: true,
+                    write: false,
+                    def: false,
+                },
+                native: {},
+            });
+            await this.setObjectNotExistsAsync('audio.arcMode', {
+                type: 'state',
+                common: { role: 'text', name: 'ARC Mode', type: 'string', read: true, write: false, def: '' },
+                native: {},
+            });
+        }
+
         // Reboot command (WMF series)
         if (def.isWireless) {
             await this.setObjectNotExistsAsync('system.reboot', {
@@ -2157,20 +2255,26 @@ class BlustreamAdapter extends utils.Adapter {
             // End of STATUS response — release command queue on separator
             if (/^={3,}$/.test(response)) {
                 this._statusHeaders = null;
-                this._c66Table = null;
+                this._matrixParser.reset();
                 this.currentCommand = null;
                 this.processCommandQueue();
             }
             return;
         }
 
-        // C66/C88 matrix: fixed-width status tables + [SUCCESS]/[FAIL] confirmations
+        // Matrix / switcher: fixed-width STATUS tables + [SUCCESS]/[FAIL] confirmations
         if (this.modelDef && this.modelDef.isMatrix) {
-            this.parseC66Response(response);
             // Plain-language confirmations are terminal single-line responses
             if (/^\[(SUCCESS|FAIL)\]/i.test(response)) {
+                this.handleMatrixConfirmation(response);
                 this.currentCommand = null;
                 this.processCommandQueue();
+                return;
+            }
+            // Fixed-width status tables — parsed per model family (see lib/statusParser.js)
+            const updates = this._matrixParser.feed(response, this.modelDef);
+            for (const u of updates) {
+                this.setStateAsync(u.id, u.val, true);
             }
             return;
         }
@@ -2208,120 +2312,21 @@ class BlustreamAdapter extends utils.Adapter {
         this.processCommandQueue();
     }
 
-    // C66/C88 status output is a set of space-padded, fixed-width tables. Each
-    // table starts with a header row; data rows are sliced by the character
-    // offset of each column name in that header. Also handles the plain-language
-    // [SUCCESS]/[FAIL] command confirmations the matrix returns.
-    parseC66Response(line) {
-        // Section dividers ("========" or "===== RS232 01") end the current table
-        if (/^=/.test(line)) {
-            this._c66Table = null;
-            return;
-        }
-
-        // Plain-language command confirmations
+    // Plain-language command confirmations the matrix/switcher returns
+    // ("[SUCCESS]…" / "[FAIL]…"). Fixed-width STATUS tables are handled
+    // separately by the per-family parser in lib/statusParser.js.
+    handleMatrixConfirmation(line) {
         if (/^\[FAIL\]/i.test(line)) {
             this.log.warn(`Device rejected command: ${line}`);
             return;
         }
-        if (/^\[SUCCESS\]/i.test(line)) {
-            let m;
-            if ((m = line.match(/Set output (\d+) connect from input (\d+)/i))) {
-                this.setStateAsync(`output.${parseInt(m[1], 10)}.source`, m[2].padStart(2, '0'), true);
-            } else if ((m = line.match(/Set output (\d+) (ON|OFF)/i))) {
-                this.setStateAsync(`output.${parseInt(m[1], 10)}.enabled`, m[2].toUpperCase() === 'ON', true);
-            } else if ((m = line.match(/Set POC (ON|OFF) on output (\d+)/i))) {
-                this.setStateAsync(`output.${parseInt(m[2], 10)}.poc`, m[1].toUpperCase() === 'ON', true);
-            }
-            return;
-        }
-
-        // Header rows: first token identifies the table. Record column offsets.
-        const tableDefs = {
-            Power: ['Power', 'IR', 'Key', 'LCD', 'Baud', 'IRPON', 'IRFV', 'Output1'],
-            Input: ['Input', 'Edid', 'HDMIcon', 'CECIn'],
-            Output: ['Output', 'FromIn', 'HDMIcon', 'OutputEn', 'OSP', 'PoC', 'RS232ctr', 'CECOut', 'IRctr', 'IRInput'],
-            DHCP: ['DHCP', 'IP', 'Gateway', 'SubnetMask'],
-            Telnet: ['Telnet', 'LAN MAC'],
-        };
-        const firstToken = line.trim().split(/\s+/)[0];
-        if (tableDefs[firstToken] && line.includes(tableDefs[firstToken][1].split(' ')[0])) {
-            const names = tableDefs[firstToken];
-            const offsets = names.map(n => line.indexOf(n));
-            // Bail if any expected column is missing from this header line
-            if (offsets.every(o => o >= 0)) {
-                this._c66Table = { type: firstToken, names, offsets };
-                return;
-            }
-        }
-
-        // Data rows: slice by the active table's column offsets
-        if (!this._c66Table) {
-            return;
-        }
-        const { type, names, offsets } = this._c66Table;
-        const data = {};
-        for (let i = 0; i < names.length; i++) {
-            data[names[i]] = line.substring(offsets[i], i + 1 < offsets.length ? offsets[i + 1] : line.length).trim();
-        }
-
-        switch (type) {
-            case 'Power':
-                if (data.Power) {
-                    this.setStateAsync('system.power', data.Power.toUpperCase() === 'ON', true);
-                }
-                if (data.IR) {
-                    this.setStateAsync('system.ir', data.IR.toUpperCase() === 'ON', true);
-                }
-                if (data.Key) {
-                    this.setStateAsync('system.key', data.Key.toUpperCase() === 'ON', true);
-                }
-                if (data.LCD) {
-                    this.setStateAsync('system.lcd', data.LCD.toUpperCase() === 'ON', true);
-                }
-                this._c66Table = null; // single-row table
-                break;
-
-            case 'Output': {
-                const outputNum = parseInt(data.Output, 10);
-                if (outputNum >= 1 && outputNum <= (this.modelDef.outputs || 8)) {
-                    if (data.FromIn) {
-                        this.setStateAsync(`output.${outputNum}.source`, data.FromIn.padStart(2, '0'), true);
-                    }
-                    if (data.OutputEn) {
-                        this.setStateAsync(`output.${outputNum}.enabled`, data.OutputEn.toUpperCase() === 'YES', true);
-                    }
-                    if (data.PoC) {
-                        this.setStateAsync(`output.${outputNum}.poc`, data.PoC.toUpperCase() === 'ON', true);
-                    }
-                }
-                break;
-            }
-
-            case 'DHCP':
-                if (data.DHCP) {
-                    this.setStateAsync('network.dhcp', data.DHCP.toUpperCase() === 'ON', true);
-                }
-                if (data.IP) {
-                    this.setStateAsync('network.ip', data.IP, true);
-                }
-                if (data.Gateway) {
-                    this.setStateAsync('network.gateway', data.Gateway, true);
-                }
-                if (data.SubnetMask) {
-                    this.setStateAsync('network.subnet', data.SubnetMask, true);
-                }
-                this._c66Table = null; // single-row table
-                break;
-
-            case 'Telnet':
-                if (data.Telnet && /^\d+$/.test(data.Telnet)) {
-                    this.setStateAsync('network.telnetPort', data.Telnet, true); // string state
-                }
-                this._c66Table = null; // single-row table
-                break;
-
-            // 'Input' table (EDID/CEC per input) intentionally not mapped yet
+        let m;
+        if ((m = line.match(/Set output (\d+) connect from input (\d+)/i))) {
+            this.setStateAsync(`output.${parseInt(m[1], 10)}.source`, m[2].padStart(2, '0'), true);
+        } else if ((m = line.match(/Set output (\d+) (ON|OFF)/i))) {
+            this.setStateAsync(`output.${parseInt(m[1], 10)}.enabled`, m[2].toUpperCase() === 'ON', true);
+        } else if ((m = line.match(/Set POC (ON|OFF) on output (\d+)/i))) {
+            this.setStateAsync(`output.${parseInt(m[2], 10)}.poc`, m[1].toUpperCase() === 'ON', true);
         }
     }
 
@@ -2664,6 +2669,41 @@ class BlustreamAdapter extends utils.Adapter {
         this.processCommandQueue();
     }
 
+    // Command-form helpers. Blustream firmware uses two spacing dialects for the
+    // numeric routing/enable commands: "spaced" (OUT 01 FR 02 — C/HMX/Pro/MFP/AMF,
+    // and verified to also accept the unspaced form on C-series) and "nospace"
+    // (OUT01FR02 — the CMX/MX HDMI matrices and SW-AB switchers, whose manuals
+    // document only that form). Auto-switch (OUT AUTO ON/OFF) and PoC stay spaced
+    // for every model, so only route/enable/allSource run through the separator.
+    cmdSep() {
+        return this.modelDef && this.modelDef.commandStyle === 'nospace' ? '' : ' ';
+    }
+    // Single-output switches (SW-AB family) route as OUTFRyy with no output index;
+    // multi-output matrices route as OUT xx FR yy. Driven by def.noOutputIndex.
+    // routePrefix overrides the OUT verb (MX44KVM routes USB as "USBOUT xx FR yy").
+    cmdRoute(out, input) {
+        const s = this.cmdSep();
+        const p = (this.modelDef && this.modelDef.routePrefix) || 'OUT';
+        if (this.modelDef && this.modelDef.noOutputIndex) {
+            return `${p}${s}FR${s}${input}`;
+        }
+        return `${p}${s}${out}${s}FR${s}${input}`;
+    }
+    cmdOutOnOff(out, on) {
+        const s = this.cmdSep();
+        const st = on ? 'ON' : 'OFF';
+        if (this.modelDef && this.modelDef.noOutputIndex) {
+            return `OUT${s}${st}`;
+        }
+        return `OUT${s}${out}${s}${st}`;
+    }
+    // PoC verb differs by family: POCOUT xx (C-series/HMX), POC OUT xx (SW41HDBT),
+    // POC TX yy (Pro-Matrix). Driven by def.pocCommand (default POCOUT). Always spaced.
+    cmdPoc(out, on) {
+        const verb = (this.modelDef && this.modelDef.pocCommand) || 'POCOUT';
+        return `${verb} ${out} ${on ? 'ON' : 'OFF'}`;
+    }
+
     processCommandQueue() {
         if (this.isProcessingQueue || !this.connected || this.currentCommand) {
             return;
@@ -2735,33 +2775,134 @@ class BlustreamAdapter extends utils.Adapter {
             return;
         }
 
-        // Handle output source changes
-        const outputSourceMatch = stateId.match(/^output\.(\d)\.source$/);
+        // Handle output source changes (outputs 1..16; 10-16 are two-digit)
+        const outputSourceMatch = stateId.match(/^output\.(\d+)\.source$/);
         if (outputSourceMatch) {
             const outputNum = outputSourceMatch[1];
-            this.sendCommand(`OUT ${outputNum.padStart(2, '0')} FR ${state.val}`);
+            this.sendCommand(this.cmdRoute(outputNum.padStart(2, '0'), state.val));
             return;
         }
 
-        // Route all outputs to one input (C66/C88 matrix): OUT 00 FR yy
+        // Route all outputs to one input (matrices): OUT 00 FR yy
         if (stateId === 'output.allSource') {
-            this.sendCommand(`OUT 00 FR ${state.val}`);
+            this.sendCommand(this.cmdRoute('00', state.val));
             return;
         }
 
         // Handle output enable changes
-        const outputEnableMatch = stateId.match(/^output\.(\d)\.enabled$/);
+        const outputEnableMatch = stateId.match(/^output\.(\d+)\.enabled$/);
         if (outputEnableMatch) {
             const outputNum = outputEnableMatch[1];
-            this.sendCommand(`OUT ${outputNum.padStart(2, '0')} ${state.val ? 'ON' : 'OFF'}`);
+            this.sendCommand(this.cmdOutOnOff(outputNum.padStart(2, '0'), state.val));
             return;
         }
 
-        // Handle per-output PoC (C66/C88 matrix): POCOUT xx ON/OFF
-        const outputPocMatch = stateId.match(/^output\.(\d)\.poc$/);
+        // Handle per-output PoC (HDBaseT matrices): POCOUT/POC OUT/POC TX xx ON/OFF
+        const outputPocMatch = stateId.match(/^output\.(\d+)\.poc$/);
         if (outputPocMatch) {
             const outputNum = outputPocMatch[1];
-            this.sendCommand(`POCOUT ${outputNum.padStart(2, '0')} ${state.val ? 'ON' : 'OFF'}`);
+            this.sendCommand(this.cmdPoc(outputNum.padStart(2, '0'), state.val));
+            return;
+        }
+
+        // Video-wall / multi-view controls (MX44VW family). Commands are spaced.
+        if (stateId === 'videowall.mode') {
+            this.sendCommand(`OUT MODE ${state.val}`);
+            return;
+        }
+        if (stateId === 'videowall.vwSource') {
+            this.sendCommand(`OUT VW FR ${state.val}`);
+            return;
+        }
+        if (stateId === 'videowall.audioSource') {
+            this.sendCommand(`MV AUD ${state.val}`);
+            return;
+        }
+        const bezelMatch = stateId.match(/^output\.(\d+)\.bezel(Left|Right|Top|Bottom)$/);
+        if (bezelMatch) {
+            const edge = { Left: 'VCL', Right: 'VCR', Top: 'VCT', Bottom: 'VCB' }[bezelMatch[2]];
+            const px = String(Math.max(0, Math.min(100, Number(state.val) || 0)));
+            this.sendCommand(`OUT ${bezelMatch[1].padStart(2, '0')} ${edge} ${px}`);
+            return;
+        }
+        const inputTypeMatch = stateId.match(/^input\.(\d+)\.type$/);
+        if (inputTypeMatch) {
+            this.sendCommand(`IN ${inputTypeMatch[1].padStart(2, '0')} FR ${state.val}`);
+            return;
+        }
+
+        // EDID management (matrices): EDID xx DF zz / EDID xx CP yy
+        const edidProfileMatch = stateId.match(/^input\.(\d+)\.edidProfile$/);
+        if (edidProfileMatch) {
+            const inp = edidProfileMatch[1].padStart(2, '0');
+            this.sendCommand(`EDID ${inp} DF ${String(state.val).padStart(2, '0')}`);
+            return;
+        }
+        const edidCopyMatch = stateId.match(/^input\.(\d+)\.edidCopyFrom$/);
+        if (edidCopyMatch) {
+            const out = Number(state.val);
+            if (out > 0) {
+                this.sendCommand(`EDID ${edidCopyMatch[1].padStart(2, '0')} CP ${String(out).padStart(2, '0')}`);
+            }
+            return;
+        }
+
+        // CEC input actions (HMX-18G / SW41HDBT): IN xx CEC ENABLE|DISABLE|<action>
+        const inCecEnMatch = stateId.match(/^input\.(\d+)\.cecEnabled$/);
+        if (inCecEnMatch) {
+            this.sendCommand(`IN ${inCecEnMatch[1].padStart(2, '0')} CEC ${state.val ? 'ENABLE' : 'DISABLE'}`);
+            return;
+        }
+        const inCecActMatch = stateId.match(/^input\.(\d+)\.cecAction$/);
+        if (inCecActMatch) {
+            if (state.val) {
+                this.sendCommand(`IN ${inCecActMatch[1].padStart(2, '0')} CEC ${state.val}`);
+            }
+            return;
+        }
+
+        // Per-input audio embed (Pro-Matrix): AUD RX xx ORG|ANA|AUTO
+        const audEmbedMatch = stateId.match(/^input\.(\d+)\.audioEmbed$/);
+        if (audEmbedMatch) {
+            this.sendCommand(`AUD RX ${audEmbedMatch[1].padStart(2, '0')} ${state.val}`);
+            return;
+        }
+
+        // Per-output CEC action button (HMX-18G / SW41HDBT): OUT xx CEC <action>
+        const outCecActMatch = stateId.match(/^output\.(\d+)\.cecAction$/);
+        if (outCecActMatch) {
+            if (state.val) {
+                this.sendCommand(`OUT ${outCecActMatch[1].padStart(2, '0')} CEC ${state.val}`);
+            }
+            return;
+        }
+
+        // Per-output audio (HMX-18G audio matrix): route / volume / ARC / mute
+        const outAudSrcMatch = stateId.match(/^output\.(\d+)\.audioSource$/);
+        if (outAudSrcMatch) {
+            this.sendCommand(`AUDIO ${outAudSrcMatch[1].padStart(2, '0')} FR ${state.val}`);
+            return;
+        }
+        const outAudVolMatch = stateId.match(/^output\.(\d+)\.audioVolume$/);
+        if (outAudVolMatch) {
+            const vol = Math.max(0, Math.min(100, Number(state.val) || 0));
+            this.sendCommand(`VOL ${vol} TX ${outAudVolMatch[1].padStart(2, '0')}`);
+            return;
+        }
+        const outArcMatch = stateId.match(/^output\.(\d+)\.arcMode$/);
+        if (outArcMatch) {
+            this.sendCommand(`OUT ${outArcMatch[1].padStart(2, '0')} ARC ${state.val}`);
+            return;
+        }
+        const outAudMuteMatch = stateId.match(/^output\.(\d+)\.audioMute$/);
+        if (outAudMuteMatch) {
+            const out = outAudMuteMatch[1].padStart(2, '0');
+            // HMX-18G audio matrix: AUDOUT xx On/Off; Pro-Matrix: MUTE On/Off TX xx
+            if (this.modelDef && this.modelDef.hasAudioMatrix) {
+                this.sendCommand(`AUDOUT ${out} ${state.val ? 'On' : 'Off'}`);
+            } else {
+                this.sendCommand(`MUTE ${state.val ? 'ON' : 'OFF'} TX ${out}`);
+            }
             return;
         }
 
@@ -2779,7 +2920,7 @@ class BlustreamAdapter extends utils.Adapter {
 
         // Handle output picture / mute / audio-mix / CEC controls (AMF series)
         const outputPictureMatch = stateId.match(
-            /^output\.(\d)\.(brightness|contrast|pictureMode|colourTemp|videoMute|audioMix|cecEnabled)$/,
+            /^output\.(\d+)\.(brightness|contrast|pictureMode|colourTemp|videoMute|audioMix|cecEnabled)$/,
         );
         if (outputPictureMatch) {
             const out = outputPictureMatch[1].padStart(2, '0');

@@ -1,0 +1,20 @@
+insta
+================================================================
+              C88CS 8x8 HDBaseT Matrix
+              FW Version: V1.6.0
+
+Power      IR         Key        LCD        Baud       IRFV       Output1   
+ON         ON         ON         OFF        57600      ON         HDBT       
+
+Input      Edid       HDMIcon    CECIn      IRInput    
+01         Default_00 No         ON         OFF       
+02         Default_00 No         ON         OFF       
+03         Default_00 No         ON         OFF       
+04         Default_00 No         ON         1 2 3 4 5 6 7 8    
+05         Default_00 No         ON         OFF       
+06         Default_00 No         ON         OFF       
+07         Default_00 No         ON         OFF       
+08         Default_00 No         ON         OFF       
+
+================================================================
+

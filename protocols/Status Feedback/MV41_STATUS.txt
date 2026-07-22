@@ -1,0 +1,38 @@
+status
+
+================================================================
+              HDMI MV41 Status
+              FW Version: MCU V1.3.0/GUI V1.1.0
+
+PowerIRIR_ModeKeyBeepBaudTemp(C)Uptime(Day:Hour:Min:Sec)
+On     On     5V On     Off    57600 26.9C0000:00:01:13
+
+InputName            EdidHDMIconHDMIsig
+01INPUT1          Force___00Off    Off    
+02INPUT2          Force___00Off    Off    
+03INPUT3          Force___00Off    Off    
+04INPUT4          Force___00Off    Off    
+
+OutputName            FromInHDMIconOutputEn OSPOutputScaler
+01OUTPUT          01         Off    Yes      SNKAuto
+
+LoopoutName            FromInHDMIconOutputEn OSPOutputScaler
+01LOOP OUT1       01Off    Yes      SNKAuto
+02LOOP OUT2       02Off    Yes      SNKAuto
+03LOOP OUT3       03Off    Yes      SNKAuto
+04LOOP OUT4       04Off    Yes      SNKAuto
+
+Layout         Id   AudioSelect    Source    Display   LayerLevel   RatioMode      
+Single         1    5              0,1,2,3   1,0,0,0   0,1,2,3      1,1,1,1        
+
+Window1             Window2             Window3             Window4             
+0,0,1024,768        0,0,1,1             0,0,1,1             0,0,1,1             
+
+DHCPIPSubnetMaskGateway
+On     192.168.000.200 255.255.255.000 192.168.000.001
+(static:192.168.000.200 255.255.255.000 192.168.000.001)
+
+TelnetTCP/IPMACLocal
+0023800034:D0:B8:27:2C:3DMV41
+================================================================
+

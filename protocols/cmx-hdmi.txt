@@ -1,0 +1,48 @@
+        Blustream CMX / MX HDMI Matrix — RS-232 / Telnet Command Reference
+
+Applies to (adapter model keys): cmx42cs, cmx44cs (CMX44CS-V2), cmx44ab, cmx88cs,
+cmx88ab, mx22ab8k (MX22AB-8K), mx44abv2 (MX44AB-V2).
+
+These are HDMI (non-HDBaseT) crosspoint matrices with analogue L/R + optical (S/PDIF)
+audio breakout on every output. No PoC (no HDBaseT). Presets, EDID and a web GUI.
+
+Dialect: NO-SPACE (adapter commandStyle = 'nospace'):
+  OUTxxON / OUTxxOFF       Set output xx on/off      (e.g. OUT01ON)
+  OUTxxFRyy               Route input yy to output xx (e.g. OUT01FR04)
+    xx = zone/output 01..N (00 = all)
+    yy = source input 01..N
+Verbatim from the CMX88CS/CMX88AB manuals (RS-232 & Telnet Commands, "How the
+string should look is as follows OUT01ON").
+
+Connection:
+  RS-232: 57600 baud, 8N1. DB9.
+  Telnet: TCP/IP (RJ45). Default IP 192.168.0.200 when no DHCP server present.
+  Command terminator: CR (0x0D).
+
+Core commands (verified from manuals):
+  STATUS            Print system/port status (free-text: "zones on, type of
+                    connection etc" — NOT the C-series fixed-width table).
+  PON / POFF        Power on / off
+  OUTxxON / OUTxxOFF
+  OUTxxFRyy
+  EDIDxxCPyy        Copy EDID from output yy to input xx (xx/yy = 01..N or ALL)
+  EDIDxxDFzz        Set input xx EDID to default profile zz
+  IRON / IROFF      System IR control on/off       (MX44AB-V2 manual)
+  KEYON / KEYOFF    Front-panel key lock on/off
+  BEEPON / BEEPOFF  Onboard beep on/off
+  DBGON / DBGOFF    Debug mode
+  RESET             Reset to factory defaults
+
+Presets: 8 custom presets via the web GUI / API (recall + save).
+
+ADAPTER STATUS (v0.6.0): routing + output enable + presets + per-input EDID
+(EDID xx DF/CP) implemented (write path, command-doc verified). CMX/MX audio
+breakout FOLLOWS the HDMI video output and has NO separate API command, so no
+audio states are created. STATUS reply is free-text and is not parsed for
+feedback (no vendor sample of the reply exists). See MODEL-EXPANSION-PLAN.md.
+
+Sources:
+  CMX88CS manual — blustream.co.uk DownloadFile?downloadId=853
+  CMX88AB manual — DownloadFile?downloadId=192
+  CMX42CS manual — DownloadFile?downloadId=897
+  MX44AB-V2 — manualslib.com/manual/1285651 page 12

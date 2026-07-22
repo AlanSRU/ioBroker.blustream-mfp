@@ -1,0 +1,16 @@
+insta
+================================================================
+              CMX44CS-V2 4x4 4K HDMI 2.0 Matrix
+              MCU FW Version: V1.2.1
+              GUI FW Version: V1.2.1
+
+Power      IR         Key        Baud       IRFV       Beep       LCD        DiagPrint  SystemLog 
+ON         ON         ON         57600      ON         OFF        OFF        OFF        OFF       
+
+InputPort  EdidIndex  Connected  InputEn    CEC        IRInput    AudioSource
+01         Default_00 No         ON         OFF        1          Original  
+02         Default_00 No         ON         OFF        2          Original  
+03         Default_00 No         ON         OFF        3          Original  
+04         Default_00 No         ON         OFF        4          Original  
+
+================================================================

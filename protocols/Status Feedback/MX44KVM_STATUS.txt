@@ -1,0 +1,62 @@
+status
+
+================================================================
+              MX44KVM 4x4 USB 3.0 Matrix Switcher
+              FW Version: V1.1.0
+
+Power     Key       GPIO              RS232 1&2 Baud
+ON        ON        Enable            57600
+
+IR        AUTOSW    RS232PASSMODE     RS232PASSFEED
+ON        ON        2                 ON 
+
+       DEVICE1  DEVICE2  DEVICE3  DEVICE4
+DATA:  ON       ON       ON       ON 
+POWER: ON       ON       ON       ON 
+
+       DEVICE1  DEVICE2  DEVICE3  DEVICE4
+HOST:  1        1        1        1
+
+          HOST1 HOST2 HOST3 HOST4
+DEVICE1:  1     0     0     0
+DEVICE2:  1     0     0     0
+DEVICE3:  1     0     0     0
+DEVICE4:  1     0     0     0
+
+       DEVICE1  DEVICE2  DEVICE3  DEVICE4
+OUT:   00       00       00       00
+
+       HOST1    HOST2    HOST3    HOST4
+FR:    00       00       00       00
+
+GPIOOUT:       MODE               TriggeringTime
+ 1             Close              -
+ 2             Close              -
+ 3             Close              -
+ 4             Close              -
+
+GPIOIN:        MODE               TriggerLevel
+ 1             Close              -
+ 2             Close              -
+ 3             Close              -
+ 4             Close              -
+
+Preset DEVICE1  DEVICE2  DEVICE3  DEVICE4
+01     0        0        0        0
+02     0        0        0        0
+03     0        0        0        0
+04     0        0        0        0
+05     0        0        0        0
+06     0        0        0        0
+07     0        0        0        0
+08     0        0        0        0
+09     0        0        0        0
+
+DHCP           IP                 GateWay            SubnetMask
+ON             192.168.0.200      192.168.0.1        255.255.255.0
+
+Telnet         Port8000           mDNS               LAN MAC
+23             ON                 ON                 34:D0:B8:23:0C:0D
+
+================================================================
+

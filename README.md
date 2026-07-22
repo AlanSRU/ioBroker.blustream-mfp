@@ -23,8 +23,24 @@ Control Blustream AMF/MFP/WMF series AV presentation switchers via RS232 serial 
 | **MFP112** | 5x2 Multi-Format Presentation Switcher with HDBaseT | IP (Telnet) |
 | **WMF51** | Wireless Media Presenter | IP (Telnet) |
 | **WMF72** | Wireless Media Presenter with Dual Display | IP (Telnet) |
-| **C66** | 6x6 Contractor HDBaseT Matrix | RS232 / IP |
-| **C88** | 8x8 Contractor HDBaseT Matrix | RS232 / IP |
+| **C66 / C88** | 6x6 / 8x8 Contractor HDBaseT Matrix | RS232 / IP |
+
+**Expanded range (v0.6.0) — routing, output enable, PoC and presets:**
+
+| Family | Models | Type |
+|--------|--------|------|
+| Contractor C (CSC) | C44-KIT, C44CS-KIT, C66CS, C88CS | HDBaseT matrix |
+| HMXL | HMXL42ARC, HMXL44CS, HMXL44ARC, HMXL66ARC, HMXL88ARC, HMXL88-V2 | HDBaseT matrix |
+| HMX 18G | HMX44-18G-KIT, HMX88-18G | HDBaseT 3.0 matrix |
+| Platinum (PLA) | PLA88CS, PLA88ARC-V2, PLA88L-V2 | HDBaseT matrix |
+| Pro / Custom-Pro | PRO48HBT70(CS), PRO88HBT70CS, PRO88HDMI-V2, PRO16HBT70CS, CUSTOMPRO-HUB, CUSTOMPRO-HUB16 | HDBaseT matrix (up to 16x16 / modular) |
+| CMX (HDMI) | CMX42CS, CMX44CS-V2, CMX44AB, CMX88CS, CMX88AB | HDMI matrix |
+| MX (HDMI) | MX22AB-8K, MX44AB-V2 | HDMI matrix |
+| SW switchers | SW41HDBT, SW41AB-V2, SW41AB-8K, SW42DA, SW21AB-V2, SW21AB-V3 | HDMI / HDBaseT switch |
+| Video wall / Multi-view | MX44VW, MX44AVW, MV41 | mode/routing/bezel/MV-audio + HDMI/VGA input select |
+| USB / KVM | MX44KVM | USB host↔device routing + presets |
+
+These families also gain **EDID management** (all matrices), **CEC control** (HMX-18G, SW41HDBT) and **audio** (HMX-18G audio matrix; Pro-Matrix audio embed/mute). CMX/MX audio follows the video output (no separate control). **STATUS feedback (read-back) is parsed** for every fixed-width family — routing, output enable, PoC, CEC, EDID, audio matrix, network, video-wall mode, KVM routing/GPIO/cascade and SW42DA Dante master audio — grounded against real device captures. The only exception is **MV41**, whose STATUS headers have no column separators. Not yet supported: **AMF41W** (distinct Linux-CLI API), **MFP31** and **SW12USB** (docs not sourced); MX44AVW advanced PIP/rotation and MV41 are provisional. See `MODEL-EXPANSION-PLAN.md`.
 
 For more information about Blustream products, visit [Blustream](https://www.blustream.co.uk/).
 

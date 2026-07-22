@@ -1,0 +1,31 @@
+status
+================================================================
+              CMX44CS-V2 4x4 4K HDMI 2.0 Matrix
+              MCU FW Version: V1.2.1
+              GUI FW Version: V1.2.1
+
+Power      IR         Key        Baud       IRFV       Beep       LCD        DiagPrint  SystemLog 
+ON         ON         ON         57600      ON         OFF        OFF        OFF        OFF       
+
+InputPort  EdidIndex  Connected  InputEn    CEC        IRInput    AudioSource
+01         Default_00 No         ON         OFF        1          Original  
+02         Default_00 No         ON         OFF        2          Original  
+03         Default_00 No         ON         OFF        3          Original  
+04         Default_00 No         ON         OFF        4          Original  
+
+
+Output     FromIn     Connected  OutputEn   OSP        CEC        AudioOut   Scaling   
+01         01         No         ON         SNK        OFF        ON         Match tv  
+02         02         No         ON         SNK        OFF        ON         Match tv  
+03         03         No         ON         SNK        OFF        ON         Match tv  
+04         04         No         ON         SNK        OFF        ON         Match tv  
+
+
+DHCP            IP              Gateway         SubnetMask      
+ON              192.168.000.200 192.168.000.001 255.255.255.000 
+
+Telnet          Port8000        mDNS            mDNS Name       
+23              ON              ON              CMX44CS-V2      
+
+LAN MAC              S/N                 
+34:D0:B8:2C:00:5F                        

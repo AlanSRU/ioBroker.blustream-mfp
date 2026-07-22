@@ -1,0 +1,19 @@
+INSTA
+================================================================
+              HMX88-18G 8x8 HDBaseT Matrix
+              FW Version: V1.4.0
+
+Power      IR         Key        Baud       IRFV       Output1    Output2    LCD        DiagPrint
+ON         ON         ON         57600      ON         HDBT       HDBT       OFF        OFF
+
+InputPort  EdidIndex  Connected  InputEn    CEC        IRInput
+01         Default_00 No         ON         ON         1
+02         Default_00 No         ON         ON         2
+03         Default_00 No         ON         ON         3
+04         Default_00 No         ON         ON         4
+05         Default_00 No         ON         ON         5
+06         Default_00 No         ON         ON         6
+07         Default_00 No         ON         ON         7
+08         Default_00 No         ON         ON         8
+================================================================
+

@@ -1,0 +1,16 @@
+outsta
+================================================================
+              CMX44CS-V2 4x4 4K HDMI 2.0 Matrix
+              MCU FW Version: V1.2.1
+              GUI FW Version: V1.2.1
+
+Power      IR         Key        Baud       IRFV       Beep       LCD        DiagPrint  SystemLog 
+ON         ON         ON         57600      ON         OFF        OFF        OFF        OFF       
+
+Output     FromIn     Connected  OutputEn   OSP        CEC        AudioOut   Scaling   
+01         01         No         ON         SNK        OFF        ON         Match tv  
+02         02         No         ON         SNK        OFF        ON         Match tv  
+03         03         No         ON         SNK        OFF        ON         Match tv  
+04         04         No         ON         SNK        OFF        ON         Match tv  
+
+================================================================

@@ -1,0 +1,16 @@
+status
+================================================================
+              SW21AB-V3  
+              FW Version: V1.1.0
+
+Power      IR         Key        Switch     Baud       DiagPrint       VideoLog        PriorityPort    FallbackPort    AutoStandby     StandbyTime    
+ON         ON         ON         AUTO       57600      OFF             OFF             OFF             OFF             OFF             180            
+
+InputPort  EdidIndex  Connected  CEC        Trigger   
+01         Default_00 No         OFF        HDMI(TMDS Video)
+02         Default_00 No         OFF        HDMI(TMDS Video)
+
+Output     FromIn     Connected  OSP        CEC        AudioDecode
+01         01         No         SNK        OFF        ON        
+
+================================================================

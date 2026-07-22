@@ -1,0 +1,111 @@
+status
+================================================================
+              C88CS 8x8 HDBaseT Matrix
+              FW Version: V1.6.0
+
+Power      IR         Key        LCD        Baud       IRFV       Output1   
+ON         ON         ON         OFF        57600      ON         HDBT       
+
+Input      Edid       HDMIcon    CECIn      IRInput    
+01         Default_00 No         ON         OFF       
+02         Default_00 No         ON         OFF       
+03         Default_00 No         ON         OFF       
+04         Default_00 No         ON         1 2 3 4 5 6 7 8    
+05         Default_00 No         ON         OFF       
+06         Default_00 No         ON         OFF       
+07         Default_00 No         ON         OFF       
+08         Default_00 No         ON         OFF       
+
+Output     FromIn     HDMIcon    OutputEn   OSP        PoC        RS232ctr   CECOut     Scaling    IRctr      GuestMode  
+01         04         No         ON         SNK        ON         OFF        ON         ON         ON         OFF       
+02         04         No         ON         SNK        ON         OFF        ON         ON         ON         OFF       
+03         04         No         ON         SNK        ON         OFF        ON         ON         ON         OFF       
+04         04         No         ON         SNK        ON         OFF        ON         ON         ON         OFF       
+05         04         No         ON         SNK        ON         OFF        ON         ON         ON         OFF       
+06         04         No         ON         SNK        ON         OFF        ON         ON         ON         OFF       
+07         04         No         ON         SNK        ON         OFF        ON         ON         ON         OFF       
+08         04         No         ON         SNK        ON         OFF        ON         ON         ON         OFF       
+
+============== RS232 01
+RS232ONOUT01  Command 1 Display On: Disable
+RS232ONOUT01  Command 2 Display Input: Disable
+RS232ONOUT01  Command 3 User 1: Disable
+RS232ONOUT01  Command 4 User 2: Disable
+RS232ONOUT01  Command 5 User 3: Disable
+RS232OFFOUT01 Command Off: Disable
+RS232DLYOUT01 Time Delay: 3 Second(s)
+
+============== RS232 02
+RS232ONOUT02  Command 1 Display On: Disable
+RS232ONOUT02  Command 2 Display Input: Disable
+RS232ONOUT02  Command 3 User 1: Disable
+RS232ONOUT02  Command 4 User 2: Disable
+RS232ONOUT02  Command 5 User 3: Disable
+RS232OFFOUT02 Command Off: Disable
+RS232DLYOUT02 Time Delay: 3 Second(s)
+
+============== RS232 03
+RS232ONOUT03  Command 1 Display On: Disable
+RS232ONOUT03  Command 2 Display Input: Disable
+RS232ONOUT03  Command 3 User 1: Disable
+RS232ONOUT03  Command 4 User 2: Disable
+RS232ONOUT03  Command 5 User 3: Disable
+RS232OFFOUT03 Command Off: Disable
+RS232DLYOUT03 Time Delay: 3 Second(s)
+
+============== RS232 04
+RS232ONOUT04  Command 1 Display On: Disable
+RS232ONOUT04  Command 2 Display Input: Disable
+RS232ONOUT04  Command 3 User 1: Disable
+RS232ONOUT04  Command 4 User 2: Disable
+RS232ONOUT04  Command 5 User 3: Disable
+RS232OFFOUT04 Command Off: Disable
+RS232DLYOUT04 Time Delay: 3 Second(s)
+
+============== RS232 05
+RS232ONOUT05  Command 1 Display On: Disable
+RS232ONOUT05  Command 2 Display Input: Disable
+RS232ONOUT05  Command 3 User 1: Disable
+RS232ONOUT05  Command 4 User 2: Disable
+RS232ONOUT05  Command 5 User 3: Disable
+RS232OFFOUT05 Command Off: Disable
+RS232DLYOUT05 Time Delay: 3 Second(s)
+
+============== RS232 06
+RS232ONOUT06  Command 1 Display On: Disable
+RS232ONOUT06  Command 2 Display Input: Disable
+RS232ONOUT06  Command 3 User 1: Disable
+RS232ONOUT06  Command 4 User 2: Disable
+RS232ONOUT06  Command 5 User 3: Disable
+RS232OFFOUT06 Command Off: Disable
+RS232DLYOUT06 Time Delay: 3 Second(s)
+
+============== RS232 07
+RS232ONOUT07  Command 1 Display On: Disable
+RS232ONOUT07  Command 2 Display Input: Disable
+RS232ONOUT07  Command 3 User 1: Disable
+RS232ONOUT07  Command 4 User 2: Disable
+RS232ONOUT07  Command 5 User 3: Disable
+RS232OFFOUT07 Command Off: Disable
+RS232DLYOUT07 Time Delay: 3 Second(s)
+
+============== RS232 08
+RS232ONOUT08  Command 1 Display On: Disable
+RS232ONOUT08  Command 2 Display Input: Disable
+RS232ONOUT08  Command 3 User 1: Disable
+RS232ONOUT08  Command 4 User 2: Disable
+RS232ONOUT08  Command 5 User 3: Disable
+RS232OFFOUT08 Command Off: Disable
+RS232DLYOUT08 Time Delay: 3 Second(s)
+
+DHCP            IP              Gateway         SubnetMask      
+OFF             192.168.0.200                                   
+
+Telnet          Port8000        mDNS            mDNS Name      
+                ON              ON                             
+
+LAN MAC         
+                
+
+================================================================
+

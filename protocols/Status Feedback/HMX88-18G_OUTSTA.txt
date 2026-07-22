@@ -1,0 +1,29 @@
+
+OUTSTA
+================================================================
+              HMX88-18G 8x8 HDBaseT Matrix
+              FW Version: V1.4.0
+
+Power      IR         Key        Baud       IRFV       Output1    Output2    LCD        DiagPrint
+ON         ON         ON         57600      ON         HDBT       HDBT       OFF        OFF
+
+OutputPort InputPort  Connected  OSP        PoC        RS232ctr   CEC        Scaling    IRctr      EnableOutput GuestMode  LRM
+1          1          No         SNK        OFF        OFF        ON         ON         ON         ON           OFF        OFF
+2          2          No         SNK        OFF        OFF        ON         ON         ON         ON           OFF        OFF
+3          3          No         SNK        OFF        OFF        ON         ON         ON         ON           OFF        OFF
+4          4          No         SNK        OFF        OFF        ON         ON         ON         ON           OFF        OFF
+5          5          No         SNK        OFF        OFF        ON         ON         ON         ON           OFF        OFF
+6          6          No         SNK        OFF        OFF        ON         ON         ON         ON           OFF        OFF
+7          7          No         SNK        OFF        OFF        ON         ON         ON         ON           OFF        OFF
+8          8          No         SNK        OFF        OFF        ON         ON         ON         ON           OFF        OFF
+
+AoutPort   AudioFrom  Optical    Analog     AnalogVol  AnalogMute
+1          HDBT01     ON         ON         68         OFF
+2          HDBT02     ON         ON         68         OFF
+3          HDBT03     ON         ON         68         OFF
+4          HDBT04     ON         ON         68         OFF
+5          HDBT05     ON         ON         68         OFF
+6          HDBT06     ON         ON         68         OFF
+7          HDBT07     ON         ON         68         OFF
+8          HDBT08     ON         ON         68         OFF
+================================================================

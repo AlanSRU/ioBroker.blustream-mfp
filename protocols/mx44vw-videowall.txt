@@ -1,0 +1,102 @@
+        Blustream MX44VW / MX44AVW / MV41 — Video-Wall & Multi-View Command Reference
+
+Applies to (adapter model keys): mx44vw (MX44VW), mx44avw (MX44AVW),
+mv41 (MV41 multi-view switcher).
+
+Dialect: SPACED (adapter default). The authoritative "MX44VW Help Info" text uses
+OUT MODE mm / OUT VW FR yy / MV AUD aa (spaced); some manuals render the unspaced
+forms (OUTMODEmm) but the firmware accepts the spaced form documented here.
+
+Three output modes via OUT MODE:
+  MX = matrix (route each output independently via OUT xx FR yy — adapter
+       output.N.source), MV = multi-view (windows routed the same way; window N =
+       OUT 0N FR yy), VW = video wall.
+Video-wall layouts: VW22 (2x2), VW41 (4x1), VW14 (1x4). Multi-view layouts MV0..MV9.
+
+Adapter state mapping:
+  videowall.mode         -> OUT MODE mm
+  output.N.source        -> OUT xx FR yy   (matrix outputs / multi-view windows)
+  videowall.vwSource     -> OUT VW FR yy
+  output.N.bezel{L/R/T/B} -> OUT xx VCL/VCR/VCT/VCB bb   (0..100 px)
+  input.N.type           -> IN xx FR HDMI|VGA            (MX44VW/AVW have VGA inputs)
+  videowall.audioSource  -> MV AUD aa                    (00 = follow window 1)
+
+MX44AVW is an advanced superset (PIP/POP/PBP, rotation, seamless) — those extra
+controls are NOT yet mapped. MV41 is modelled on the MX44VW command set (dedicated
+MV41 doc not sourced) — verify against hardware.
+
+Connection: RS-232 57600 8N1; Telnet TCP/IP; default IP 192.168.0.200. CR terminator.
+STATUS reply is free-text (not the C-series table) — feedback not yet parsed.
+
+Source: blustream.co.uk DownloadFile?downloadId=642 ("MX44VW.txt") and =188 (manual).
+================================================================================
+              Seamless HDMI MX44VW Help Info
+
+============= System Information Command
+HELP          Print Help Information
+STATUS        Print System Status And Port Status
+============= System Control Command
+PON           Power On, System Run On Normal State
+POFF          Power Off, System Run On Power Save State
+IR ON/OFF     Set System IR Control On Or Off
+KEY ON/OFF    Set System KEY Control On Or Off
+DBG ON/OFF    Set Debug Mode On Or Off
+BEEP ON/OFF   Set Onboard Beep On Or Off
+LCD ON/OFF    Set LCD Always On Or Auto Turn Off When Power On
+
+RESET         Reset System To Default Setting
+RESET ALL     Reset System And Network To Default Setting
+              (Should Type "Yes" To Confirm, "No" To Discard)
+============= Input And Output Port Control Command
+OUT MODE mm   Set Output Mode To mm
+              mm=[MX]: Matrix, [MV]: Multi-View, [VW]: Video-Wall
+              mm=[MV0]: Layout0, [MV1]: Layout1 ... [MV9]:Layout9
+              mm=[VW22]: Video-Wall2x2, [VW41]: 4x1, [VW14]: 1x4
+OUT xx ON/OFF Set OUTPUT:xx On Or Off
+              xx=00: Select All OUTPUT Port
+              xx=[01...04]: Select One OUTPUT Port
+OUT xx FR yy  Set MATRIX/MULTI-VIEW OUTPUT:xx From INPUT:yy
+              (MULTI-VIEW Main And Sub Picture Can Not
+              Select The Same Input Source)
+              xx=00: Select All OUTPUT Port
+              xx=[01...04]: Select One OUTPUT Port
+              yy=[01...04]: Select One INPUT Port
+OUT VW FR yy  Set VIDEO-WALL OUTPUT From INPUT:yy
+              yy=[01...04]: Select One INPUT Port
+OUT xx VCL bb Set VIDEO-WALL Bezel Control:Left Border
+OUT xx VCR bb Set VIDEO-WALL Bezel Control:Right Border
+OUT xx VCT bb Set VIDEO-WALL Bezel Control:Top Border
+OUT xx VCB bb Set VIDEO-WALL Bezel Control:Bottom Border
+              xx=00: Select All OUTPUT Port
+              xx=[01...04]: Select One OUTPUT Port
+              yy=[01...04]: Select One INPUT Port
+              bb=[00...100]: Set Border bb Pixels
+IN xx FR yy   Set INPUT:xx From Signal:yy
+              xx=00: Select All INPUT Port
+              xx=[01...04]: Select One INPUT Port
+              yy=HDMI: From HDMI Signal
+              yy=VGA: From VGA Signal
+EDID xx CP yy Set Input:xx EDID Copy From Output:yy
+EDID xx DF zz Set Input:xx EDID To Default EDID:zz
+              xx=00: Select All INPUT Port
+              xx=[01...04]: Select One INPUT Port
+              yy=[01...04]: Select One OUTPUT Port
+              zz=00: HDMI 1080p@60Hz, Audio 2CH PCM
+              zz=01: HDMI 1080i@60Hz, Audio 2CH PCM
+              zz=02: DVI 1920x1080@60Hz, Audio None
+              zz=03: DVI 1280x1024@60Hz, Audio None
+              zz=04: DVI 1280x720@60Hz, Audio None
+              zz=05: User EDID 1
+              zz=06: User EDID 2
+              zz=07: GUI Download EDID
+============= Multi-View Control Command
+MV AUD aa     Set Multi-View Output Audio From INPUT:aa
+              aa=00: Follow Output 1 Selected Input Source
+              aa=[01...04]: Fixed Select One INPUT Port
+============= Network Control Command
+NET DHCP ON/OFF : Set Auto IP(DHCP) ON Or OFF
+NET IP xxx.xxx.xxx.xxx : Set IP Address
+NET GW xxx.xxx.xxx.xxx : Set Gateway Address
+NET SM xxx.xxx.xxx.xxx : Set Subnet Mask Address
+NET RB : Set Network Reboot and Apply New Config!!!
+NET TN xxxx : Set Telnet Port

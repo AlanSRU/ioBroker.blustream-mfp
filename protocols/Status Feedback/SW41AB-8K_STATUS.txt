@@ -1,0 +1,19 @@
+STATUS
+
+================================================================
+              HDMI SW41AB-8K Status
+              FW Version: 1.2.0
+PowerIrIr_Mode  KeyBaudAutoSW
+ON ON 5V       ON 57600 ON 
+
+Input   Edid         HDMIcon   
+01      FORCE_00     OFF
+02      FORCE_00     OFF
+03      FORCE_00     OFF
+04      FORCE_00     OFF
+
+Output  FromIn       HDMIcon    OutputEn    OSP
+01      01           OFF        Yes         SNK
+
+================================================================
+

@@ -1,0 +1,13 @@
+cascadestatus
+
+================================================================
+          MX44KVM 4x4 USB 3.0 Matrix Switcher
+          FW Version: V1.1.0
+
+       DEVICE1  DEVICE2  DEVICE3  DEVICE4
+OUT:   00       00       00       00
+
+       HOST1    HOST2    HOST3    HOST4
+FR:    00       00       00       00
+================================================================
+

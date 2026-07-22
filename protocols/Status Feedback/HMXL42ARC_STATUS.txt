@@ -1,0 +1,50 @@
+status
+================================================================
+              HMXL42ARC-KIT 4x2 HDBT Matrix With ARC
+              FW Version: V1.6.0
+
+Power      IR         Key        Baud       IRFV       Output1   
+ON         ON         ON         57600      ON         HDBT      
+
+InputPort  EdidIndex  Connected  CEC        IRInput    
+01         Default_00 No         ON         1         
+02         Default_00 No         ON         2         
+03         Default_00 No         ON         OFF       
+04         Default_00 No         ON         OFF       
+
+OutputPort InputPort  Connected  OSP        Switch     PoC        RS232ctr   CEC        Scaling    IRctr      EnableOutput GuestMode  
+1          1          No         SNK        Manual     ON         OFF        ON         ON         ON         ON           OFF       
+2          2          No         SNK        Manual     ON         OFF        ON         ON         ON         ON           OFF       
+
+OutputPort AudioFrom  Optical    Analog     AnalogVol  AnalogMute 
+1          HDBT01     ON         ON         68         OFF       
+2          HDBT02     ON         ON         68         OFF       
+
+============== RS232 01
+Command On Interval Time: 3s
+RS232ONOUT01  Command 1 Display On: Disable
+RS232ONOUT01  Command 2 Display Input: Disable
+RS232ONOUT01  Command 3 User 1: Disable
+RS232ONOUT01  Command 4 User 2: Disable
+RS232ONOUT01  Command 5 User 3: Disable
+RS232OFFOUT01 Command Off: Disable
+
+============== RS232 02
+Command On Interval Time: 3s
+RS232ONOUT02  Command 1 Display On: Disable
+RS232ONOUT02  Command 2 Display Input: Disable
+RS232ONOUT02  Command 3 User 1: Disable
+RS232ONOUT02  Command 4 User 2: Disable
+RS232ONOUT02  Command 5 User 3: Disable
+RS232OFFOUT02 Command Off: Disable
+
+DHCP      IP                Gateway           SubnetMask      
+ON        192.168.000.200   192.168.000.001   255.255.255.000 
+
+Telnet          Port8000        mDNS            mDNS Name       
+23              ON              ON                              
+
+LAN MAC        
+34:D0:B8:23:08:31
+
+================================================================

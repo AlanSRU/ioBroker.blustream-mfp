@@ -1,0 +1,44 @@
+status
+
+MX44AVW> ================================================================
+     HDMI MX44AVW Status
+     FW Version MB:1.35  WEB:0.0
+
+Power  IR  Key  Baud    Temp(C) 
+On     On  On   57600   48.0
+
+Input Name             Edid         HDMICon  HDMIsig
+01                     Default_00   No       Off
+02                     Default_00   No       Off
+03                     Default_00   No       Off
+04                     Default_00   No       Off
+
+Mode
+Matrix
+
+Output Name             FromIn        HDMICon OutputEn OSP  OutputScler             AudioSelect
+01                      01            Off     Yes      V22  3840x2160@60Hz(2160p60) 
+02                      02            Off     Yes      V22  3840x2160@60Hz(2160p60) 
+03                      03            Off     Yes      V22  3840x2160@60Hz(2160p60) 
+04                      04            Off     Yes      V22  3840x2160@60Hz(2160p60) 
+
+
+DHCP   IP              SubnetMask      Gateway
+Static 000.000.000.000 000.000.000.000 000.000.000.000
+
+Telnet    SSH       TCP/IP    HTTPS     WEB       MAC                Local
+0000      0000      0000      OFF       OFF       00:00:00:00:00:00  mx44avw
+
+MX44AVW> Web Version v1.31
+GUI Version v1.31
+TCP Enable:1, port:8000
+Telnet Enable:1, port:23
+SSH Enable:1, port:20
+Web Access:1
+https Access:0
+DHCP: ON
+IP:      [192.168.0.200]
+Sub Mak: [255.255.255.0]
+Gateway: [192.168.0.1]
+MAC [52:208:184:43:0:224]
+Domain Name:mx44avw.local

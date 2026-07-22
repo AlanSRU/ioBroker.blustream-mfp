@@ -1,0 +1,13 @@
+insta
+================================================================
+              HMXL42ARC-KIT 4x2 HDBT Matrix With ARC
+              FW Version: V1.6.0
+
+Power      IR         Key        Baud       IRFV       Output1   
+ON         ON         ON         57600      ON         HDBT      
+
+InputPort  EdidIndex  Connected  CEC        IRInput    
+01         Default_00 No         ON         1         
+02         Default_00 No         ON         2         
+03         Default_00 No         ON         OFF       
+04         Default_00 No         ON         OFF       

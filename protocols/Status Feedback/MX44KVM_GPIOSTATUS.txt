@@ -1,0 +1,19 @@
+gpiostatus
+
+================================================================
+          MX44KVM 4x4 USB 3.0 Matrix Switcher
+          FW Version: V1.1.0
+
+GPIOOUT:       MODE               TriggeringTime
+ 1             Close              -
+ 2             Close              -
+ 3             Close              -
+ 4             Close              -
+
+GPIOIN:        MODE               TriggerLevel
+ 1             Close              -
+ 2             Close              -
+ 3             Close              -
+ 4             Close              -
+================================================================
+
