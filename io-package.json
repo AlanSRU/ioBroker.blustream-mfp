@@ -219,6 +219,19 @@
       "native": {}
     },
     {
+      "_id": "info.stateSchema",
+      "type": "state",
+      "common": {
+        "role": "value",
+        "name": "State tree schema version",
+        "type": "number",
+        "read": true,
+        "write": false,
+        "def": 0
+      },
+      "native": {}
+    },
+    {
       "_id": "info.lastSent",
       "type": "state",
       "common": {

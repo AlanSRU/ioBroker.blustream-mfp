@@ -335,6 +335,18 @@ const MODEL_DEFINITIONS = {
     },
 };
 
+// Bump whenever the shape of the model-driven state tree changes in a way that
+// existing installs must pick up (new states, changed common.states enum lists,
+// renamed paths). Every object is created with setObjectNotExistsAsync, which
+// never rewrites an object that already exists, so a version bump is the only
+// way a running instance rebuilds its tree. Stored in info.stateSchema.
+//
+// 2 — 0.5.2: forced rebuild. Until 0.5.2 the model-change purge never ran
+//     (info.model was overwritten before it was compared), so installs that
+//     switched model kept the previous model's states — e.g. an MFP112 left with
+//     the default MFP72 input list, missing HDBaseT on output.N.source.
+const STATE_SCHEMA_VERSION = 2;
+
 // Union of every state path any supported model creates. Used only to purge
 // orphaned objects when the configured model changes (each entry is deleted
 // recursively). Keep this in sync with the setObjectNotExistsAsync calls in
@@ -517,11 +529,38 @@ class BlustreamAdapter extends utils.Adapter {
         // Get model definition
         this.modelDef = MODEL_DEFINITIONS[this.config.deviceModel] || MODEL_DEFINITIONS.mfp72;
 
+        // Read the previously configured model BEFORE overwriting info.model —
+        // setupModelStates() compares against it to decide whether to purge and
+        // recreate the state tree.
+        const lastModelState = await this.getStateAsync('info.model');
+        const lastModel = (lastModelState && lastModelState.val) || null;
+
+        // A tree built by an older schema must be rebuilt even when the model is
+        // unchanged (see STATE_SCHEMA_VERSION). Created here as well as in
+        // io-package.json instanceObjects, because instances installed before
+        // 0.5.2 have no such object.
+        await this.setObjectNotExistsAsync('info.stateSchema', {
+            type: 'state',
+            common: {
+                role: 'value',
+                name: 'State tree schema version',
+                type: 'number',
+                read: true,
+                write: false,
+                def: 0,
+            },
+            native: {},
+        });
+        const schemaState = await this.getStateAsync('info.stateSchema');
+        const lastSchema = schemaState && typeof schemaState.val === 'number' ? schemaState.val : 0;
+
         // Set model info
         await this.setStateAsync('info.model', this.modelDef.name, true);
 
         // Clean up states from other models and create current model states
-        await this.setupModelStates();
+        await this.setupModelStates(lastModel, lastSchema);
+
+        await this.setStateAsync('info.stateSchema', STATE_SCHEMA_VERSION, true);
 
         await this.setStateAsync('info.connection', false, true);
 
@@ -530,19 +569,26 @@ class BlustreamAdapter extends utils.Adapter {
         this.connect();
     }
 
-    async setupModelStates() {
+    async setupModelStates(lastModel, lastSchema) {
         const model = this.config.deviceModel || 'mfp72';
         const def = this.modelDef;
 
         this.log.info(`Setting up states for model: ${def.name}`);
 
-        // Only delete and recreate states if the model has changed
-        const lastModelState = await this.getStateAsync('info.model');
-        const lastModel = lastModelState && lastModelState.val;
+        // Delete and recreate states when the model has changed, or when the tree
+        // was built by an older schema version. lastModel is read by onReady
+        // before info.model is overwritten with the current model.
         const modelChanged = lastModel !== def.name;
+        const schemaStale = lastSchema !== STATE_SCHEMA_VERSION;
 
-        if (modelChanged) {
-            this.log.info(`Model changed from ${lastModel || 'none'} to ${def.name}, recreating states`);
+        if (modelChanged || schemaStale) {
+            if (schemaStale && !modelChanged) {
+                this.log.info(
+                    `State schema ${lastSchema} is older than ${STATE_SCHEMA_VERSION}, recreating states for ${def.name}`,
+                );
+            } else {
+                this.log.info(`Model changed from ${lastModel || 'none'} to ${def.name}, recreating states`);
+            }
             for (const statePath of ALL_MODEL_STATES) {
                 try {
                     await this.delObjectAsync(statePath, { recursive: true });
