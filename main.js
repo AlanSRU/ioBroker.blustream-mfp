@@ -362,6 +362,7 @@ const ALL_MODEL_STATES = [
     'system.debug',
     'system.ir232',
     'system.autoSwitch',
+    'system.telnetNegotiation',
     'system.videoMute',
     'system.standbyMode',
     'system.standbyDelay',
@@ -554,12 +555,13 @@ class BlustreamAdapter extends utils.Adapter {
         const schemaState = await this.getStateAsync('info.stateSchema');
         const lastSchema = schemaState && typeof schemaState.val === 'number' ? schemaState.val : 0;
 
-        // Set model info
-        await this.setStateAsync('info.model', this.modelDef.name, true);
-
         // Clean up states from other models and create current model states
         await this.setupModelStates(lastModel, lastSchema);
 
+        // Both markers are written only once the tree has actually been built. If
+        // setupModelStates() throws or the instance is stopped part-way through, the
+        // old values survive and the next start retries the rebuild.
+        await this.setStateAsync('info.model', this.modelDef.name, true);
         await this.setStateAsync('info.stateSchema', STATE_SCHEMA_VERSION, true);
 
         await this.setStateAsync('info.connection', false, true);
@@ -2560,7 +2562,11 @@ class BlustreamAdapter extends utils.Adapter {
         const outMatch = response.match(/OUT\s*(\d+)\s*FR\s*(\w+)/i);
         if (outMatch) {
             const output = parseInt(outMatch[1], 10);
-            this.setStateAsync(`output.${output}.source`, outMatch[2], true);
+            // Bound to the model's outputs: an echo of the route-all form (OUT 00 FR yy)
+            // or an out-of-range index would otherwise create a state with no object.
+            if (output >= 1 && output <= this.modelDef.outputs) {
+                this.setStateAsync(`output.${output}.source`, outMatch[2], true);
+            }
         }
 
         // Output enable: OUT 01: ON
@@ -2671,8 +2677,11 @@ class BlustreamAdapter extends utils.Adapter {
         const command = this.commandQueue.shift();
         this.currentCommand = command;
 
-        this.log.debug(`Sending command: ${command}`);
-        this.setStateAsync('info.lastSent', command, true);
+        // Redact secrets before they reach the log or info.lastSent — the latter is
+        // readable, which would otherwise expose the write-only wifi.password value.
+        const loggedCommand = command.replace(/^(WIFI\s+PASS\s+).*/i, '$1***');
+        this.log.debug(`Sending command: ${loggedCommand}`);
+        this.setStateAsync('info.lastSent', loggedCommand, true);
 
         const cmdWithCR = `${command}\r`;
 

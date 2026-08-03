@@ -70,8 +70,12 @@ The adapter creates states dynamically based on the selected device model. Commo
 
 ### Output Control (`output.*`)
 - `output.X.source` - Select input source for output X
-- `output.X.volume` - Volume level for output X
-- `output.X.mute` - Mute status for output X
+- `output.X.enabled` - Enable/disable output X
+- `output.X.videoMute` - Blank the video on output X
+
+### Audio (`audio.*`)
+- `audio.volume` - Master volume level
+- `audio.mute` - Master mute
 
 ### System Control (`system.*`)
 - `system.power` - Power on/off
@@ -88,7 +92,7 @@ The adapter creates states dynamically based on the selected device model. Commo
 
 | Feature | AMF42AU | MFP62 | MFP72 | MFP112 | WMF51 | WMF72 | C66 | C88 |
 |---------|---------|-------|-------|--------|-------|-------|-----|-----|
-| Network Control | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Yes |
+| Network Control | Yes | Yes | - | Yes | Yes | Yes | Yes | Yes |
 | RS232 Control | - | - | Yes | - | - | - | Yes | Yes |
 | Matrix Routing | - | - | - | - | - | - | Yes | Yes |
 | CEC Control | Yes | - | - | - | - | - | - | - |
@@ -123,6 +127,13 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
+### __WORK IN PROGRESS__
+* (Alan Paris) Fixed the state tree keeping the previous model's controls after the device model was changed: the internal model-change check compared the model against a value the adapter had just overwritten, so the cleanup never ran. An MFP112 configured after the default MFP72, for example, was left without the HDBaseT input on `output.N.source`
+* (Alan Paris) Existing instances repair themselves on first start after the update: a new `info.stateSchema` state records the layout version of the state tree, and the tree is rebuilt once when it is out of date. State values are repopulated by the next device poll. Note that the rebuild recreates the objects, so any per-state history/logging settings on the adapter's states have to be reapplied
+* (Alan Paris) The WiFi password is no longer stored in clear text in `info.lastSent` or written to the debug log when it is set
+* (Alan Paris) Device responses reporting an output number the configured model does not have (including an echo of the route-all command) no longer create a stray output state
+* (Alan Paris) Corrected the documented state list and the per-model feature table in the README, and added the missing `system` parent object
+
 ### 0.5.1 (2026-07-16)
 * (Alan Paris) Every state object now defines a default (`def`) value, so states have a defined initial value before the first device poll
 * (Alan Paris) Admin config: all device-model descriptions and option labels are now translatable and provided in all 11 ioBroker languages

@@ -271,6 +271,14 @@
       "native": {}
     },
     {
+      "_id": "system",
+      "type": "channel",
+      "common": {
+        "name": "System Control"
+      },
+      "native": {}
+    },
+    {
       "_id": "system.telnetNegotiation",
       "type": "state",
       "common": {
