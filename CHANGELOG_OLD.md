@@ -6,6 +6,12 @@
 ### 0.3.0 (2025-12-21)
 * (Alan Paris) Initial release with support for AMF42AU, MFP62, MFP72, MFP112, WMF51, WMF72
 * (Alan Paris) Added CEC control, preset management, and picture controls
+## 0.4.0 (2026-07-02)
+* (Alan Paris) Writes to all writable states are now processed in onStateChange; previously many controls (picture, CEC, presets, WiFi, standby, sidebar, layout, audio mode, per-LAN DHCP) were silently ignored
+* (Alan Paris) WiFi frequency and channel are now sent together as the single command the device requires
+* (Alan Paris) Sensitive values (e.g. WiFi password) are masked in the debug state-change log
+* (Alan Paris) Polling and reconnect intervals are now clamped to safe bounds in code, not only in the admin UI
+
 ## 0.3.8 (2026-07-02)
 * (Alan Paris) Fixed CEC output states being created for outputs the model does not have (missing intermediate object, E3009)
 * (Alan Paris) Preset save/apply/clear states now have read=true as required by the "level" role (E1010)

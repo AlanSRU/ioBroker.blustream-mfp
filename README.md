@@ -127,7 +127,7 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
+### 0.5.2 (2026-08-03)
 * (Alan Paris) Fixed the state tree keeping the previous model's controls after the device model was changed: the internal model-change check compared the model against a value the adapter had just overwritten, so the cleanup never ran. An MFP112 configured after the default MFP72, for example, was left without the HDBaseT input on `output.N.source`
 * (Alan Paris) Existing instances repair themselves on first start after the update: a new `info.stateSchema` state records the layout version of the state tree, and the tree is rebuilt once when it is out of date. State values are repopulated by the next device poll. Note that the rebuild recreates the objects, so any per-state history/logging settings on the adapter's states have to be reapplied
 * (Alan Paris) The WiFi password is no longer stored in clear text in `info.lastSent` or written to the debug log when it is set
@@ -150,12 +150,6 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 
 ### 0.4.1 (2026-07-03)
 * (Alan Paris) Removed unused state paths that were never created from the internal cleanup list, so it now matches the states the adapter actually creates
-
-### 0.4.0 (2026-07-02)
-* (Alan Paris) Writes to all writable states are now processed in onStateChange; previously many controls (picture, CEC, presets, WiFi, standby, sidebar, layout, audio mode, per-LAN DHCP) were silently ignored
-* (Alan Paris) WiFi frequency and channel are now sent together as the single command the device requires
-* (Alan Paris) Sensitive values (e.g. WiFi password) are masked in the debug state-change log
-* (Alan Paris) Polling and reconnect intervals are now clamped to safe bounds in code, not only in the admin UI
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
