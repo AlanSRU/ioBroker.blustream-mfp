@@ -41,3 +41,7 @@ blustream-mfp.*.json
 *.tgz
 
 .review/
+
+# Local dev notes (never committed)
+CLAUDE.md
+**/CLAUDE.md
