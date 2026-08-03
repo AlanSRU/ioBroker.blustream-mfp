@@ -6,6 +6,9 @@
 ### 0.3.0 (2025-12-21)
 * (Alan Paris) Initial release with support for AMF42AU, MFP62, MFP72, MFP112, WMF51, WMF72
 * (Alan Paris) Added CEC control, preset management, and picture controls
+## 0.4.1 (2026-07-03)
+* (Alan Paris) Removed unused state paths that were never created from the internal cleanup list, so it now matches the states the adapter actually creates
+
 ## 0.4.0 (2026-07-02)
 * (Alan Paris) Writes to all writable states are now processed in onStateChange; previously many controls (picture, CEC, presets, WiFi, standby, sidebar, layout, audio mode, per-LAN DHCP) were silently ignored
 * (Alan Paris) WiFi frequency and channel are now sent together as the single command the device requires

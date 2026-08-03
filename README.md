@@ -143,7 +143,7 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
+### 0.5.3 (2026-08-03)
 * (Alan Paris) Added support for 39 further Blustream models, taking the total to 47: the HDBaseT matrices (C-series and C-CS, HMXL, HMX-18G, PLA/Platinum, Pro and Custom-Pro, up to 16x16), the HDMI matrices (CMX/MX), the SW-series HDMI and HDBaseT switchers, the video-wall and multi-view processors (MX44VW, MX44AVW, MV41) and the MX44KVM USB/KVM matrix
 * (Alan Paris) Routing, output enable, PoC and preset recall now follow each model's own command form, so the differing firmware families (spaced `OUT 01 FR 04` versus `OUT01FR04`, the three PoC verbs, single-output switches without an output index) are each addressed correctly
 * (Alan Paris) Added per-input EDID management on all matrices, CEC actions on the HMX-18G and SW41HDBT, the HMX-18G audio matrix, Pro-Matrix audio embedding, video-wall mode and bezel compensation, and USB routing on the MX44KVM
@@ -171,9 +171,6 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 ### 0.4.2 (2026-07-04)
 * (Alan Paris) WiFi password state is now write-only (`read: false`) so the value cannot be read back from the object tree once set
 * (Alan Paris) Removed the accidentally committed npm pack artifact (`.tgz`) from the repository
-
-### 0.4.1 (2026-07-03)
-* (Alan Paris) Removed unused state paths that were never created from the internal cleanup list, so it now matches the states the adapter actually creates
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
