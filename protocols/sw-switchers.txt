@@ -16,10 +16,12 @@ Applies to (adapter model keys):
 Connection: RS-232 57600 baud 8N1; Telnet TCP/IP. Terminator CR (0x0D).
 The SW-AB manuals note spaces are optional: "OUTFR03" or "OUT FR 03" both work.
 
-ADAPTER STATUS (v0.6.0): source selection (output.1.source) + auto-switch
+ADAPTER STATUS (v0.5.3): source selection (output.1.source) + auto-switch
 implemented for all. SW41HDBT additionally has EDID (EDID xx DF/CP), per-output
 & per-input CEC actions (OUT/IN xx CEC ...) and PoC wired. Scaling (OUT xx
-SCALING) and SW-AB audio breakout are not yet wired; free-text STATUS not parsed.
+SCALING) and SW-AB audio breakout are not yet wired. STATUS read-back IS parsed
+(families `swHdbt` for SW41HDBT and `swBasic` for the SW-AB/DA switches),
+grounded on the SW41HDBT, SW21AB-V3, SW41AB-8K and SW42DA-V2 captures.
 
 Sources:
   SW41HDBT commands — blustream.co.uk DownloadFile?downloadId=652 ("SW41HDBT.txt")

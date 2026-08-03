@@ -25,7 +25,7 @@ Control Blustream AMF/MFP/WMF series AV presentation switchers via RS232 serial 
 | **WMF72** | Wireless Media Presenter with Dual Display | IP (Telnet) |
 | **C66 / C88** | 6x6 / 8x8 Contractor HDBaseT Matrix | RS232 / IP |
 
-**Expanded range (v0.6.0) — routing, output enable, PoC and presets:**
+**Expanded range (v0.5.3) — routing, output enable, PoC and presets:**
 
 | Family | Models | Type |
 |--------|--------|------|
@@ -40,7 +40,7 @@ Control Blustream AMF/MFP/WMF series AV presentation switchers via RS232 serial 
 | Video wall / Multi-view | MX44VW, MX44AVW, MV41 | mode/routing/bezel/MV-audio + HDMI/VGA input select |
 | USB / KVM | MX44KVM | USB host↔device routing + presets |
 
-These families also gain **EDID management** (all matrices), **CEC control** (HMX-18G, SW41HDBT) and **audio** (HMX-18G audio matrix; Pro-Matrix audio embed/mute). CMX/MX audio follows the video output (no separate control). **STATUS feedback (read-back) is parsed** for every fixed-width family — routing, output enable, PoC, CEC, EDID, audio matrix, network, video-wall mode, KVM routing/GPIO/cascade and SW42DA Dante master audio — grounded against real device captures. The only exception is **MV41**, whose STATUS headers have no column separators. Not yet supported: **AMF41W** (distinct Linux-CLI API), **MFP31** and **SW12USB** (docs not sourced); MX44AVW advanced PIP/rotation and MV41 are provisional. See `MODEL-EXPANSION-PLAN.md`.
+These families also gain **EDID management** (all matrices), **CEC control** (HMX-18G, SW41HDBT) and **audio** (HMX-18G audio matrix; Pro-Matrix audio embed/mute). CMX/MX audio follows the video output (no separate control). **STATUS feedback (read-back) is parsed** for every fixed-width family — routing, output enable, PoC, CEC, EDID, audio matrix, network, video-wall mode and SW42DA Dante master audio — grounded against real device captures. The MX44KVM has its own reply format, of which host routing, GPIO modes and USB cascade are read back (its network table is not). The only exception is **MV41**, whose STATUS headers have no column separators. Not yet supported: **AMF41W** (distinct Linux-CLI API), **MFP31** and **SW12USB** (docs not sourced); MX44AVW advanced PIP/rotation and MV41 are provisional. See `MODEL-EXPANSION-PLAN.md`.
 
 For more information about Blustream products, visit [Blustream](https://www.blustream.co.uk/).
 
@@ -143,6 +143,14 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
+### __WORK IN PROGRESS__
+* (Alan Paris) Added support for 39 further Blustream models, taking the total to 47: the HDBaseT matrices (C-series and C-CS, HMXL, HMX-18G, PLA/Platinum, Pro and Custom-Pro, up to 16x16), the HDMI matrices (CMX/MX), the SW-series HDMI and HDBaseT switchers, the video-wall and multi-view processors (MX44VW, MX44AVW, MV41) and the MX44KVM USB/KVM matrix
+* (Alan Paris) Routing, output enable, PoC and preset recall now follow each model's own command form, so the differing firmware families (spaced `OUT 01 FR 04` versus `OUT01FR04`, the three PoC verbs, single-output switches without an output index) are each addressed correctly
+* (Alan Paris) Added per-input EDID management on all matrices, CEC actions on the HMX-18G and SW41HDBT, the HMX-18G audio matrix, Pro-Matrix audio embedding, video-wall mode and bezel compensation, and USB routing on the MX44KVM
+* (Alan Paris) Device status read-back is now parsed per model family from the fixed-width STATUS/INSTA/OUTSTA/CTRLSTA/AUDSTA tables, matching columns by header name so power, routing, output enable, PoC, CEC, EDID, audio, network and video-wall values are reflected in the states. Unrecognised tables are ignored rather than guessed at
+* (Alan Paris) Added the device command references and the captured status replies used to build the parser under `protocols/`, plus unit tests that replay every capture
+* (Alan Paris) Pre-release review fixes: EDID commands now use each model's own spacing (the CMX/MX matrices document only the unspaced form); command confirmations naming an output the model does not have no longer create a stray state; status replies whose divider is prefixed by the device prompt (MX44VW/MX44AVW) no longer stall the command queue or grow the captured-response buffer without limit; a status column reported as `N/A` now leaves its state untouched instead of writing "off"; and stopping the instance no longer schedules a reconnect after shutdown
+
 ### 0.5.2 (2026-08-03)
 * (Alan Paris) Fixed the state tree keeping the previous model's controls after the device model was changed: the internal model-change check compared the model against a value the adapter had just overwritten, so the cleanup never ran. An MFP112 configured after the default MFP72, for example, was left without the HDBaseT input on `output.N.source`
 * (Alan Paris) Existing instances repair themselves on first start after the update: a new `info.stateSchema` state records the layout version of the state tree, and the tree is rebuilt once when it is out of date. State values are repopulated by the next device poll. Note that the rebuild recreates the objects, so any per-state history/logging settings on the adapter's states have to be reapplied

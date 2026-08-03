@@ -72,6 +72,12 @@ const CEC_INPUT_ACTIONS = {
 //     the default MFP72 input list, missing HDBaseT on output.N.source.
 const STATE_SCHEMA_VERSION = 2;
 
+// Upper bound on the lines buffered for info.rawResponse. A model whose reply
+// carries no recognised terminator would otherwise accumulate lines for the
+// lifetime of the instance; flushing at this size keeps the state useful and the
+// memory bounded. A full 16x16 STATUS reply is well under this.
+const MAX_RESPONSE_LINES = 200;
+
 // Union of every state path any supported model creates. Used only to purge
 // orphaned objects when the configured model changes (each entry is deleted
 // recursively). Keep this in sync with the setObjectNotExistsAsync calls in
@@ -2244,8 +2250,15 @@ class BlustreamAdapter extends utils.Adapter {
                     this._responseLines = [];
                 }
                 this._responseLines.push(line.trim());
-                // When we hit a separator line, flush the full response
-                if (/^={5,}$/.test(line.trim())) {
+                // When we hit a separator line, flush the full response. Some models
+                // (MX44VW/AVW) prefix the divider with their telnet prompt, so allow
+                // anything before it rather than anchoring at the start of the line.
+                if (/={5,}\s*$/.test(line.trim())) {
+                    this.setStateAsync('info.rawResponse', this._responseLines.join('\n'), true);
+                    this._responseLines = [];
+                } else if (this._responseLines.length > MAX_RESPONSE_LINES) {
+                    // A model whose reply has no recognised terminator would otherwise
+                    // grow this array for the lifetime of the instance.
                     this.setStateAsync('info.rawResponse', this._responseLines.join('\n'), true);
                     this._responseLines = [];
                 }
@@ -2266,13 +2279,13 @@ class BlustreamAdapter extends utils.Adapter {
 
         // Skip separator lines and title lines
         if (
-            /^={3,}$/.test(response) ||
+            /={3,}\s*$/.test(response) ||
             /Status$/i.test(response) ||
             /^FW Version/i.test(response) ||
             /^Scaler Version/i.test(response)
         ) {
             // End of STATUS response — release command queue on separator
-            if (/^={3,}$/.test(response)) {
+            if (/={3,}\s*$/.test(response)) {
                 this._statusHeaders = null;
                 this._matrixParser.reset();
                 this.currentCommand = null;
@@ -2340,12 +2353,26 @@ class BlustreamAdapter extends utils.Adapter {
             return;
         }
         let m;
+        // The echoed output number is bounded to the model's outputs: the route-all
+        // form (OUT 00 FR yy) is confirmed as output 00, and a device may report a
+        // physical output the def does not model (e.g. SW41HDBT's HDMI output).
+        // Either would otherwise write a state that has no object behind it.
+        const inRange = n => n >= 1 && n <= this.modelDef.outputs;
         if ((m = line.match(/Set output (\d+) connect from input (\d+)/i))) {
-            this.setStateAsync(`output.${parseInt(m[1], 10)}.source`, m[2].padStart(2, '0'), true);
+            const out = parseInt(m[1], 10);
+            if (inRange(out)) {
+                this.setStateAsync(`output.${out}.source`, m[2].padStart(2, '0'), true);
+            }
         } else if ((m = line.match(/Set output (\d+) (ON|OFF)/i))) {
-            this.setStateAsync(`output.${parseInt(m[1], 10)}.enabled`, m[2].toUpperCase() === 'ON', true);
+            const out = parseInt(m[1], 10);
+            if (inRange(out)) {
+                this.setStateAsync(`output.${out}.enabled`, m[2].toUpperCase() === 'ON', true);
+            }
         } else if ((m = line.match(/Set POC (ON|OFF) on output (\d+)/i))) {
-            this.setStateAsync(`output.${parseInt(m[2], 10)}.poc`, m[1].toUpperCase() === 'ON', true);
+            const out = parseInt(m[2], 10);
+            if (inRange(out)) {
+                this.setStateAsync(`output.${out}.poc`, m[1].toUpperCase() === 'ON', true);
+            }
         }
     }
 
@@ -2853,15 +2880,18 @@ class BlustreamAdapter extends utils.Adapter {
         // EDID management (matrices): EDID xx DF zz / EDID xx CP yy
         const edidProfileMatch = stateId.match(/^input\.(\d+)\.edidProfile$/);
         if (edidProfileMatch) {
+            const s = this.cmdSep();
             const inp = edidProfileMatch[1].padStart(2, '0');
-            this.sendCommand(`EDID ${inp} DF ${String(state.val).padStart(2, '0')}`);
+            this.sendCommand(`EDID${s}${inp}${s}DF${s}${String(state.val).padStart(2, '0')}`);
             return;
         }
         const edidCopyMatch = stateId.match(/^input\.(\d+)\.edidCopyFrom$/);
         if (edidCopyMatch) {
             const out = Number(state.val);
             if (out > 0) {
-                this.sendCommand(`EDID ${edidCopyMatch[1].padStart(2, '0')} CP ${String(out).padStart(2, '0')}`);
+                const s = this.cmdSep();
+                const inp = edidCopyMatch[1].padStart(2, '0');
+                this.sendCommand(`EDID${s}${inp}${s}CP${s}${String(out).padStart(2, '0')}`);
             }
             return;
         }
@@ -3287,11 +3317,18 @@ class BlustreamAdapter extends utils.Adapter {
             }
 
             if (this.socket) {
+                // Detach first: destroy() emits 'close' asynchronously, and that
+                // handler would otherwise write states and arm a reconnect timer
+                // after unload has finished.
+                this.socket.removeAllListeners();
                 this.socket.destroy();
                 this.socket = null;
             }
 
             if (this.serialPort && this.serialPort.isOpen) {
+                // Same reason as the socket above: the 'close' handler schedules a
+                // reconnect, which must not happen once we are shutting down.
+                this.serialPort.removeAllListeners();
                 this.serialPort.close();
                 this.serialPort = null;
             }

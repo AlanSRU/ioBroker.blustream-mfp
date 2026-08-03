@@ -10,7 +10,7 @@ Dialect: SPACED (OUT xx FR yy). Command terminator: CR (0x0D).
 RS-232: 57600 baud 8N1. Telnet: TCP (NET TN sets port).
 PoC verb on this family is "POC TX yy ON/OFF" (adapter pocCommand = 'POC TX').
 
-ADAPTER STATUS (v0.6.0): routing + output enable + PoC (POC TX) + presets +
+ADAPTER STATUS (v0.5.3): routing + output enable + PoC (POC TX) + presets +
 per-input EDID (EDID xx DF/CP) + audio embed (AUD RX xx ORG/ANA/AUTO) + per-output
 audio mute (MUTE On/Off TX xx) wired. Not yet: OUT xx EH/ET, MXIR/MXRS RS232/IR
 routing. Free-text STATUS not parsed (no vendor sample of the reply exists).

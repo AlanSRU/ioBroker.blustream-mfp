@@ -35,11 +35,12 @@ Core commands (verified from manuals):
 
 Presets: 8 custom presets via the web GUI / API (recall + save).
 
-ADAPTER STATUS (v0.6.0): routing + output enable + presets + per-input EDID
-(EDID xx DF/CP) implemented (write path, command-doc verified). CMX/MX audio
+ADAPTER STATUS (v0.5.3): routing + output enable + presets + per-input EDID
+(EDIDxxDF/CP — unspaced here, per commandStyle) implemented (write path,
+command-doc verified). CMX/MX audio
 breakout FOLLOWS the HDMI video output and has NO separate API command, so no
-audio states are created. STATUS reply is free-text and is not parsed for
-feedback (no vendor sample of the reply exists). See MODEL-EXPANSION-PLAN.md.
+audio states are created. STATUS read-back IS parsed (family `hdmi`), grounded
+on the CMX44CS-V2 STATUS/INSTA/OUTSTA captures in "Status Feedback/". See MODEL-EXPANSION-PLAN.md.
 
 Sources:
   CMX88CS manual — blustream.co.uk DownloadFile?downloadId=853

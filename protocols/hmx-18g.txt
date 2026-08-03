@@ -6,7 +6,7 @@ but the spaced form is accepted (as on the C-series). Adapter uses POCOUT xx.
 Status feedback uses the fixed-width INSTA/OUTSTA/CTRLSTA tables (parseC66Response).
 RS-232: 57600 baud 8N1. Telnet: TCP (NET TN / NET TN8000).
 
-ADAPTER STATUS (v0.6.0): routing + output enable + PoC (POCOUT) + presets +
+ADAPTER STATUS (v0.5.3): routing + output enable + PoC (POCOUT) + presets +
 per-input EDID (EDID xx DF/CP) + full audio matrix (AUDIO xx FR yy route,
 VOL v TX xx, AUDOUT xx On/Off mute, OUT xx ARC aa) + per-output & per-input CEC
 (OUT/IN xx CEC ENABLE|DISABLE|<action>) wired. Not yet: IR/RS232 routing,

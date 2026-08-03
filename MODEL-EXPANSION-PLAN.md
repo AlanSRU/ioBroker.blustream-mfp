@@ -167,7 +167,7 @@ Small surface; the video path (if any) reuses matrix logic.
 > All command forms verified against the vendor RS-232 text docs (downloaded &
 > `pdftotext`-parsed) and covered by the `/tmp` unit harness.
 >
-> **Cross-cutting features DONE (v0.6.0):** per-input **EDID** (`EDID xx DF/CP`) on
+> **Cross-cutting features DONE (v0.5.3):** per-input **EDID** (`EDID xx DF/CP`) on
 > all 35 matrices; **CEC** enable+actions (HMX-18G, SW41HDBT); **audio matrix**
 > (HMX-18G: route/vol/mute/ARC) and **audio embed** (Pro-Matrix: `AUD RX`/`MUTE TX`).
 > CMX/MX audio follows video (no API command → no states).
