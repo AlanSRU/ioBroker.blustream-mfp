@@ -145,6 +145,7 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 -->
 ### __WORK IN PROGRESS__
 * (Alan Paris) MFP72/MFP112: output mode, scaler resolution and frequency mode are now read back from the STATUS reply. The devices pad short cells with two tabs, which shifted every later column, so these states stayed empty (or, on the MFP112, frequency mode showed the resolution). Resolution and frequency are also read from the MFP72's `ScalerAudio` row, and the MFP72 no longer writes output-enable states it does not have
+* (Alan Paris) Maintenance: updated `@iobroker/testing` to 6.x and `@iobroker/adapter-core` to 3.4.3, added Node.js 26 to the test matrix, and completed a missing Ukrainian translation
 
 ### 0.5.3 (2026-08-03)
 * (Alan Paris) Added support for 39 further Blustream models, taking the total to 47: the HDBaseT matrices (C-series and C-CS, HMXL, HMX-18G, PLA/Platinum, Pro and Custom-Pro, up to 16x16), the HDMI matrices (CMX/MX), the SW-series HDMI and HDBaseT switchers, the video-wall and multi-view processors (MX44VW, MX44AVW, MV41) and the MX44KVM USB/KVM matrix
