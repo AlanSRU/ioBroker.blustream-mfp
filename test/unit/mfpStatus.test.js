@@ -126,3 +126,36 @@ describe('non-matrix STATUS path ignores space-padded tables', () => {
         });
     }
 });
+
+// ZoomOut/Overscan cells map to the 0..8 step the states (and OUT ZOOM/SCAN mm)
+// use: "No" = 0, "2%" = 1 … "16%" = 8. Verified on an MFP112 (FW 2.23): OUT ZOOM 02
+// + OUT SCAN 01 report "FullScreen\tOFF\t4%\t2%". The saved captures show "No", so
+// non-zero values are substituted into the MFP112 capture's ScalerAspect row.
+describe('MFP112 zoom/overscan read-back', () => {
+    const captured = fs.readFileSync(path.join(SAMPLE_DIR, 'MFP112_STATUS.txt'), 'utf8');
+    const withAspect = (zoom, scan) =>
+        captured.replace('FullScreen\tOFF\tNo\tNo', `FullScreen\tOFF\t${zoom}\t${scan}`);
+
+    it('keeps the capture intact for substitution', () => {
+        expect(withAspect('X', 'Y')).to.not.equal(captured);
+    });
+
+    for (const [zoom, scan, zoomStep, scanStep] of [
+        ['No', 'No', 0, 0],
+        ['2%', '16%', 1, 8],
+        ['4%', '10%', 2, 5],
+        ['02', '08', 2, 8], // bare step codes
+    ]) {
+        it(`ZoomOut "${zoom}" / Overscan "${scan}" -> ${zoomStep} / ${scanStep}`, () => {
+            const s = replay(withAspect(zoom, scan), 'mfp112');
+            expect(s['output.zoom']).to.equal(zoomStep);
+            expect(s['output.overscan']).to.equal(scanStep);
+        });
+    }
+
+    it('leaves the states untouched for an unrecognised or out-of-range value', () => {
+        const s = replay(withAspect('3%', '18%'), 'mfp112');
+        expect(s).to.not.have.property('output.zoom');
+        expect(s).to.not.have.property('output.overscan');
+    });
+});

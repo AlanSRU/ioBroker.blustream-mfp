@@ -78,6 +78,23 @@ const STATE_SCHEMA_VERSION = 2;
 // memory bounded. A full 16x16 STATUS reply is well under this.
 const MAX_RESPONSE_LINES = 200;
 
+// Map a STATUS ZoomOut/Overscan cell to the output.zoom / output.overscan step
+// (0 = none, 1 = 2% … 8 = 16%, matching OUT ZOOM/SCAN mm). The device prints "No"
+// for none; a percentage ("4%") is halved to its step, a bare number is taken as
+// the step itself. Anything else, or a step outside 0..8, returns null.
+function scalerStep(cell) {
+    if (/^no$/i.test(cell)) {
+        return 0;
+    }
+    const m = cell.match(/^(\d+)\s*(%?)$/);
+    if (!m) {
+        return null;
+    }
+    const n = parseInt(m[1], 10);
+    const step = m[2] ? n / 2 : n;
+    return Number.isInteger(step) && step >= 0 && step <= 8 ? step : null;
+}
+
 // Union of every state path any supported model creates. Used only to purge
 // orphaned objects when the configured model changes (each entry is deleted
 // recursively). Keep this in sync with the setObjectNotExistsAsync calls in
@@ -2511,19 +2528,18 @@ class BlustreamAdapter extends utils.Adapter {
                 if (data.OSD) {
                     this.setStateAsync('system.osd', data.OSD.toUpperCase() === 'ON', true);
                 }
-                if (data.ZoomOut) {
-                    const zoom =
-                        data.ZoomOut.toUpperCase() === 'NO'
-                            ? 0
-                            : parseInt(data.ZoomOut.replace(/[^0-9]/g, ''), 10) || 0;
-                    this.setStateAsync('output.zoom', zoom, true);
-                }
-                if (data.Overscan) {
-                    const scan =
-                        data.Overscan.toUpperCase() === 'NO'
-                            ? 0
-                            : parseInt(data.Overscan.replace(/[^0-9]/g, ''), 10) || 0;
-                    this.setStateAsync('output.overscan', scan, true);
+                for (const [col, id] of [
+                    ['ZoomOut', 'output.zoom'],
+                    ['Overscan', 'output.overscan'],
+                ]) {
+                    if (data[col]) {
+                        const step = scalerStep(data[col]);
+                        if (step === null) {
+                            this.log.debug(`Unknown ${col} value in STATUS: ${data[col]}`);
+                        } else {
+                            this.setStateAsync(id, step, true);
+                        }
+                    }
                 }
                 break;
 
