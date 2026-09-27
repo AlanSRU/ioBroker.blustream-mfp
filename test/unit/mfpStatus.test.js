@@ -3,8 +3,8 @@
 // Unit test for the MFP presentation-switcher STATUS read-back in main.js, driven
 // by the real MFP72/MFP112 captures in protocols/Status Feedback/ (raw bytes from
 // info.rawResponse: tab-delimited, short cells followed by two tabs). Each capture
-// is replayed through the adapter's own handleData() as captured and with the tabs
-// expanded to spaces (as a terminal shows it), and the written states are asserted.
+// is replayed through the adapter's own handleData() and the written states are
+// asserted.
 
 const fs = require('node:fs');
 const path = require('node:path');
@@ -60,13 +60,6 @@ function replay(text, modelKey) {
     return state;
 }
 
-// Expand tabs to 8-column stops, as a terminal renders the reply
-const expandTabs = text =>
-    text
-        .split('\n')
-        .map(line => line.replace(/[^\t]*\t/g, seg => seg.slice(0, -1).padEnd(Math.floor((seg.length - 1) / 8) * 8 + 8)))
-        .join('\n');
-
 const CASES = {
     mfp72: {
         file: 'MFP72_STATUS.txt',
@@ -107,20 +100,29 @@ const CASES = {
 
 for (const [model, c] of Object.entries(CASES)) {
     describe(`${model.toUpperCase()} STATUS read-back`, () => {
-        const captured = fs.readFileSync(path.join(SAMPLE_DIR, c.file), 'utf8');
-        for (const [label, text] of [
-            ['tab-delimited (as captured)', captured],
-            ['tab-expanded to spaces', expandTabs(captured)],
-        ]) {
-            it(`maps scaler/output/system states from a ${label} reply`, () => {
-                const s = replay(text, model);
-                for (const [id, val] of Object.entries(c.expected)) {
-                    expect(s[id], id).to.equal(val);
-                }
-                for (const id of c.absent) {
-                    expect(s).to.not.have.property(id);
-                }
-            });
-        }
+        it('maps scaler/output/system states from the captured tab-delimited reply', () => {
+            const s = replay(fs.readFileSync(path.join(SAMPLE_DIR, c.file), 'utf8'), model);
+            for (const [id, val] of Object.entries(c.expected)) {
+                expect(s[id], id).to.equal(val);
+            }
+            for (const id of c.absent) {
+                expect(s).to.not.have.property(id);
+            }
+        });
     });
 }
+
+// A space-padded fixed-width table (the matrix/switcher layout) arriving on a
+// non-matrix model must be ignored, not misread as rows of the MFP tab tables —
+// otherwise e.g. an "InputPort" row would be parsed with the Power headers and
+// flip system.power/ir/key to false on every poll.
+describe('non-matrix STATUS path ignores space-padded tables', () => {
+    for (const file of ['SW41HDBT_STATUS.txt', 'HMX88-18G_STATUS.txt']) {
+        it(`${file} replayed on amf42au writes no table states`, () => {
+            const s = replay(fs.readFileSync(path.join(SAMPLE_DIR, file), 'utf8'), 'amf42au');
+            expect(s).to.not.have.property('system.power');
+            expect(s).to.not.have.property('system.ir');
+            expect(s).to.not.have.property('system.key');
+        });
+    }
+});

@@ -2311,22 +2311,16 @@ class BlustreamAdapter extends utils.Adapter {
             return;
         }
 
-        // STATUS table parsing (MFP72/MFP112). Columns are tab-delimited, or arrive
-        // space-padded when the tabs have been expanded on the way in. Header names are
-        // single words; space-padded data cells are split on 2+ spaces so values such as
-        // "Keep Aspect Ratio" stay whole.
-        const headerKeywords = ['Power', 'Input', 'Output', 'ScalerAudio', 'ScalerBypass', 'ScalerAspect'];
-        const tabbed = response.includes('\t');
-        const words = response.split(/\s+/);
-        const spacedHeader =
-            !tabbed && headerKeywords.includes(words[0]) && words.length > 1 && words.every(w => /^\w+$/.test(w));
-        if (tabbed || spacedHeader || (this._statusHeaders && /\S\s{2,}\S/.test(response))) {
-            // Any run of whitespace containing a tab (e.g. "\t\t" padding a short cell)
-            // or 2+ spaces is one column break, so mixed tab/space padding still aligns.
-            const cols = spacedHeader ? words : response.split(/\s*\t\s*|\s{2,}/);
+        // Tab-delimited STATUS table parsing (MFP72/MFP112). The devices pad cells to
+        // 8-column tab stops, so a short cell is followed by two tabs ("OFF\t\tAUTO") and
+        // some cells carry trailing spaces ("Orginal  \t30"): any whitespace run containing
+        // a tab is one column break.
+        if (response.includes('\t')) {
+            const cols = response.split(/\s*\t\s*/);
 
             // Detect header rows by known header keywords
-            if (spacedHeader || (tabbed && headerKeywords.some(h => cols[0] === h || cols.includes(h)))) {
+            const headerKeywords = ['Power', 'Input', 'Output', 'ScalerAudio', 'ScalerBypass', 'ScalerAspect'];
+            if (headerKeywords.some(h => cols[0] === h || cols.includes(h))) {
                 this._statusHeaders = cols;
                 this.log.debug(`Status table headers: ${cols.join(', ')}`);
                 return;
