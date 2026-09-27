@@ -143,7 +143,7 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
+### 0.5.5 (2026-09-27)
 * (Alan Paris) MFP72/MFP112: zoom-out and overscan read back as the correct step. A device value such as "4%" was stored as 4 (which means 8%) instead of 2, so any non-zero setting showed double its value in the dropdown (10%–16% were out of range and showed no label); unrecognised values now leave the state unchanged
 
 ### 0.5.4 (2026-09-27)
@@ -168,12 +168,6 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 ### 0.5.1 (2026-07-16)
 * (Alan Paris) Every state object now defines a default (`def`) value, so states have a defined initial value before the first device poll
 * (Alan Paris) Admin config: all device-model descriptions and option labels are now translatable and provided in all 11 ioBroker languages
-
-### 0.5.0 (2026-07-16)
-* (Alan Paris) Added support for the Blustream C66 (6x6) and C88 (8x8) Contractor HDBaseT matrices: crosspoint routing across up to 8 outputs, route-all (`output.allSource`), per-output enable, per-output PoC, and 9 presets
-* (Alan Paris) Added a dedicated parser for the C66/C88 fixed-width STATUS/OUTSTA tables and the `[SUCCESS]`/`[FAIL]` command confirmations, so routing, enable, PoC and network states reflect the device
-* (Alan Paris) Scaler, resolution and audio states are no longer created for the C66/C88 crosspoint matrices (they have no scaler/audio path), so the object tree only exposes controls the device actually implements
-* (Alan Paris) Added `protocols/c66.txt` documenting the C66/C88 RS-232 / Telnet command set (verified against FW V1.0.1d)
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 

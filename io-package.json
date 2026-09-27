@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "blustream-mfp",
-    "version": "0.5.4",
+    "version": "0.5.5",
     "news": {
+      "0.5.5": {
+        "en": "MFP72/MFP112: zoom-out and overscan read back as the correct step. A device value such as \"4%\" was stored as 4 (which means 8%) instead of 2, so any non-zero setting showed double its value in the dropdown (10%–16% were out of range and showed no label); unrecognised values now leave the state unchanged",
+        "de": "MFP72/MFP112: Zoomen und Overscan lesen korrekt zurück. Ein Gerätewert wie \"4%\" wurde als 4 (also 8%) statt als 2 gespeichert, sodass jeder Wert ungleich Null doppelt so groß war (10 — 16% lagen außerhalb des Bereichs und ohne Label); unerkannte Werte lassen den Status unverändert",
+        "ru": "MFP72/MFP112: уменьшение масштаба и повторное сканирование — правильный шаг. Значение устройства, например «4%», было сохранено в виде 4 (то есть 8%) вместо 2, поэтому любое значение, отличное от нуля, показывалось в выпадающем списке в два раза больше (10— 16% выходили за пределы допустимого диапазона и не были отмечены); нераспознанные значения теперь оставляют состояние без изменений",
+        "pt": "MFP72/MFP112: reduzir e sobreler é a etapa correta. Um valor de dispositivo como \"4%\" foi armazenado como 4 (ou seja, 8%) em vez de 2, então qualquer configuração diferente de zero mostrou o dobro (10% a 16% estavam fora de alcance e sem rótulo).",
+        "nl": "MFP72/MFP112: uitzoomen en overscannen is de juiste stap. Een apparaatwaarde zoals \"4%\" werd opgeslagen als 4 (wat 8% betekent) in plaats van 2, dus elke instelling die niet gelijk is aan nul, werd in de keuzelijst het dubbele van de waarde weergegeven (10% — 16% was buiten bereik en er stond geen label); bij niet-herkende waarden blijft de status nu ongewijzigd",
+        "fr": "MFP72/MFP112 : zoom arrière et relecture, c'est la bonne étape. Une valeur d'appareil telle que « 4 % » était mémorisée sous la forme 4 (soit 8 %) au lieu de 2. Tout réglage différent de zéro affichait le double de sa valeur dans la liste déroulante (10 % à 16 % étaient hors limites) ; les valeurs non reconnues laissent l'état inchangé",
+        "it": "MFP72/MFP112: zoom out e overscan riletti come passo giusto. Un valore del dispositivo come \"4%\" era 4 (ovvero 8%) anziché 2, quindi qualsiasi impostazione diversa da zero era doppia (10-16% era fuori range e senza etichetta); i valori non riconosciuti ora lasciano lo stato invariato",
+        "es": "MFP72/MFP112: alejar y sobreescanear la lectura como paso correcto. Un valor de dispositivo como el «4%» se almacenaba como 4 (es decir, un 8%) en lugar de 2, por lo que cualquier valor distinto de cero mostraba el doble de su valor en el menú desplegable (entre el 10 y el 16% estaban fuera de rango y sin etiqueta); los valores no reconocidos ahora no cambian",
+        "pl": "MFP72/MFP112: pomniejszanie i przesunięcie odczytu jako prawidłowy krok. Wartość urządzenia, taka jak „4%”, została zapisana jako 4 (co oznacza 8%) zamiast 2, więc każde ustawienie niezerowe wykazywało podwójną wartość w rozwijanym menu (10% - 16% było poza zakresem i nie wykazywało etykiety); nierozpoznane wartości pozostawiają stan niezmieniony",
+        "uk": "MFP72/MFP112: зменшення масштабування та пересканування зчитування як правильний крок. Значення пристрою, таке як «4%», зберігалося як 4 (що означає 8%) замість 2, тому будь-яке ненульове налаштування показало подвійне значення у випадаючому списку (10% - 16% були поза діапазоном і не показали мітки); нерозпізнані значення тепер залишають стан незмінним",
+        "zh-cn": "MFP72/MFP112：缩小和过度扫描回读是正确的步骤。诸如 “4%” 之类的设备值存储为 4（表示 8%）而不是 2，因此任何非零设置都会在下拉列表中显示其值的两倍（10% — 16% 超出范围且未显示标签）；无法识别的值现在保持状态不变"
+      },
       "0.5.4": {
         "en": "MFP72/MFP112: output mode, scaler resolution and frequency mode are now read back from the STATUS reply. The devices pad short cells with two tabs, which shifted every later column, so these states stayed empty (or, on the MFP112, frequency mode showed the resolution). Resolution and frequency are also read from the MFP72's `ScalerAudio` row, and the MFP72 no longer writes output-enable states it does not have\nMaintenance: updated `@iobroker/testing` to 6.x and `@iobroker/adapter-core` to 3.4.3, added Node.js 26 to the test matrix, and completed a missing Ukrainian translation",
         "de": "MFP72/MFP112: Ausgabe, Skalierung und Frequenz werden jetzt aus der STATUS-Antwort gelesen. Die Geräte füllen kurze Zellen mit zwei Tabs auf, die nach jeder Spalte verschoben wurden, leer (oder beim MFP112 zeigte der Frequenzmodus die Auflösung). Auflösung und Frequenz werden auch aus der `ScalerAudio`-Zeile des MFP72 gelesen und der MFP72 schreibt keine ausgabefähigen Zustände mehr\nWartung: @iobroker /testing auf 6.x und @iobroker /adapter-core auf 3.4.3 aktualisiert, Node.js 26 zur Testmatrix hinzugefügt und fehlende ukrainische Übersetzung ergänzt",
@@ -80,19 +93,6 @@
         "pl": "Stan hasła WiFi jest teraz tylko do zapisu (`odczyt: fałsz`), więc po ustawieniu wartości nie można jej odczytać z drzewa obiektów\nUsunięto przypadkowo zatwierdzony artefakt pakietu npm (`.tgz`) z repozytorium",
         "uk": "Пароль WiFi тепер доступний лише для запису (`читання: false`), тому значення не можна зчитати з дерева об'єктів після встановлення.\nВидалено випадково закомітований артефакт npm-пакета (`.tgz`) з репозиторію",
         "zh-cn": "WiFi 密码状态现在设置为只写（`read: false`），因此一旦设置，就无法从对象树中读取该值。\n从仓库中移除了意外提交的 npm 打包产物（`.tgz`）。"
-      },
-      "0.4.1": {
-        "en": "Removed unused state paths that were never created from the internal cleanup list, so it now matches the states the adapter actually creates",
-        "de": "Unbenutzte Zustandspfade, die nie erstellt wurden, wurden aus der internen Bereinigungsliste entfernt, sodass sie nun den vom Adapter tatsächlich erzeugten Zuständen entspricht.",
-        "ru": "Из внутреннего списка очистки удалены неиспользуемые пути состояний, которые так и не были созданы, поэтому теперь они соответствуют состояниям, которые фактически создает адаптер.",
-        "pt": "Removemos da lista de limpeza interna os caminhos de estado não utilizados que nunca foram criados, de forma que agora corresponda aos estados que o adaptador realmente cria.",
-        "nl": "Ongebruikte statuspaden die nooit zijn aangemaakt, zijn verwijderd uit de interne opschoonlijst, zodat deze nu overeenkomt met de statussen die de adapter daadwerkelijk aanmaakt.",
-        "fr": "Les chemins d'état inutilisés qui n'ont jamais été créés ont été supprimés de la liste de nettoyage interne, afin qu'elle corresponde désormais aux états réellement créés par l'adaptateur.",
-        "it": "Sono stati rimossi dall'elenco di pulizia interno i percorsi di stato inutilizzati che non sono mai stati creati, in modo che ora corrispondano agli stati effettivamente creati dall'adattatore.",
-        "es": "Se eliminaron de la lista de limpieza interna las rutas de estado no utilizadas que nunca se crearon, por lo que ahora coincide con los estados que realmente crea el adaptador.",
-        "pl": "Usunięto nieużywane ścieżki stanu, które nigdy nie zostały utworzone z wewnętrznej listy czyszczenia, dzięki czemu teraz odpowiadają one stanom, które adapter faktycznie tworzy",
-        "uk": "Видалено невикористані шляхи станів, які ніколи не створювалися, зі списку внутрішнього очищення, тому тепер він відповідає станам, які адаптер фактично створює.",
-        "zh-cn": "从内部清理列表中移除了从未创建过的未使用状态路径，使其与适配器实际创建的状态相匹配。"
       }
     },
     "titleLang": {

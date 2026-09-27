@@ -6,6 +6,12 @@
 ### 0.3.0 (2025-12-21)
 * (Alan Paris) Initial release with support for AMF42AU, MFP62, MFP72, MFP112, WMF51, WMF72
 * (Alan Paris) Added CEC control, preset management, and picture controls
+## 0.5.0 (2026-07-16)
+* (Alan Paris) Added support for the Blustream C66 (6x6) and C88 (8x8) Contractor HDBaseT matrices: crosspoint routing across up to 8 outputs, route-all (`output.allSource`), per-output enable, per-output PoC, and 9 presets
+* (Alan Paris) Added a dedicated parser for the C66/C88 fixed-width STATUS/OUTSTA tables and the `[SUCCESS]`/`[FAIL]` command confirmations, so routing, enable, PoC and network states reflect the device
+* (Alan Paris) Scaler, resolution and audio states are no longer created for the C66/C88 crosspoint matrices (they have no scaler/audio path), so the object tree only exposes controls the device actually implements
+* (Alan Paris) Added `protocols/c66.txt` documenting the C66/C88 RS-232 / Telnet command set (verified against FW V1.0.1d)
+
 ## 0.4.2 (2026-07-04)
 * (Alan Paris) WiFi password state is now write-only (`read: false`) so the value cannot be read back from the object tree once set
 * (Alan Paris) Removed the accidentally committed npm pack artifact (`.tgz`) from the repository
