@@ -143,7 +143,7 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
+### 0.5.4 (2026-09-27)
 * (Alan Paris) MFP72/MFP112: output mode, scaler resolution and frequency mode are now read back from the STATUS reply. The devices pad short cells with two tabs, which shifted every later column, so these states stayed empty (or, on the MFP112, frequency mode showed the resolution). Resolution and frequency are also read from the MFP72's `ScalerAudio` row, and the MFP72 no longer writes output-enable states it does not have
 * (Alan Paris) Maintenance: updated `@iobroker/testing` to 6.x and `@iobroker/adapter-core` to 3.4.3, added Node.js 26 to the test matrix, and completed a missing Ukrainian translation
 
@@ -171,10 +171,6 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 * (Alan Paris) Added a dedicated parser for the C66/C88 fixed-width STATUS/OUTSTA tables and the `[SUCCESS]`/`[FAIL]` command confirmations, so routing, enable, PoC and network states reflect the device
 * (Alan Paris) Scaler, resolution and audio states are no longer created for the C66/C88 crosspoint matrices (they have no scaler/audio path), so the object tree only exposes controls the device actually implements
 * (Alan Paris) Added `protocols/c66.txt` documenting the C66/C88 RS-232 / Telnet command set (verified against FW V1.0.1d)
-
-### 0.4.2 (2026-07-04)
-* (Alan Paris) WiFi password state is now write-only (`read: false`) so the value cannot be read back from the object tree once set
-* (Alan Paris) Removed the accidentally committed npm pack artifact (`.tgz`) from the repository
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 

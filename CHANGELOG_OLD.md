@@ -6,6 +6,10 @@
 ### 0.3.0 (2025-12-21)
 * (Alan Paris) Initial release with support for AMF42AU, MFP62, MFP72, MFP112, WMF51, WMF72
 * (Alan Paris) Added CEC control, preset management, and picture controls
+## 0.4.2 (2026-07-04)
+* (Alan Paris) WiFi password state is now write-only (`read: false`) so the value cannot be read back from the object tree once set
+* (Alan Paris) Removed the accidentally committed npm pack artifact (`.tgz`) from the repository
+
 ## 0.4.1 (2026-07-03)
 * (Alan Paris) Removed unused state paths that were never created from the internal cleanup list, so it now matches the states the adapter actually creates
 
