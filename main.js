@@ -2311,13 +2311,22 @@ class BlustreamAdapter extends utils.Adapter {
             return;
         }
 
-        // Tab-delimited STATUS table parsing (MFP112 format)
-        if (response.includes('\t')) {
-            const cols = response.split('\t').map(c => c.trim());
+        // STATUS table parsing (MFP72/MFP112). Columns are tab-delimited, or arrive
+        // space-padded when the tabs have been expanded on the way in. Header names are
+        // single words; space-padded data cells are split on 2+ spaces so values such as
+        // "Keep Aspect Ratio" stay whole.
+        const headerKeywords = ['Power', 'Input', 'Output', 'ScalerAudio', 'ScalerBypass', 'ScalerAspect'];
+        const tabbed = response.includes('\t');
+        const words = response.split(/\s+/);
+        const spacedHeader =
+            !tabbed && headerKeywords.includes(words[0]) && words.length > 1 && words.every(w => /^\w+$/.test(w));
+        if (tabbed || spacedHeader || (this._statusHeaders && /\S\s{2,}\S/.test(response))) {
+            // Any run of whitespace containing a tab (e.g. "\t\t" padding a short cell)
+            // or 2+ spaces is one column break, so mixed tab/space padding still aligns.
+            const cols = spacedHeader ? words : response.split(/\s*\t\s*|\s{2,}/);
 
             // Detect header rows by known header keywords
-            const headerKeywords = ['Power', 'Input', 'Output', 'ScalerAudio', 'ScalerBypass', 'ScalerAspect'];
-            if (headerKeywords.some(h => cols[0] === h || cols.includes(h))) {
+            if (spacedHeader || (tabbed && headerKeywords.some(h => cols[0] === h || cols.includes(h)))) {
                 this._statusHeaders = cols;
                 this.log.debug(`Status table headers: ${cols.join(', ')}`);
                 return;
@@ -2377,6 +2386,26 @@ class BlustreamAdapter extends utils.Adapter {
     }
 
     parseStatusTableRow(tableType, data) {
+        // Resolution/Frequence sit in the ScalerBypass row on the MFP112 but in the
+        // ScalerAudio row on the MFP72, so read them from whichever row carries them.
+        if (data.Resolution) {
+            // Reverse-lookup resolution code from the display string
+            const resDef = this.modelDef && this.modelDef.resolutions;
+            if (resDef) {
+                const resCode = Object.keys(resDef).find(
+                    k => resDef[k].toUpperCase() === data.Resolution.toUpperCase(),
+                );
+                if (resCode) {
+                    this.setStateAsync('output.resolution', resCode, true);
+                } else {
+                    this.log.debug(`Unknown scaler resolution in STATUS: ${data.Resolution}`);
+                }
+            }
+        }
+        if (data.Frequence) {
+            this.setStateAsync('output.freqMode', data.Frequence.toUpperCase(), true);
+        }
+
         switch (tableType) {
             case 'Power':
                 // System row: Power, IR, Key, DBG, Beep, LCD, IR_RS232
@@ -2437,7 +2466,7 @@ class BlustreamAdapter extends utils.Adapter {
                         const source = inputMap[data.SelectInput] || data.SelectInput;
                         this.setStateAsync(`output.${outputNum}.source`, source, true);
                     }
-                    if (data.OutputEn) {
+                    if (data.OutputEn && this.modelDef.hasOutputEnable) {
                         this.setStateAsync(
                             `output.${outputNum}.enabled`,
                             data.OutputEn.trim().toUpperCase() === 'YES',
@@ -2446,11 +2475,12 @@ class BlustreamAdapter extends utils.Adapter {
                     }
                     if (data.Mode) {
                         const mode = data.Mode.toUpperCase();
-                        this.setStateAsync(
-                            'output.mode',
-                            mode === 'SPLITTER' ? 'SP' : mode === 'MATRIX' ? 'MX' : mode,
-                            true,
-                        );
+                        const modeCode = /SPLIT|^SP$/.test(mode) ? 'SP' : /MATRIX|^MX$/.test(mode) ? 'MX' : null;
+                        if (modeCode) {
+                            this.setStateAsync('output.mode', modeCode, true);
+                        } else {
+                            this.log.debug(`Unknown output mode in STATUS: ${data.Mode}`);
+                        }
                     }
                 }
                 break;
@@ -2474,19 +2504,6 @@ class BlustreamAdapter extends utils.Adapter {
                 // Bypass row: ScalerBypass, Resolution, Frequence
                 if (data.ScalerBypass) {
                     this.setStateAsync('output.bypass', data.ScalerBypass.toUpperCase() === 'ON', true);
-                }
-                if (data.Resolution) {
-                    // Reverse-lookup resolution code from the display string
-                    const resDef = this.modelDef && this.modelDef.resolutions;
-                    if (resDef) {
-                        const resCode = Object.keys(resDef).find(k => resDef[k] === data.Resolution);
-                        if (resCode) {
-                            this.setStateAsync('output.resolution', resCode, true);
-                        }
-                    }
-                }
-                if (data.Frequence) {
-                    this.setStateAsync('output.freqMode', data.Frequence.toUpperCase(), true);
                 }
                 break;
 

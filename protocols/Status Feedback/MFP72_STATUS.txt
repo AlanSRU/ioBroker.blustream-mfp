@@ -1,0 +1,19 @@
+================================================================
+HDMI MFP72  Status
+FW Version: 2.11
+Scaler Version: 1.36
+Power	IR	Key	DBG	Beep	LCD
+ON 	ON 	OFF	OFF	OFF	OFF
+Input	EdidIndex	CableConn
+01	FORCE___00	Yes
+02	FORCE___00	No
+03	FORCE___00	No
+04	FORCE___00	No
+Output	SelectInput	CableConn	OutputEn	Mode
+01	HDMI1		Yes 		Yes 		MATRIX
+02	HDMI1		No		Yes 		MATRIX
+ScalerAudio	Volume	Mute	Format	Resolution	Frequence
+Orginal  	30	OFF	PCM	1280x1024@60Hz	AUTO
+ScalerAspect	OSD	ZoomOut	Overscan
+16:9		OFF	No	No
+================================================================

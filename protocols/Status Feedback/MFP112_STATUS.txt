@@ -1,0 +1,22 @@
+================================================================
+HDMI MFP112  Status
+FW Version: 2.23
+Scaler Version: 1.38
+Power	IR	Key	DBG	Beep	LCD	IR_RS232
+ON 	ON 	ON 	OFF	OFF	OFF	Remote TX
+Input	EdidIndex	CableConn	Audio
+HDBT	FORCE___00	No		Orginal
+HDMI1	FORCE___00	Yes 		Orginal
+HDMI2	FORCE___00	No		Orginal
+HDMI3	FORCE___00	No		Orginal
+HDMI4	FORCE___00	No		Orginal
+Output	SelectInput	CableConn	OutputEn	Mode
+01	HDMI1		Yes 		Yes 		SPLITTER
+02	HDMI1		No		Yes 		SPLITTER
+ScalerAudio	Volume	Mute	Format
+Orginal  	30	OFF	PCM
+ScalerBypass	Resolution	Frequence
+OFF		1080P@50Hz	AUTO
+ScalerAspect	OSD	ZoomOut	Overscan
+FullScreen	OFF	No	No
+================================================================
