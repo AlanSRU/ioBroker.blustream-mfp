@@ -16,6 +16,15 @@ const SE = 240; // Subnegotiation End
 // Model definitions (see lib/models.js — kept dependency-free for reuse + tests)
 const { MODEL_DEFINITIONS } = require('./lib/models');
 
+// Emulated mute, for MFP firmware without a MUTE command (MFP72 FW 2.06 answers "MUTE ON" with
+// "[ERROR]Command not found"; FW 2.11 has it). Mute stores the volume and sends VOL 00; unmute
+// restores it. Detected per unit from its own STATUS: native-mute firmware has a Mute column.
+// The default is used on unmute when no pre-mute volume was ever stored.
+const EMULATED_MUTE_DEFAULT_VOLUME = 10;
+// After muting, a STATUS reply already in flight can still carry the old volume. Ignore
+// "volume came back up" for this long, so that reply cannot cancel the mute it raced.
+const EMULATED_MUTE_GRACE_MS = 10000;
+
 // CEC discrete-action option maps (written to output.N.cecAction / input.N.cecAction,
 // each write sends `OUT/IN xx CEC <value>`). Superset from the HMX-18G API; SW41HDBT
 // implements a subset (unsupported actions are simply ignored by the device).
@@ -265,6 +274,10 @@ class BlustreamAdapter extends utils.Adapter {
         this._statusHeaders = null;
         this._responseLines = null;
         this._matrixParser = new MatrixStatusParser();
+        // null until the first STATUS audio row says whether this unit has a native MUTE
+        this._nativeMute = null;
+        this._emulatedMuted = null; // null = not yet read back from audio.mute
+        this._emulatedMuteAt = 0;
 
         this.on('ready', this.onReady.bind(this));
         this.on('stateChange', this.onStateChange.bind(this));
@@ -1047,6 +1060,24 @@ class BlustreamAdapter extends utils.Adapter {
                     read: true,
                     write: true,
                     def: false,
+                },
+                native: {},
+            });
+
+            // Only used by firmware without a MUTE command (see EMULATED_MUTE_DEFAULT_VOLUME).
+            // A state rather than a member so an adapter restart while muted still unmutes to
+            // the right level.
+            await this.setObjectNotExistsAsync('audio.preMuteVolume', {
+                type: 'state',
+                common: {
+                    role: 'level.volume',
+                    name: 'Volume to restore on unmute (emulated mute only)',
+                    type: 'number',
+                    read: true,
+                    write: false,
+                    def: 0,
+                    min: 0,
+                    max: def.volumeMax,
                 },
                 native: {},
             });
@@ -2498,9 +2529,15 @@ class BlustreamAdapter extends utils.Adapter {
             }
 
             case 'ScalerAudio':
-                // Audio row: ScalerAudio, Volume, Mute, Format
+                // Audio row: ScalerAudio, Volume, Mute, Format. Firmware without a MUTE command
+                // has no Mute column at all, which is how native mute support is detected.
+                this._nativeMute = 'Mute' in data;
                 if (data.Volume) {
-                    this.setStateAsync('audio.volume', parseInt(data.Volume, 10), true);
+                    const vol = parseInt(data.Volume, 10);
+                    this.setStateAsync('audio.volume', vol, true);
+                    if (!this._nativeMute) {
+                        this.reconcileEmulatedMute(vol);
+                    }
                 }
                 if (data.Mute) {
                     this.setStateAsync('audio.mute', data.Mute.toUpperCase() === 'ON', true);
@@ -2822,6 +2859,54 @@ class BlustreamAdapter extends utils.Adapter {
         this.isProcessingQueue = false;
     }
 
+    /**
+     * Mute for firmware without a MUTE command: store the volume, send VOL 00; unmute sends the
+     * stored volume back. audio.mute is acknowledged here, because the device has no mute to
+     * report.
+     *
+     * @param {boolean} on - true to mute, false to unmute
+     */
+    async setEmulatedMute(on) {
+        if (on) {
+            const cur = await this.getStateAsync('audio.volume');
+            const vol = cur && typeof cur.val === 'number' ? cur.val : 0;
+            // Muting an already-silent unit must not overwrite the level to come back to.
+            if (vol > 0) {
+                await this.setStateAsync('audio.preMuteVolume', vol, true);
+            }
+            this._emulatedMuted = true;
+            this._emulatedMuteAt = Date.now();
+            this.sendCommand('VOL 00');
+            this.log.info(`Mute (emulated, no MUTE command on this firmware): VOL 00, will restore ${vol}`);
+        } else {
+            const saved = await this.getStateAsync('audio.preMuteVolume');
+            const vol = saved && Number(saved.val) > 0 ? Number(saved.val) : EMULATED_MUTE_DEFAULT_VOLUME;
+            this._emulatedMuted = false;
+            this.sendCommand(`VOL ${String(vol).padStart(2, '0')}`);
+            this.log.info(`Unmute (emulated): VOL ${vol}`);
+        }
+        await this.setStateAsync('audio.mute', on, true);
+    }
+
+    /**
+     * Keep an emulated mute honest against what STATUS reports. If the volume is above zero
+     * while emulated-muted — someone used the front panel, or another controller set VOL — the
+     * room is audible, so audio.mute is cleared rather than left claiming silence.
+     *
+     * @param {number} vol - volume the device just reported in STATUS
+     */
+    async reconcileEmulatedMute(vol) {
+        if (this._emulatedMuted === null) {
+            const m = await this.getStateAsync('audio.mute');
+            this._emulatedMuted = !!(m && m.val);
+        }
+        if (this._emulatedMuted && vol > 0 && Date.now() - this._emulatedMuteAt > EMULATED_MUTE_GRACE_MS) {
+            this.log.info(`Volume is ${vol} while emulated-muted — clearing mute`);
+            this._emulatedMuted = false;
+            await this.setStateAsync('audio.mute', false, true);
+        }
+    }
+
     async onStateChange(id, state) {
         if (!state || state.ack) {
             return;
@@ -3112,10 +3197,20 @@ class BlustreamAdapter extends utils.Adapter {
 
             case 'audio.volume':
                 this.sendCommand(`VOL ${String(state.val).padStart(2, '0')}`);
+                // Raising the volume while emulated-muted makes the room audible, so the mute
+                // is over. Native mute is independent of volume and is left alone.
+                if (this._nativeMute === false && this._emulatedMuted && Number(state.val) > 0) {
+                    this._emulatedMuted = false;
+                    this.setStateAsync('audio.mute', false, true);
+                }
                 break;
 
             case 'audio.mute':
-                this.sendCommand(`MUTE ${state.val ? 'ON' : 'OFF'}`);
+                if (this._nativeMute === false) {
+                    await this.setEmulatedMute(!!state.val);
+                } else {
+                    this.sendCommand(`MUTE ${state.val ? 'ON' : 'OFF'}`);
+                }
                 break;
 
             case 'audio.source':

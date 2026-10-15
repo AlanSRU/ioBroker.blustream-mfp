@@ -143,6 +143,9 @@ Enable debug logging in the ioBroker admin to see detailed communication with th
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
+### __WORK IN PROGRESS__
+* (Alan Paris) MFP: mute now works on firmware without a MUTE command. MFP72 FW 2.06 answers "MUTE ON" with "[ERROR]Command not found" and has no Mute column in STATUS, while FW 2.11 has both; the adapter now detects this per unit from its own STATUS. Without native mute it mutes by storing the volume (new state `audio.preMuteVolume`) and sending `VOL 00`, and unmute restores it. Raising the volume while muted clears the mute. Units with native mute are unchanged
+
 ### 0.5.5 (2026-09-27)
 * (Alan Paris) MFP72/MFP112: zoom-out and overscan read back as the correct step. A device value such as "4%" was stored as 4 (which means 8%) instead of 2, so any non-zero setting showed double its value in the dropdown (10%–16% were out of range and showed no label); unrecognised values now leave the state unchanged
 
